@@ -1,26 +1,3 @@
-/**
- * User appearance preference — System / Light / Dark — for the whole app.
- *
- * Canonical mirror; synced into each app at src/theme/themePreference.ts by
- * `sync.mjs design-system-native`. Edit HERE, not per app.
- *
- * Self-contained on purpose: it persists with AsyncStorage (every app already
- * depends on it) and applies the scheme with React Native's `Appearance` — no
- * dependency on the app shell, i18n, or SQLite, so it works in every app
- * regardless of whether it has adopted the app-shell yet.
- *
- * How it drives the UI: `Appearance.setColorScheme(...)` overrides what
- * `useColorScheme()` returns process-wide, and the canonical `useTheme()`
- * (colors.ts) reads `useColorScheme()`. So setting the preference re-renders
- * every themed surface — no extra context plumbing through the tree.
- *
- *   // App root (or AppShell), once:
- *   useApplyThemePreference();
- *
- *   // The toggle (or any surface that needs to read/set it):
- *   const { pref, setPref } = useThemePreference();
- */
-
 import { useCallback, useEffect, useSyncExternalStore } from 'react';
 import { Appearance } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';

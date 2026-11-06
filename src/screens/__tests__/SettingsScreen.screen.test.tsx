@@ -1,20 +1,12 @@
-/**
- * Screen test — SettingsScreen action coverage (Uplevel-3 T3).
- *
- * Renders the real Settings/About screen and exercises every user-facing
- * action: Back (goBack), Export lists, Import lists, Support (tip jar),
- * Send feedback, Leave a review, Privacy, Source code, Acknowledgements
- * (navigate), and the "Learn more" studio link. Queried by role/label only —
- * no testID, no snapshot.
- */
+/** Settings actions: navigation, data transfer, feedback, and project links. */
 
 import React from 'react';
 import { render, screen, userEvent, waitFor } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const METRICS = {
-  frame: { x: 0, y: 0, width: 390, height: 844 },
-  insets: { top: 47, left: 0, right: 0, bottom: 34 },
+  frame: { x: 0, y: 0, width: 412, height: 915 },
+  insets: { top: 24, left: 0, right: 0, bottom: 24 },
 };
 
 jest.mock('expo-haptics', () => ({
@@ -57,27 +49,17 @@ jest.mock('../../lib/links', () => {
   const actual = jest.requireActual('../../lib/links');
   return {
     ...actual,
-    openReview: jest.fn(),
     openUrl: jest.fn(),
-  };
-});
-
-// The IAP tip-jar sheet pulls in expo-iap; a lightweight stand-in reports its
-// visibility so we can prove the Support row opened it, without the native module.
-jest.mock('../../components/TipJarSheet', () => {
-  const { Text } = require('react-native');
-  return {
-    __esModule: true,
-    default: ({ visible }: { visible: boolean }) =>
-      visible ? <Text>TIP_JAR_OPEN</Text> : null,
   };
 });
 
 import SettingsScreen from '../SettingsScreen';
 import { useListsStore } from '../../store/lists';
 import { pickAndParseLists } from '../../lib/transfer';
-import { openReview, openUrl, REPO_URL } from '../../lib/links';
+import { openUrl, REPO_URL } from '../../lib/links';
 import { makeList } from '../../data/list';
+import { resetToBaseStrings, setLocaleStrings, t } from '../../i18n';
+import { LOCALES } from '../../i18n/locales';
 
 function resetStore() {
   useListsStore.setState({ lists: [], hydrated: true });
@@ -105,12 +87,26 @@ async function renderScreen(navigation = nav()) {
 }
 
 beforeEach(() => {
+  resetToBaseStrings();
   resetStore();
   jest.clearAllMocks();
 });
-afterEach(() => resetStore());
+afterEach(() => {
+  resetToBaseStrings();
+  resetStore();
+});
 
 describe('SettingsScreen', () => {
+  it.each(['en', ...Object.keys(LOCALES)])('localizes Appearance controls in %s', async (locale) => {
+    if (LOCALES[locale]) setLocaleStrings(LOCALES[locale]);
+    await renderScreen();
+
+    expect(screen.getByLabelText(t('settings.appearance')).props.accessibilityRole).toBe('radiogroup');
+    for (const key of ['themeSystem', 'themeLight', 'themeDark']) {
+      expect(screen.getByRole('radio', { name: t(`settings.${key}`) })).toBeTruthy();
+    }
+  });
+
   it('goes back when the Back button is pressed', async () => {
     const user = userEvent.setup();
     const { navigation } = await renderScreen();
@@ -148,7 +144,6 @@ describe('SettingsScreen', () => {
   it('does not offer the upstream tip jar', async () => {
     await renderScreen();
     expect(screen.queryByRole('button', { name: 'Support this app' })).toBeNull();
-    expect(screen.queryByText('TIP_JAR_OPEN')).toBeNull();
   });
 
   it('opens the feedback flow from the Send feedback row', async () => {
@@ -162,7 +157,6 @@ describe('SettingsScreen', () => {
   it('does not offer store reviews in the independent app', async () => {
     await renderScreen();
     expect(screen.queryByRole('button', { name: 'Leave a review' })).toBeNull();
-    expect(openReview).not.toHaveBeenCalled();
   });
 
   it('opens the privacy page from the Privacy row', async () => {

@@ -1,19 +1,3 @@
-/**
- * SQLite persistence for grocery lists.
- *
- * One row per list with JSON-encoded `items` / `categoryOrder` / optional
- * `shareIdentity`. This blob shape is deliberately the same one the shared-
- * sync module (build step 4) replicates, so local and synced storage stay
- * identical and no relational migration is needed when sync lands.
- *
- * Persisting to the app's SQLite DB in the default Documents location also
- * gives us canon § Backup & restore Layer 1 (rides iCloud / Android auto-
- * backup) for free, with zero UI.
- *
- * All functions are async. Writes are fire-and-forget (UI is the source of
- * truth); the single hydrate() is awaited at app start.
- */
-
 import * as SQLite from 'expo-sqlite';
 import { getDb as getSharedDb } from '../storage/kv';
 import type { Category } from '../data/categories';
@@ -113,8 +97,6 @@ async function openDb(): Promise<SQLite.SQLiteDatabase> {
   }
   return _db;
 }
-
-// ---------- Item history (local autocomplete; never synced, never external) --
 
 export interface HistoryRow {
   name: string;

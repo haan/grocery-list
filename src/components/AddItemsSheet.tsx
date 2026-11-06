@@ -1,21 +1,3 @@
-/**
- * Add items — the full-screen sheet that is the hub for building a list fast.
- *
- * Opens from the List-detail "Add an item" bar. Two tabs:
- *   - Items — your usuals, recent history, and the built-in seed catalog, one
- *     tap each (the reusable ItemPicker).
- *   - Kits — your saved kits; one tap drops a whole kit's ingredients onto the
- *     list (KitPicker). You build kits on the Kits tab, not here.
- *
- * This component is just the shell: the Modal, the safe-area, the top bar, and
- * the Items/Kits segmented control. The two tabs are self-contained.
- *
- * Cross-platform: pure RN `Modal` + design-system tokens — no ActionSheetIOS /
- * Alert.prompt (canon § Cross-platform functional parity). A RN Modal renders
- * detached from the root SafeAreaProvider, so we nest one (canon
- * § rn/modal-safe-area-provider).
- */
-
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Modal, View, Text, Pressable, StyleSheet } from 'react-native';
 import {

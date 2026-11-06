@@ -17,8 +17,8 @@ import TestRenderer, { act } from 'react-test-renderer';
 import ItemPicker from '../ItemPicker';
 
 const METRICS = {
-  frame: { x: 0, y: 0, width: 390, height: 844 },
-  insets: { top: 47, left: 0, right: 0, bottom: 34 },
+  frame: { x: 0, y: 0, width: 412, height: 915 },
+  insets: { top: 24, left: 0, right: 0, bottom: 24 },
 };
 
 // Native side-effects with no bearing on the behavior under test.

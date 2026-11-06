@@ -1,34 +1,3 @@
-/**
- * User language preference — System / English / a translated locale — for the
- * whole app. The language sibling of the design system's themePreference.ts
- * (System / Light / Dark): same singleton-store + useSyncExternalStore shape,
- * same persist-and-apply-on-launch contract, so the in-app control behaves
- * identically to the appearance control (canon § Translations, § Theming).
- *
- * Canonical, app-agnostic — synced by `sync.mjs app-shell`; do NOT fork per app.
- *
- * It lives in i18n/ (not the design system, where themePreference sits) because
- * it depends on the i18n machinery — `applyDeviceLocale()` / `setLocaleStrings()`
- * / `LOCALES` — which is the app shell, not the theme. An app without the shell
- * can't translate in-app anyway, so there is nothing to gate from here.
- *
- * How it drives the UI (the one real difference from theme): a theme change
- * rides `useColorScheme()`, which re-renders every themed surface for free. A
- * language change has no OS primitive — `t()` reads a module-level dictionary —
- * so the app root keys its <NavigationContainer> on `useLocaleVersion()`, and an
- * explicit switch bumps that version, re-rendering the whole tree in the new
- * language (and returning to the home route, as an OS-level language change
- * would on relaunch). Cold start applies a saved non-System choice before the
- * user sees anything, with at most one startup remount.
- *
- *   // App root (or AppShell), once:
- *   useApplyLocalePreference();
- *   const localeVersion = useLocaleVersion();   // -> <NavigationContainer key={localeVersion} />
- *
- *   // The control (or any surface that reads/sets the choice):
- *   const { pref, setPref } = useLocalePreference();
- */
-
 import { useCallback, useEffect, useSyncExternalStore } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {

@@ -1,15 +1,3 @@
-/**
- * Kits home — every kit the user has, newest first.
- *
- * A kit is a reusable bundle of items you buy together for one thing you make.
- * Create one, open it to edit, or rename / duplicate / delete via a per-row
- * overflow menu (cross-platform `Dialogs`, never ActionSheetIOS). You select a
- * kit while adding to a list (the Add-items sheet's Kits tab) — you don't add
- * kits here, you build and keep them.
- *
- * Sibling of ListsHomeScreen; same row + header + empty-state shapes.
- */
-
 import React, { useCallback } from 'react';
 import { View, Text, Pressable, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

@@ -4,27 +4,12 @@
     "slug": "grocery-list",
     "version": "1.0.12",
     "scheme": "haan-grocerylist-dev",
-    "platforms": ["android"],
+    "platforms": [
+      "android"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "io.github.haan.grocerylist.dev",
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false,
-        "CFBundleName": "Grocery List",
-        "CFBundleLocalizations": [
-          "en",
-          "es",
-          "de",
-          "fr",
-          "it",
-          "pt-BR",
-          "ja"
-        ]
-      }
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -36,24 +21,17 @@
         "android.permission.CAMERA"
       ]
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
     "owner": "lean-mean-coding-team",
     "plugins": [
       "expo-sqlite",
       "expo-font",
-      "expo-iap",
       [
         "expo-camera",
         {
-          "cameraPermission": "Scan a QR code to join a shared list.",
           "recordAudioAndroid": false
         }
       ],
       "./plugins/withGradleJvmArgs",
-      "./plugins/withSiriIntents",
-      "expo-mail-composer",
       "./plugins/withAndroidLocaleConfig",
       "expo-sharing",
       [

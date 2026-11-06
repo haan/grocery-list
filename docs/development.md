@@ -105,7 +105,7 @@ Preview and development currently share the development package ID: installing
 one replaces the other and retains its data if signed with the same key. Neither
 replaces the original author's app. A future everyday release needs its own
 package ID, scheme, release channel, and migration decisions before distribution.
-No production or store-submission profile is configured in phase one.
+No production or store-submission profile is configured.
 
 Updates point only to our Expo project. Runtime compatibility uses Expo's
 fingerprint policy. Actual OTA publishing and automatic APK updates are later work.
@@ -113,16 +113,21 @@ fingerprint policy. Actual OTA publishing and automatic APK updates are later wo
 ## Checks and CI
 
 ```powershell
+npm run check:android
+npm run test:fuzz-harness
 npm run typecheck
 npm test -- --runInBand
 npx expo install --check
 npx expo-doctor@latest
 ```
 
-The Checks workflow runs typechecking and unit/component tests on pushes to main
-and pull requests. Legacy device QA/deep suites are manual, require additional
-credentials/toolchains, and have not been adapted/validated end-to-end for this
-fork. There are no scheduled builds. Local reporter output is ignored by Git.
+The Checks workflow runs Android-only configuration checks, fuzz-harness self-tests, TypeScript, and the Jest Android suite on main pushes and pull requests. It can also be run manually. There are no scheduled builds or device-emulator jobs. Fuzz artifacts go to ignored tmp/; useful minimized regression JSON stays tracked under qa/regressions.
+
+## Android-only cleanup acceptance
+
+The cleanup removes unused native purchase and email integrations. Install its new development APK as an update; do not uninstall the existing app or clear storage. Keep the package and signing key. Verify startup and existing lists, settings/feedback, add/edit/check, suggestions/learning, drag ordering, rename selection/replacement/appending, kits, and export/import on a disposable list. Two-device sync is separate when another installation is available.
+
+Build and device results are recorded in [repository audit](repository-audit.md).
 
 ## Credentials
 
@@ -130,7 +135,7 @@ Expo account credentials and tokens stay outside the repository. To inspect or
 download the Android keystore, run `npx eas-cli@27.5.0 credentials --platform android`
 and choose the appropriate build profile. Save the keystore and its passwords in
 a secure backup outside this checkout. Do not commit `credentials.json`, keys, or
-tokens. GitHub unit-test CI needs no Expo token; only future cloud/native jobs do.
+tokens. GitHub unit-test CI needs no Expo token; EAS builds use your local Expo login.
 
 ## Device acceptance (requires the phone)
 

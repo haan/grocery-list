@@ -1,18 +1,3 @@
-/**
- * Dark-mode contrast contract — guards the canonical theme tokens.
- *
- * Synced verbatim into each app at src/theme/__tests__/contrast.test.ts by
- * `sync.mjs design-system-native`. Edit the canonical file in
- * josh-approved-factory/templates/design-system/__tests__/, not per app.
- *
- * The OS-following palettes INVERT in dark mode, so a foreground must pair with
- * the token that inverts WITH its background. This test locks the matched pairs
- * (so a future palette edit can't silently break contrast) and pins the trap
- * that shipped a real defect: `fgOnInk` is paper in BOTH palettes, so it
- * collapses to ~1:1 on the inverted dark-mode ink button — the correct token is
- * `inkButtonText`. Component-level misuse of `fgOnInk` is caught by the
- * `theme/contrast-pairing` QA-linter rule; this guards the token definitions.
- */
 import { lightColors, darkColors, type Colors } from '../colors';
 
 function rgb(input: string): [number, number, number] {

@@ -1,28 +1,5 @@
-/**
- * Cross-platform action menu, text-input prompt, and confirm dialog.
- *
- * Replaces `ActionSheetIOS`, `Alert.prompt`, and `Alert.alert` (all iOS-only or
- * iOS-divergent), so every management flow works identically on both platforms.
- * Studio tenet: functional parity is mandatory; no OS-specific frameworks for
- * core functionality (canon § Cross-platform functional parity).
- *
- * Canonical, app-agnostic — synced by `sync.mjs app-shell`; do not fork.
- *
- * Styling mirrors the canonical ReviewModal (same scrim/card tokens) so every
- * dialog reads as a sibling. Reduced motion collapses the present animation to
- * none (canon § Accessibility, WCAG 2.2 AA).
- *
- * Shared styles, config types and the reduced-motion hook live in
- * `dialogShared.ts` (split out
- * to keep this file under the component size ceiling); the pressables stay
- * here so their action-coverage ids don't move.
- *
- * Each hook returns `{ open, element }`: call `open(config)` from a handler,
- * render `element` once in the screen tree.
- */
-
 import React, { useCallback, useRef, useState } from 'react';
-import { Modal, View, Text, Pressable, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { Modal, View, Text, Pressable, TextInput, KeyboardAvoidingView } from 'react-native';
 import { useTheme } from '../theme';
 import { t } from '../i18n';
 import {
@@ -61,10 +38,7 @@ export function useActionMenu(): {
   const choose = useCallback(
     (opt: ActionOption) => {
       close();
-      // Let the sheet finish dismissing before the action runs. Native
-      // presentations (the OS share sheet, the image picker) are rejected by
-      // iOS if they try to present while this Modal is still animating closed,
-      // so defer past the slide-out. Harmless for non-presenting actions.
+      // Let the menu finish dismissing before opening another native surface.
       setTimeout(() => opt.onPress(), 260);
     },
     [close],
@@ -164,7 +138,7 @@ export function usePrompt(): {
       statusBarTranslucent
       onRequestClose={close}
     >
-      <KeyboardAvoidingView style={s.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <KeyboardAvoidingView style={s.flex}>
         <Pressable
           style={s.centerOverlay}
           onPress={close}

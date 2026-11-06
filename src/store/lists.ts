@@ -44,8 +44,6 @@ import {
   setSyncMeta,
 } from './db';
 import { logEvent, logError } from '../feedback/log';
-import { QA_MODE } from '../qa/qaMode';
-import { qaLists } from '../qa/fixtures';
 
 /** Heal duplicate ids in loaded data (legacy/edge collisions corrupt React
  *  keys and would let two devices share an id once sync lands). */
@@ -167,10 +165,7 @@ interface ListsState {
   /** Reserved generic sync entry (kept for symmetry with other apps). */
   applySync: (changes: { upserts: GroceryList[]; deletes: string[] }) => void;
 
-  /** Durably write all current state, AWAITED. Per-list saves are otherwise
-   *  fire-and-forget, so a check made right before the app is backgrounded can
-   *  be lost if iOS suspends/kills the app before the write lands. The App-level
-   *  AppState handler awaits this on background. */
+
   flushPending: () => Promise<void>;
 }
 
@@ -263,13 +258,6 @@ export const useListsStore = create<ListsState>()((set, get) => {
         }
         initClock(maxTs, persistClock);
 
-        // QA capture boots cleared (clearState:true); seed deterministic data so
-        // every screen is screenshot-ready without typing live. Compile-time
-        // false in production (EXPO_PUBLIC_QA_MODE unset) → tree-shaken out.
-        if (QA_MODE && healed.length === 0) {
-          set({ lists: qaLists(), hydrated: true });
-          return;
-        }
         const { lists, changed } = repairIds(healed);
         // The counts that answer "I opened it and my lists were gone": how many
         // came off disk, how many were shared, how many needed repair.

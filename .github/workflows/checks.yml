@@ -24,5 +24,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - run: npm run check:android
+      - run: npm run test:fuzz-harness
       - run: npm run typecheck
       - run: npm test -- --runInBand

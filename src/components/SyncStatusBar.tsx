@@ -93,8 +93,8 @@ export function SyncStatusBar({ secret }: { secret: string }) {
       onPress={onPress}
       accessibilityRole="button"
       // The status text is what a person can see, so it is the accessible name
-      // and Voice Control can match it. The "shared list sync / tap to sync"
-      // framing moves to the hint, which Voice Control ignores and VoiceOver
+      // and Voice Access can match it. The "shared list sync / tap to sync"
+      // framing moves to the hint, which Voice Access ignores and TalkBack
       // still reads.
       accessibilityLabel={label}
       accessibilityHint={t('detail.sync.hint')}

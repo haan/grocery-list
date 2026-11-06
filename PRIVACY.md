@@ -22,7 +22,7 @@ When you share a list with someone, the two phones keep each other up to date by
 ## Where your data can go
 
 - **On this device.** Everything lives in app storage on your phone.
-- **In your own iCloud or Android backup, if you have it on.** Like any app, this app's data is included in the device backup your platform makes for you. That backup is yours. It runs on your account, which you control. We don't operate it and can't see it.
+- **In Android device backups, when enabled and supported.** The app does not disable Android backup; what is backed up depends on device settings and the backup provider. That backup is yours. It runs on your account, which you control. We don't operate it and can't see it.
 - **To someone with your share link.** Shared lists and kits are synchronized with paired devices. Treat the link or QR code as a secret; recipients can forward it.
 - **In a file you export yourself.** If you export a list, the app hands a single file to the system share sheet and you choose where it goes. Nothing leaves until you pick a destination.
 - **To development tools.** Development builds connect to Metro on the developer's computer for code and debugging. Debugging can expose application state to the developer. Use test data. A tunnel, when enabled, routes development traffic through its provider.
@@ -31,7 +31,7 @@ When you share a list with someone, the two phones keep each other up to date by
 
 ## What's collected
 
-The app keeps a bounded diagnostic log locally for debugging. No analytics or automatic diagnostic-upload service is configured. Network providers described above handle requests under their own policies. The development app has no active donation or store-review flow.
+The app keeps a bounded diagnostic log locally for debugging. No analytics or automatic diagnostic-upload service is configured. Network providers described above handle requests under their own policies. The app has no donation or store-review features.
 
 ## Questions
 

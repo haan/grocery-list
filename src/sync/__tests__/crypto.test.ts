@@ -1,26 +1,3 @@
-/**
- * Shared-list envelope crypto (sync/crypto.ts) — the layer two user-visible
- * promises rest on, neither of which a round-trip test can see.
- *
- *  1. PAIR ONCE, SYNCED FOREVER. The channel id (where two phones rendezvous)
- *     and the symmetric key (what opens the envelope) are both DERIVED from the
- *     per-list secret — nothing about either is stored. So if a derivation ever
- *     shifts, two already-paired phones on different app versions stop hearing
- *     each other, silently: no error, no reconnect, just a list that quietly
- *     stops updating. A seal→open round trip cannot catch that (it re-derives
- *     both sides the same wrong way), so both derivations are pinned here to
- *     checked-in golden vectors. If one of these fails, the change breaks every
- *     device already in the field — that is the signal, not a stale fixture.
- *
- *  2. YOUR DATA STAYS WITH YOU, EVEN AGAINST A HOSTILE RELAY. The drop boxes
- *     are public: anyone can push any bytes onto our channel. `open` must
- *     answer `null` for junk, for a tampered envelope, and for one sealed under
- *     somebody else's secret — never throw (the engine's `receive` treats a
- *     throw as a crash, not a skip), and never return `undefined` (which reads
- *     the same as `null` at a truthiness check and then diverges everywhere
- *     else).
- */
-
 import naclUtil from 'tweetnacl-util';
 
 import { newSecret, channelId, seal, open } from '../crypto';

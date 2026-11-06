@@ -1,15 +1,3 @@
-/**
- * Top-level error boundary — catches render-time crashes anywhere in the tree
- * and shows a calm, design-system fallback instead of a white screen or the
- * red box. Wrapped around the app by AppShell. Canonical, app-agnostic —
- * synced by `sync.mjs app-shell`; do not fork.
- *
- * A class component is required (React only supports error boundaries as
- * classes); the visible fallback is a function component so it can use theme
- * tokens. No telemetry is sent (canon § Analytics & telemetry) — the error is
- * logged to the console only, scrubbed of nothing because nothing leaves.
- */
-
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

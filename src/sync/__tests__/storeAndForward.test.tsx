@@ -1,30 +1,3 @@
-/**
- * Regression — defect grocery-list-20261018-1: a shared list only synced while
- * BOTH phones had the app open at the same moment.
- *
- * As shipped, list state left the device only as an ephemeral relay event
- * (kind 20001 — relays forward it to whoever is listening right now and keep
- * nothing), and the cold-start "hello" handshake only works if a live partner
- * answers it. So an edit made while the other phone was closed was never
- * delivered: it sat on the editing phone until both apps happened to be open
- * together. Store-and-forward fixes it: the engine now DEPOSITS its latest
- * full state in the drop box as a replaceable event (kind 30078, one slot per
- * channel + author), relays keep the latest copy, and a device that connects
- * later REQUESTS those slots on open — no partner needed.
- *
- * Three layers, each proven failing-first on the pre-fix code:
- *   • Engine (fake transport + fake drop box): device A edits with B offline,
- *     A closes, B opens ALONE → B has A's edit. Kits ride the same path. A
- *     hello is never deposited (it would overwrite the state slot).
- *   • Transport (REAL DropBoxTransport over fake WebSockets): the stored
- *     filter is requested on open, deposits are kind-30078 replaceable events
- *     under a stable per-device author, a replayed slot from the partner is
- *     delivered with its publish time, our own slot is skipped.
- *   • Status bar: "Connected" means the drop boxes are reachable, NOT that the
- *     partner is there — the bar now says when the other phone was last heard
- *     from, so the two can never be confused again.
- */
-
 jest.mock('expo-font', () => ({
   useFonts: () => [true, null],
   isLoaded: () => true,

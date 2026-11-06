@@ -1,17 +1,3 @@
-/**
- * Share identity + the link/QR a person taps once to pair.
- *
- * The link is the *whole* handshake. After it's used the pairing is durable:
- * both devices keep the secret and the derived channel forever — "pair once,
- * synced forever" (no expiring rooms, no re-share later).
- *
- * Per-app: `SHARE_SCHEME` lives in the sibling `shareConfig.ts`, which the
- * factory syncs *only if absent* so each consuming app keeps its own scheme
- * (`grocerylist`, `packinglist`, etc.) without re-syncs clobbering it. The
- * app must also declare the same string as `expo.scheme` in app.json so
- * tapping the link launches the right app.
- */
-
 import { newSecret } from './crypto';
 import { SHARE_SCHEME } from './shareConfig';
 

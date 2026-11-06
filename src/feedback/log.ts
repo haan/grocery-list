@@ -1,42 +1,5 @@
-/**
- * On-device diagnostic log — a small, bounded, content-scrubbed ring buffer the
- * Send-feedback flow can attach to a bug report so a vague "it broke" still comes
- * with something triageable (canon § Funding & feedback, § Analytics & telemetry).
- *
- * Canonical, app-agnostic — synced by `sync.mjs app-shell`; do not fork.
- *
- * PRIVACY CONTRACT (load-bearing — the canon line is "no usage logs; if a crash
- * reporter is unavoidable, scrub everything except stack traces"):
- *   - Nothing here ever leaves the device on its own. The buffer lives in memory,
- *     plus ONE best-effort file so a crash survives a restart. It is read only
- *     when the user taps "Share logs" and sends the email themselves, and they
- *     can preview the exact text first (FeedbackSheet).
- *   - We record STRUCTURED EVENTS (a tag + short message + scalar fields) and
- *     ERRORS (message + stack — stack traces are the canon-exempt payload). We do
- *     NOT capture user content: callers pass `{ count: 12 }`, never the item text.
- *     Field values and intercepted console args are length-capped so stray
- *     content can't pool here, and we intercept only console.warn / console.error
- *     (diagnostic by nature), never console.log / .info / .debug.
- *
- * WHAT MAKES A LOG USEFUL (the 2026-08-09 rebuild — Josh filed a real bug and the
- * attached log was three copies of an Expo deprecation warning and nothing else):
- *   1. A BREADCRUMB TRAIL. The shell logs screen changes, foreground/background,
- *      database open, backup import/export, settings changes and every caught
- *      render error; apps log their own domain actions as scalars. Without that
- *      trail the buffer only ever holds whatever the runtime happened to warn
- *      about, which explains nothing.
- *   2. WALL-CLOCK TIME. "0.23s since boot" cannot be lined up with "it broke
- *      around 1pm". Every line carries local time-of-day.
- *   3. NO NOISE FLOOR. One warning repeated 40 times pushed the real events out
- *      of a 400-entry buffer. Repeats collapse to `×N` and a signature that keeps
- *      firing is suppressed after a handful.
- *   4. A HEADER THAT ANSWERS THE FIRST QUESTION. The report opens with a counted
- *      summary (errors / warnings / events, session length) so triage starts at
- *      the answer instead of scrolling.
- */
-
 import { AppState, Platform } from 'react-native';
-import { cacheDir, docDir, writeText, readText } from './fileStore';
+import { docDir, writeText, readText } from './fileStore';
 
 export type LogLevel = 'info' | 'warn' | 'error';
 
@@ -413,12 +376,4 @@ export function installDiagnostics(meta?: SessionMeta): void {
     osVersion: String(Platform.Version),
     ...meta,
   });
-}
-
-/** Drop a fresh attachment file with the supplied text into the cache dir; returns
- *  its URI or null. Used by compose.ts for the email attachment. */
-export async function writeReportFile(text: string, name: string): Promise<string | null> {
-  const dir = cacheDir();
-  if (!dir) return null;
-  return writeText(`${dir}${name}`, text);
 }

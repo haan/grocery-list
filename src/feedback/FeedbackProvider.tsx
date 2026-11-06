@@ -11,16 +11,15 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import { installDiagnostics } from './log';
 import { collectDiagnostics } from './diagnostics';
-import type { FeedbackType } from './compose';
-import { openFeedbackMail } from '../lib/links';
+import { openFeedback } from '../lib/links';
 
 type FeedbackApi = {
-  /** Open the issue form. The optional type preserves existing callers. */
-  open: (type?: FeedbackType) => void;
+  /** Open the issue form. No logs are attached. */
+  open: () => void;
 };
 
 // Feedback opens the fork's issue form. No diagnostics are uploaded automatically.
-const feedbackApi: FeedbackApi = { open: () => openFeedbackMail() };
+const feedbackApi: FeedbackApi = { open: () => openFeedback() };
 const FeedbackContext = createContext<FeedbackApi>(feedbackApi);
 
 export function useFeedback(): FeedbackApi {

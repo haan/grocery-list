@@ -1,6 +1,4 @@
 // Canonical Josh Approved theme — native public surface.
-// Synced verbatim into each app at src/theme/index.ts by
-// `sync.mjs design-system-native`. Edit the canonical files here, not per app.
 
 export {
   typography,

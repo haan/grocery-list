@@ -1,41 +1,10 @@
-/**
- * Translation-ready i18n — canonical, app-agnostic. Synced by
- * `sync.mjs app-shell`; do NOT fork per app.
- *
- * Canon § Translations: every v1 ships translation-READY — all user-facing
- * strings live in one externalized module (no copy hardcoded in components),
- * and dates / numbers / currency format through the platform locale APIs.
- * Full per-locale translation is the post-launch step (P7); the *structure*
- * here is the v1 ship gate, and retrofitting it later is the expensive path.
- *
- * How it works:
- *   - `SHELL_STRINGS` (shellStrings.ts) is the canonical, app-agnostic copy
- *     (Settings / About / common actions). Edit it in the factory, not per app.
- *   - `APP_STRINGS` (appStrings.ts, app-owned, ifAbsent) is each app's domain
- *     copy. The two are deep-merged at module load.
- *   - `t('settings.title')` reads a dotted path out of the merged dictionary;
- *     a missing key returns the key itself (visible failure, never a crash).
- *   - `t('list.itemCount', { count: 3 })` interpolates `{count}`.
- *
- * v1 is single-language (English is the build language). The dictionary is
- * intentionally shaped so a locale map drops in later without touching call
- * sites: when translations land (P7), `setLocaleStrings(locale, dict)` swaps
- * the active table. Formatters are already locale-aware today.
- */
-
 import { SHELL_STRINGS } from './shellStrings';
 import { APP_STRINGS } from './appStrings';
 import { LOCALES } from './locales';
 
 type Dict = { [key: string]: string | Dict };
 
-/**
- * Canon § Translations: every live app ships in-app strings in this set within
- * its first listing-iteration cycle. Order = match priority (most-specific
- * first). Extend per app when per-country installs justify it; RTL only after
- * the layout is verified. Keep in lockstep with the store-listing locale set
- * (`scripts/translate.mjs`, `runbooks/translations.md`).
- */
+
 export const CANONICAL_LOCALES = ['es', 'de', 'fr', 'it', 'pt-BR', 'ja'] as const;
 
 function deepMerge(base: Dict, extra: Dict): Dict {

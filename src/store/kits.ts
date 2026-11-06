@@ -26,8 +26,6 @@ import {
   observe as observeClock,
 } from '../sync/clock';
 import { loadAllKits, saveKit } from './db';
-import { QA_MODE } from '../qa/qaMode';
-import { qaKits } from '../qa/fixtures';
 
 interface KitsState {
   kits: Kit[];
@@ -113,10 +111,6 @@ export const useKitsStore = create<KitsState>()((set, get) => {
     hydrate: async () => {
       try {
         const loaded = await loadAllKits();
-        if (QA_MODE && loaded.length === 0) {
-          set({ kits: qaKits(), hydrated: true });
-          return;
-        }
         set({ kits: loaded, hydrated: true });
       } catch (err) {
         console.warn('grocery-list: failed to load kits from disk', err);

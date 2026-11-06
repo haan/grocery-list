@@ -1,25 +1,3 @@
-/**
- * Canonical SQLite foundation — app-agnostic. Synced by `sync.mjs app-shell`;
- * do not fork.
- *
- * Owns the shared database connection + the three canonical cross-cutting
- * tables every data app needs:
- *   - app_settings  — account-level key/value prefs (theme, currency, …)
- *   - sync_meta     — cross-device sync bookkeeping (Layer 2)
- *   - tombstones    — per-record deletes so a delete propagates instead of
- *                     being resurrected on the next pull (canon § Backup #5)
- *
- * The database lives in expo-sqlite's default location (the app's Documents
- * directory), which is exactly canon § Backup & restore Layer 1: it rides
- * iCloud Backup / Android Auto Backup automatically, with zero UI.
- *
- * The app's domain module (e.g. store/db.ts) calls `getDb()` to get the same
- * connection and adds its own CREATE TABLE for its records. One connection,
- * one file, one backup unit.
- *
- * Set DB_NAME in dbConfig.ts (app-owned; bootstrap fills the slug).
- */
-
 import * as SQLite from 'expo-sqlite';
 import { DB_NAME } from './dbConfig';
 import { logEvent, logError } from '../feedback/log';

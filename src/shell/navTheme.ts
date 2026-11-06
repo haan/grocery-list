@@ -1,11 +1,3 @@
-/**
- * Builds the React Navigation theme from the canonical design-system colors +
- * fonts, so headers, backgrounds, and the default text all match the app's
- * paper/ink palette in light and dark. Canonical, app-agnostic — synced by
- * `sync.mjs app-shell`; do not fork. (This was copy-pasted identically into
- * every app's App.tsx before the app-shell module.)
- */
-
 import {
   DefaultTheme,
   DarkTheme,

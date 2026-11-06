@@ -1,12 +1,4 @@
-/**
- * Lists home — every list the user has, newest first.
- *
- * Create a list, open one, or rename / duplicate / delete via a per-row
- * overflow menu (cross-platform `Dialogs`, never ActionSheetIOS). Sharing is
- * wired at build step 4; Settings at step 6.
- */
-
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
   View,
   Text,
@@ -22,10 +14,7 @@ import type { ListsTabProps } from './navTypes';
 import { useListsStore } from '../store/lists';
 import { listStats, type GroceryList } from '../data/list';
 import { useActionMenu, usePrompt, useConfirm } from '../components/Dialogs';
-import TipJarSheet from '../components/TipJarSheet';
-import { FundingFooter } from '../components/FundingFooter';
-import { TIP_PRODUCT_IDS } from '../constants/tipProducts';
-import { TIP_JAR_ENABLED } from '../lib/links';
+import { FeedbackFooter } from '../components/FeedbackFooter';
 import { t } from '../i18n';
 import {
   useTheme,
@@ -53,7 +42,6 @@ export default function ListsHomeScreen({ navigation }: Props) {
   const menu = useActionMenu();
   const prompt = usePrompt();
   const confirm = useConfirm();
-  const [tipVisible, setTipVisible] = useState(false);
   const {
     pullToReveal,
     reveal,
@@ -107,8 +95,8 @@ export default function ListsHomeScreen({ navigation }: Props) {
             destructive: true,
             onPress: () =>
               confirm.open({
-                title: t('home.deleteList'),
-                message: t('home.deleteListConfirm'),
+                title: t('detail.deleteList'),
+                message: t('detail.deleteListConfirm'),
                 confirmLabel: t('common.delete'),
                 destructive: true,
                 onConfirm: () => deleteList(list.id),
@@ -203,8 +191,7 @@ export default function ListsHomeScreen({ navigation }: Props) {
         </Pressable>
       </View>
 
-      {/* GestureDetector carries the Android over-pull (inert on iOS); the pan
-          recognises simultaneously with the list's own scroll. */}
+      {/* The pan recognises simultaneously with the list scroll. */}
       <GestureDetector gesture={gesture}>
         <Animated.FlatList
           style={s.flex}
@@ -213,7 +200,6 @@ export default function ListsHomeScreen({ navigation }: Props) {
           renderItem={renderItem}
           onScroll={pullToReveal ? onScroll : undefined}
           scrollEventThrottle={16}
-          alwaysBounceVertical={pullToReveal}
           overScrollMode={pullToReveal ? 'never' : 'auto'}
           onLayout={onScrollViewLayout}
           onContentSizeChange={onContentSizeChange}
@@ -237,10 +223,7 @@ export default function ListsHomeScreen({ navigation }: Props) {
           }
           ListFooterComponent={
             <View style={s.footerHolder}>
-              <FundingFooter
-                onSupport={
-                  TIP_JAR_ENABLED ? () => setTipVisible(true) : undefined
-                }
+              <FeedbackFooter
                 reveal={reveal}
                 pullToReveal={pullToReveal}
               />
@@ -249,13 +232,6 @@ export default function ListsHomeScreen({ navigation }: Props) {
         />
       </GestureDetector>
 
-      {tipVisible && (
-        <TipJarSheet
-          visible
-          onDismiss={() => setTipVisible(false)}
-          productIds={TIP_PRODUCT_IDS}
-        />
-      )}
 
       {menu.element}
       {prompt.element}

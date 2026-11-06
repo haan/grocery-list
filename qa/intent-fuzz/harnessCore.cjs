@@ -1,28 +1,3 @@
-/**
- * harnessCore.cjs — the PURE, node-testable core of the intent-fuzz kit
- * (Uplevel 3 / T1). CommonJS on purpose:
- *
- *   • `node templates/qa/intent-fuzz/selftest.mjs` can require it directly (no
- *     TypeScript, no fast-check, no app) to prove the pure logic — seed logging
- *     round-trip, story serialization, shrink-output shape.
- *   • the TypeScript `harness.ts` pulls it in via `require('./harnessCore.cjs')`
- *     (a call, so tsc never module-resolves it — the harness stays tsc-clean
- *     against a fresh Expo app with only `fast-check` in scope, and all the
- *     fs/path/node work lives here where tsc never touches it).
- *
- * This file owns the FAILURE-CRYSTALLIZATION path so it is defined once: a
- * counterexample becomes (1) a checked-in minimal-story fixture under
- * `qa/regressions/` (ratified condition 2), (2) a normalized line in the
- * gitignored `qa/defect-intake.jsonl` (folded into the ledger by
- * `scripts/defects.mjs ingest`), and (3) a line in the gitignored
- * `qa/fuzz-log.jsonl` so any night replays exactly from its logged seed.
- *
- * Signature normalization mirrors `templates/qa/defect-reporter/defect-reporter.cjs`
- * (advisory only — `defects.mjs ingest` recomputes the canonical key).
- *
- * Zero deps, zero network. Schema: `defects/_SCHEMA.md`.
- */
-
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
@@ -73,8 +48,8 @@ function paths(appRoot) {
   const root = appRoot || process.cwd();
   return {
     regressionsDir: path.join(root, 'qa', 'regressions'),
-    fuzzLog: path.join(root, 'qa', 'fuzz-log.jsonl'),
-    intake: path.join(root, 'qa', 'defect-intake.jsonl'),
+    fuzzLog: path.join(root, 'tmp', 'fuzz-log.jsonl'),
+    intake: path.join(root, 'tmp', 'defect-intake.jsonl'),
   };
 }
 
@@ -283,7 +258,7 @@ function crystallizeFailure({ appRoot, app, model, runDetails, message, date }) 
   writeJsonFile(regressionFile, regression);
 
   const rel = (p) => {
-    try { return path.relative(appRoot || process.cwd(), p) || p; } catch { return p; }
+    try { return (path.relative(appRoot || process.cwd(), p) || p).split(path.sep).join('/'); } catch { return p; }
   };
   appendJsonl(intake, buildIntakeLine({ app, model, seed, message, artifact: rel(regressionFile), date }));
   logRun({ appRoot, app, model, seed, runs: runDetails.numRuns, profile: null, outcome: 'fail', date });

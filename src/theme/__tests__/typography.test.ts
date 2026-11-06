@@ -1,18 +1,3 @@
-/**
- * Dynamic Type regression guard for the shared type scale.
- *
- * Synced verbatim into each app at src/theme/__tests__/typography.test.ts by
- * `sync.mjs design-system-native`. Edit the canonical file in
- * josh-approved-factory/templates/design-system/__tests__/, not per app.
- *
- * React Native auto-scales `fontSize` by the OS accessibility font scale
- * (`allowFontScaling` defaults true) but does NOT auto-scale a numeric
- * `lineHeight` — a fixed lineHeight paired with a scaling fontSize clips or
- * overlaps text at large accessibility sizes. This guards that every step of
- * the shared `type` scale grows its lineHeight with the current font scale,
- * and that at scale 1.0 it still renders the original literal values (no
- * visual change for users at the default size).
- */
 import { PixelRatio } from 'react-native';
 import { type, scaledLineHeight } from '../typography';
 

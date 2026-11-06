@@ -1,15 +1,5 @@
 #!/usr/bin/env node
-/**
- * selftest.mjs — proves the PURE core of the intent-fuzz kit (Uplevel 3 / T1).
- * No fast-check, no TypeScript, no app: just the deterministic logic the whole
- * failure-crystallization path stands on. Exits non-zero on the first failure.
- *
- *   node templates/qa/intent-fuzz/selftest.mjs
- *
- * Covers the three things the stage names: seed logging round-trip, story
- * serialization round-trip, and the shrink-output shape guard — plus the
- * end-to-end crystallization into a temp dir.
- */
+
 
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';

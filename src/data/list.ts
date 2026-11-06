@@ -21,13 +21,7 @@ import {
 export const MAX_QTY = 99;
 export const DEFAULT_LIST_NAME = 'Groceries';
 
-/**
- * The persistent shared-list identity. Absent until a list is shared; written
- * once at pairing and stored durably on every paired device (this is what
- * makes "pair once, synced forever" hold). Populated by the shared-sync
- * module at build step 4 — declared here so the model and storage shape are
- * stable now and step 4 needs no migration.
- */
+
 export interface ShareIdentity {
   /** Stable per-list secret; the drop-box channel id derives from it. */
   secret: string;

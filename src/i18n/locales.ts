@@ -1,18 +1,3 @@
-/**
- * The per-locale string overlays this app ships. APP-OWNED.
- *
- * Each locale = the canonical shell chrome (shellLocales.ts — translated once in
- * the factory) DEEP-MERGED with this app's domain translations (src/i18n/<loc>.ts).
- * Deep merge (not a shallow spread) so a domain locale that re-states a shell
- * namespace — e.g. its own `common` / `settings` keys — AUGMENTS the shell chrome
- * instead of replacing it; any key absent here falls back to English at runtime
- * (i18n/index.ts). A fresh object per locale (never the shell reference), so
- * availableLocales() lights each language up in the picker.
- *
- * Regenerate the domain skeletons with `node scripts/translate.mjs --strings <app>`,
- * fill each src/i18n/<locale>.ts, then this file needs no edits — it merges the six.
- */
-
 import { SHELL_LOCALES } from './shellLocales';
 import es from './es';
 import de from './de';

@@ -12,9 +12,6 @@
  * the Checked header, plus a gentle prompt to clear last shop's leftovers when
  * you reopen the list. Nothing important hinges on remembering a tap.
  *
- * The finished shop is therefore an OBSERVED moment, not a declared one: the
- * check that leaves nothing unchecked. That's where the canonical review prompt
- * is triggered (see toggleChecked).
  */
 
 import React, {
@@ -128,7 +125,7 @@ export default function ListDetailScreen({ route, navigation }: Props) {
     undo: () => void;
   } | null>(null);
 
-  // The list can vanish (deleted elsewhere / a synced delete). Leave.
+
   // NOTE: every hook below runs unconditionally — the `!list` early return
   // lives just above the JSX, after all hooks (Rules of Hooks).
   useEffect(() => {
@@ -339,7 +336,7 @@ export default function ListDetailScreen({ route, navigation }: Props) {
               accessibilityRole="button"
               // "Clear" is the visible word, so it is the label; the count
               // detail moves to the hint. (de/ja put the visible word at the
-              // END of the A11y string, which Voice Control could not match.)
+              // END of the A11y string, which Voice Access could not match.)
               accessibilityLabel={t('detail.clearChecked')}
               accessibilityHint={t('detail.clearCheckedA11y', {
                 count: row.count,

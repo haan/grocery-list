@@ -61,7 +61,7 @@ export default function KitDetailScreen({ route, navigation }: Props) {
     null
   );
 
-  // The kit can vanish (deleted here or via a synced delete). Leave.
+
   useEffect(() => {
     if (!kit) navigation.goBack();
   }, [kit, navigation]);

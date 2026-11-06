@@ -1,11 +1,3 @@
-/**
- * Share a list — the entire pairing UX.
- *
- * Person 1: a QR + a link, sent however they like. Person 2: scan it or tap
- * it. No account, no sign-up, ever. After this one handshake the two devices
- * stay synced forever (the link is just the introduction).
- */
-
 import React, { useCallback, useState } from 'react';
 import {
   View,
@@ -128,7 +120,7 @@ export default function ShareScreen({ route, navigation }: Props) {
           <Pressable
             onPress={startScan}
             accessibilityRole="button"
-            // Label is the visible words so Voice Control can match them; the
+            // Label is the visible words so Voice Access can match them; the
             // "list code" clarification moves to the hint.
             accessibilityLabel={t('share.scanInstead')}
             accessibilityHint={t('share.scanInsteadA11y')}

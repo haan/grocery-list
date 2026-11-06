@@ -65,11 +65,7 @@ interface Props {
   presentLabel: string;
   /** A11y label for an already-present row. */
   presentA11y: (name: string) => string;
-  /**
-   * A11y hint for an addable row (e.g. "Adds it to your list."). The row's
-   * accessible NAME is the item name alone, so that Voice Control can match
-   * the words on screen; this carries the action for VoiceOver.
-   */
+
   addHint: string;
 }
 

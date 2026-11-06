@@ -1,13 +1,3 @@
-/**
- * Account-level store: item history (powers local autocomplete) + "usuals"
- * (staple items you re-buy every shop).
- *
- * Both are on-device only. History is never synced and never sourced from
- * anywhere external — it is only the words this user has typed before, ranked
- * by how often. App tenet: the list contains only what the user typed; the
- * suggestions are their own past entries, not a feed.
- */
-
 import { create } from 'zustand';
 import {
   loadHistory,

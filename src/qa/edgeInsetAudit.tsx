@@ -1,17 +1,3 @@
-/**
- * Canonical, app-agnostic — synced by `sync.mjs qa`; do not fork.
- *
- * Renders one screen the way the edge-inset audit (./edgeInset.ts) needs it
- * and returns the findings: inside a SafeAreaProvider with fixed phone metrics
- * (a 390 x 844 iPhone with a notch and a home indicator), after the screen has
- * finished loading. Pass `readyText` — text that only appears once async data
- * or a sheet has landed — or the audit reads the loading frame. Wrap a screen
- * that needs app context (a store provider, a navigation container) before
- * passing it in.
- *
- * Test-only: imported from __tests__, never from app code.
- */
-
 import React from 'react';
 import { render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -23,8 +9,8 @@ import {
 } from './edgeInset';
 
 export const AUDIT_METRICS = {
-  frame: { x: 0, y: 0, width: 390, height: 844 },
-  insets: { top: 47, left: 0, right: 0, bottom: 34 },
+  frame: { x: 0, y: 0, width: 412, height: 915 },
+  insets: { top: 24, left: 0, right: 0, bottom: 24 },
 };
 
 /**

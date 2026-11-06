@@ -38,16 +38,11 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import ShareScreen from './src/screens/ShareScreen';
 import Credits from './src/components/Credits';
 import { startSyncEngine, stopSyncEngine, flushSyncEngine } from './src/sync';
-import { drainPendingSiriItems, startSiriListSync } from './src/siri';
 import { parseShareLink } from './src/sync/share';
 import { t } from './src/i18n';
-import { QA_MODE } from './src/qa/qaMode';
 
-// Hold the native launch screen until the JS splash takes over (no icon blink).
-// Skipped under QA_MODE so the e2e screenshot harness sees deterministic frames.
-if (!QA_MODE) {
-  SplashScreen.preventAutoHideAsync().catch(() => {});
-}
+// Hold the native launch screen until the animated splash is ready.
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export type RootStackParamList = {
   Tabs: undefined;
@@ -137,20 +132,11 @@ export default function App() {
     return () => stopSyncEngine();
   }, [hydrated]);
 
-  // Siri (iOS only; no-op elsewhere): once the store is ready, pull in any
-  // items dictated to Siri while we were closed, and keep Siri's view of the
-  // lists mirrored so "add milk to <list>" can resolve the right list.
-  useEffect(() => {
-    if (!hydrated) return;
-    void drainPendingSiriItems();
-    return startSiriListSync();
-  }, [hydrated]);
-
   // On the way to the background, durably flush local state and push the latest
   // copy to peers immediately. Without this, a check made just before switching
   // apps can be lost (fire-and-forget save not yet landed) or never published
   // (the 700ms publish debounce is suspended mid-wait). Fires on 'inactive'
-  // (the transition) so it runs before iOS suspends the app.
+  // (when reported) or 'background', before the OS suspends the app.
   useEffect(() => {
     if (!hydrated) return;
     const sub = AppState.addEventListener('change', (next) => {
@@ -158,10 +144,6 @@ export default function App() {
         flushSyncEngine();
         useListsStore.getState().flushPending();
         useKitsStore.getState().flushPending();
-      }
-      // Coming back to the foreground: drain anything added via Siri while away.
-      if (next === 'active') {
-        void drainPendingSiriItems();
       }
     });
     return () => sub.remove();
@@ -197,7 +179,7 @@ export default function App() {
     <AppShell ready={ready} navigationRef={navigationRef}>
       <Stack.Navigator
         initialRouteName="Tabs"
-        screenOptions={{ headerShown: false, animation: QA_MODE ? 'none' : undefined }}
+        screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Tabs" component={MainTabs} />
         <Stack.Screen name="ListDetail" component={ListDetailScreen} />

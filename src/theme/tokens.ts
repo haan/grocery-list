@@ -1,11 +1,3 @@
-/**
- * Spacing, radius, target, motion, and hairline tokens (React Native).
- *
- * Canonical mirror of josh-approved-design-system/colors_and_type.css. Synced
- * into each app at src/theme/tokens.ts by `sync.mjs design-system-native`.
- * Edit values HERE, not per app.
- */
-
 import { StyleSheet } from 'react-native';
 
 // ---------- Spacing (4pt grid) ----------
@@ -27,13 +19,12 @@ export const radius = {
   sm: 6,
   md: 10,
   lg: 16,
-  xl: 22,    // iOS app icon native
+  xl: 22,
   pill: 999,
 } as const;
 
-// ---------- Touch targets (44pt iOS, 48pt Android, use 44 floor) ----------
+
 export const target = {
-  ios: 44,
   android: 48,
   min: 44,
 } as const;

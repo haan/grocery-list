@@ -51,10 +51,13 @@ submit-*.log
 google-play-key.json
 credentials.json
 *.keystore
-/qa/test-run.json
-/qa/defect-intake.jsonl
-/qa/fuzz-log.jsonl
 /coverage/
+/reports/
 
 # Local dictionary source and inspection artifacts; only the reviewed catalog ships.
 /tmp/
+
+# Ignore historical local QA output left by older checkouts.
+/qa/test-run.json
+/qa/defect-intake.jsonl
+/qa/fuzz-log.jsonl

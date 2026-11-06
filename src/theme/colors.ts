@@ -1,15 +1,3 @@
-/**
- * Josh Approved color tokens (React Native).
- *
- * Canonical mirror of josh-approved-design-system/colors_and_type.css. Synced
- * into each app at src/theme/colors.ts by `sync.mjs design-system-native`.
- * Edit values HERE, not per app — drift shows up as a sync diff.
- *
- * The one per-app value, the brand accent, is NOT in this file: it lives in
- * the app-owned ./appAccent.ts (which sync never overwrites). This file
- * derives the light/dark accent washes from that single declared hex.
- */
-
 import { useColorScheme } from 'react-native';
 import { APP_ACCENT } from './appAccent';
 

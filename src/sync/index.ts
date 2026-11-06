@@ -1,39 +1,3 @@
-/**
- * Sync engine — wires the store to the drop-box transport.
- *
- * For every list that has a share identity it keeps one transport open,
- * publishes the (encrypted) whole list when it changes locally, and merges
- * anything that arrives. The merge is conflict-free, so this can be
- * best-effort: a missed message re-converges on the next publish.
- *
- * Durable by construction: the channel is derived from the persistent
- * per-list secret, so a paired list reconnects forever with nothing from the
- * user ("pair once, synced forever"). Devices have different local list ids;
- * the shared secret — not the id — is the join key.
- *
- * STORE-AND-FORWARD (defect grocery-list-20261018-1). State is DEPOSITED in
- * the drop box as a replaceable event (transport.publishStored: one slot per
- * device per channel, relays keep the latest copy), so a phone that opens
- * hours or days later receives what its partner left without the partner
- * being online. Before this, state rode an ephemeral event and a shared list
- * only synced while BOTH apps were open at the same moment. The slots: `list`
- * (this list's full state) and `kits` (the kit collection). Only the hello
- * stays live-only — it means "I am here now" and must never occupy a slot.
- *
- * COLD-START, BOTH ONLINE. The deposit covers the partner-is-closed case; the
- * "hello" handshake still covers the partner-is-open-right-now case: on each
- * (re)connect a device announces itself; any peer that hears a hello
- * force-republishes its current full state, so the newcomer converges within
- * seconds instead of waiting for an edit. Hello carries no list data; old app
- * versions simply ignore it (no `shareIdentity`), so it is wire-compatible.
- *
- * Merge correctness across skewed device clocks is handled by the logical
- * clock (see ./clock.ts); `mergeRemoteList` folds the peer's timestamps in
- * before merging.
- *
- * NOT DEVICE-VERIFIED end-to-end (see transport.ts / crypto.ts headers).
- */
-
 import { useListsStore } from '../store/lists';
 import { useKitsStore } from '../store/kits';
 import type { GroceryList } from '../data/list';

@@ -2,7 +2,7 @@
 
 An independent Android version of [Josh Williams's Grocery List](https://github.com/Josh-Approved/grocery-list), maintained in [haan/grocery-list](https://github.com/haan/grocery-list).
 
-Phase one provides a development APK for a physical Android phone, with Fast Refresh from a local PC. It retains SQLite storage and encrypted synchronization through public Nostr relays.
+This Android-only app uses a development APK on a physical phone, with Fast Refresh from a local PC. It retains SQLite storage and encrypted synchronization through public Nostr relays.
 
 ## Development
 
@@ -16,6 +16,8 @@ npm run dev
 Install our custom development APK first; Expo Go does not contain all native dependencies. Open the development app on the same Wi-Fi network as your PC and scan Metro's QR code with your phone's camera. No emulator is required. The development server must remain running.
 
 ```sh
+npm run check:android
+npm run test:fuzz-harness
 npm run typecheck
 npm test -- --runInBand
 npm run build:dev
@@ -27,9 +29,11 @@ See [the development guide](docs/development.md) for installation, debugging, cr
 
 ## Sharing and feedback
 
-The development app has its own Android identity and share-link scheme and can coexist with the original app. Use disposable test lists; importing or joining household lists is outside initial setup.
+The development app has its own Android identity and share-link scheme and can coexist with the original app. Use disposable lists for development and device acceptance.
 
-Feedback opens this repository's issue form without automatically including diagnostic logs. Upstream donations and store-review prompts are disabled. Public relay availability is best-effort.
+Feedback opens this repository's issue form without automatically including diagnostic logs. There are no purchase, store-review, or promotion features. Public relay availability is best-effort.
+
+See [the repository audit](docs/repository-audit.md) for retained code and removed legacy tooling.
 
 ## License and attribution
 

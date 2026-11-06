@@ -1,26 +1,5 @@
 jest.mock('react-native-draggable-flatlist', () => require('../../../qa/draggableFlatListMock.cjs'));
-/**
- * Edge-inset audit over this app's own screens — APP-OWNED: seeded once by
- * `sync.mjs qa`, never overwritten.
- *
- * src/qa/edgeInset.ts (canonical) fails when text or an icon sits closer than
- * 8pt to the inside edge of a card, sheet, row or button; the canonical
- * edgeInset.proof.test.tsx proves it catches the shape that shipped.
- *
- * What belongs here: Settings, and every screen, sheet or pane that draws a
- * card, a filled or bordered row, or a labelled button. Each renders with two
- * lists (one shared, with items in a few aisles, a quantity, a note and a
- * crossed-off leftover), a kit, and some history and usuals on file, so its
- * rows, cards and pills actually appear. A sheet that only opens from a tap
- * (the Language and Siri pickers) is opened through auditScreen's `interact`
- * step, then audited. A new screen or sheet gets a line here in the same PR. qa-canonical
- * `test/edge-inset-screens` warns while this file renders none of the app's
- * screens or components.
- *
- * Fixing a finding: give the content room inside the surface, usually the
- * container's own `paddingHorizontal` matching its neighbours, rather than
- * padding each row.
- */
+
 
 import React, { useEffect } from 'react';
 import { screen, userEvent } from '@testing-library/react-native';
@@ -59,43 +38,14 @@ jest.mock('../../store/db', () => ({
 // The sync engine (relays, crypto) has no bearing on padding; the status
 // store the sync bar reads stays real.
 jest.mock('../../sync', () => ({ resyncNow: jest.fn() }));
-// Siri is iOS-native; report it supported so Settings draws the Siri row.
-jest.mock('../../siri', () => ({
-  isSiriSupported: () => true,
-  getSiriDefaultListId: () => Promise.resolve(null),
-  setSiriDefaultListId: () => Promise.resolve(),
-  syncListsToSiri: () => Promise.resolve(),
-}));
 jest.mock('../../lib/transfer', () => ({
   exportLists: jest.fn(() => Promise.resolve()),
   pickAndParseLists: jest.fn(() => Promise.resolve([])),
 }));
 jest.mock('../../lib/links', () => ({
   ...jest.requireActual('../../lib/links'),
-  openReview: jest.fn(),
   openUrl: jest.fn(),
 }));
-jest.mock('../../storage/reviewPrompt', () => ({
-  markReviewOpened: () => Promise.resolve(),
-  markReviewPromptShown: () => Promise.resolve(),
-}));
-jest.mock('expo-store-review', () => ({
-  isAvailableAsync: () => Promise.resolve(false),
-  requestReview: () => Promise.resolve(),
-}));
-// Real price buttons, so the audit sees the tip tiers as they render.
-jest.mock('../../lib/tipJar', () => {
-  const { TIP_PRODUCT_IDS } = require('../../constants/tipProducts');
-  return {
-    isStoreKnownUnavailable: () => false,
-    useTipJar: () => ({
-      status: 'ready',
-      products: TIP_PRODUCT_IDS.map((id: string) => ({ id, displayPrice: '$2.99' })),
-      pendingSku: null,
-      tip: jest.fn(),
-    }),
-  };
-});
 // The QR renderer and camera are native; the share screen's own layout stays real.
 jest.mock('react-native-qrcode-svg', () => {
   const { View } = require('react-native');
@@ -159,14 +109,8 @@ import KitPicker from '../../components/KitPicker';
 import { useItemEditor } from '../../components/ItemEditor';
 import { useActionMenu, usePrompt, useConfirm } from '../../components/Dialogs';
 import { LanguageSetting } from '../../components/LanguageSetting';
-import { SiriSetting } from '../../components/SiriSetting';
 import { Snackbar } from '../../components/Snackbar';
 import { SyncStatusBar } from '../../components/SyncStatusBar';
-import TipJarSheet from '../../components/TipJarSheet';
-import ReviewModal from '../../components/ReviewModal';
-import LaunchNoticeModal from '../../components/LaunchNoticeModal';
-import { FeedbackSheet } from '../../feedback/FeedbackSheet';
-import { TIP_PRODUCT_IDS } from '../../constants/tipProducts';
 import { useListsStore } from '../../store/lists';
 import { useKitsStore } from '../../store/kits';
 import { useAccountStore } from '../../store/account';
@@ -305,7 +249,7 @@ describe("edge-inset audit — this app's screens", () => {
   it('Settings', async () => {
     expect(
       await auditScreen(<SettingsScreen navigation={navigation} route={route('Settings')} />, {
-        readyText: 'Default list',
+        readyText: 'Export lists',
       })
     ).toEqual([]);
   });
@@ -408,17 +352,6 @@ describe("edge-inset audit — this app's screens", () => {
     ).toEqual([]);
   });
 
-  it('Siri default-list sheet', async () => {
-    expect(
-      await auditScreen(<SiriSetting />, {
-        interact: async () => {
-          await userEvent.setup().press(await screen.findByRole('button', { name: /^Default list/ }));
-          await screen.findByRole('radio', { name: 'Party' });
-        },
-      })
-    ).toEqual([]);
-  });
-
   it('Snackbar', async () => {
     expect(
       await auditScreen(
@@ -429,33 +362,5 @@ describe("edge-inset audit — this app's screens", () => {
 
   it('Sync status bar', async () => {
     expect(await auditScreen(<SyncStatusBar secret={SECRET} />)).toEqual([]);
-  });
-
-  it('Tip jar sheet', async () => {
-    expect(
-      await auditScreen(<TipJarSheet visible onDismiss={noop} productIds={TIP_PRODUCT_IDS} />)
-    ).toEqual([]);
-  });
-
-  it('Review prompt', async () => {
-    expect(
-      await auditScreen(
-        <ReviewModal
-          visible
-          onDismiss={noop}
-          appName="Grocery List"
-          iosAppStoreId="123"
-          androidPackageName="com.joshapproved.grocerylist"
-        />
-      )
-    ).toEqual([]);
-  });
-
-  it('Launch notice', async () => {
-    expect(await auditScreen(<LaunchNoticeModal visible onDismiss={noop} />)).toEqual([]);
-  });
-
-  it('Feedback sheet', async () => {
-    expect(await auditScreen(<FeedbackSheet visible onClose={noop} />)).toEqual([]);
   });
 });

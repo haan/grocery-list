@@ -52,8 +52,7 @@ development dependency only.
   together, using the existing list/item/preference synchronization clocks.
   Empty names, built-in aisle keys, and duplicate names are rejected. Built-in
   labels stay fixed; custom names keep the existing 40-character limit.
-- The old `scratch/seed` assets and keyword tables are historical upstream data;
-  they are not used by the runtime catalog or classifier.
+- The obsolete upstream English seed assets and keyword classifier have been removed.
 
 ## Device acceptance
 

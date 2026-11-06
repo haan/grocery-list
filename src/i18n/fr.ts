@@ -189,11 +189,7 @@ const fr = {
     importLists: 'Importer des listes',
     addedListsOne: '{count} liste ajoutée.',
     addedListsOther: '{count} listes ajoutées.',
-    learnMoreA11y: 'En savoir plus sur joshapproved.com',
-    siri: 'Siri',
-    siriHint: 'Ajoutez des articles à la voix. Dites : "Add milk to Grocery List".',
-    siriDefaultList: 'Liste par défaut',
-    siriAskEachTime: 'Demander à chaque fois',
+    learnMoreA11y: 'En savoir plus sur github.com/haan/grocery-list',
   },
 };
 export default fr;

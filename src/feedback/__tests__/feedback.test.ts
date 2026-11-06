@@ -1,31 +1,4 @@
-/**
- * Trust-core tests for the Send-feedback flow (canon § QA & testing, Tier 1).
- * The things a bug here corrupts silently are (1) the privacy scrub — user
- * content must never pool in the diagnostic log — (2) the email composition +
- * mailto fallback, and (3) DELIVERY of the log the user opted into sharing.
- * All pure/logic-level, so they're tested headless here and ride every app's
- * `npm test`. Canonical, app-agnostic — synced by app-shell.
- */
-
-import { Linking } from 'react-native';
-
-// Exercise the retained generic email composer with an explicit test recipient.
-// The app itself leaves this empty and uses the fork's GitHub issue form.
-jest.mock('../../lib/links', () => ({ FEEDBACK_EMAIL: 'feedback@example.test' }));
-
-// compose.ts imports expo-mail-composer statically, so every app has it
-// installed. Not a `virtual` mock: a virtual mock of an installed module loses
-// to the real one once an earlier test file in the same jest process has
-// resolved it (a single-worker CI run), and these tests then drive the real
-// composer and fall through to mailto.
-jest.mock('expo-mail-composer', () => ({
-  isAvailableAsync: jest.fn(async () => true),
-  composeAsync: jest.fn(async () => ({ status: 'sent' })),
-}));
-
-// The file layer is the thing that failed silently in production (SDK 54 made
-// the write throw, the failure was swallowed, the attachment vanished and
-// nothing said so). Mocking it here is what lets us prove the fallback.
+/** Bounded local diagnostics: privacy scrubbing and readable error traces. */
 jest.mock('../fileStore', () => ({
   cacheDir: jest.fn(() => 'file:///cache/'),
   docDir: jest.fn(() => 'file:///docs/'),
@@ -35,20 +8,8 @@ jest.mock('../fileStore', () => ({
 }));
 
 import { logEvent, logError, logWarn, serialize, serializeBounded, entryCount, clear } from '../log';
-import { sendFeedback } from '../compose';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const MailComposer = require('expo-mail-composer');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fileStore = require('../fileStore');
-
-beforeEach(() => {
-  require('../../lib/links').FEEDBACK_EMAIL = 'feedback@example.test';
-  clear();
-  jest.clearAllMocks();
-  MailComposer.isAvailableAsync.mockResolvedValue(true);
-  fileStore.writeText.mockImplementation(async (uri: string) => uri);
-});
+beforeEach(() => { clear(); jest.clearAllMocks(); });
 
 describe('diagnostic log — privacy scrub', () => {
   it('never lets full field content into the serialized log', () => {
@@ -129,108 +90,5 @@ describe('diagnostic log — is it actually readable', () => {
     const out = serialize();
     expect(out).toContain('someDeeplyNestedFrame');
     expect(out.length).toBeGreaterThan(1000); // not clipped to the 120-char field cap
-  });
-});
-
-describe('email composition', () => {
-  it('does not compose or attach diagnostics when no feedback inbox is configured', async () => {
-    require('../../lib/links').FEEDBACK_EMAIL = '';
-    const openURL = jest.spyOn(Linking, 'openURL');
-    const result = await sendFeedback({ type: 'bug', fields: {}, includeLogs: true });
-    expect(result.status).toBe('failed');
-    expect(MailComposer.composeAsync).not.toHaveBeenCalled();
-    expect(fileStore.writeText).not.toHaveBeenCalled();
-    expect(openURL).not.toHaveBeenCalled();
-    openURL.mockRestore();
-  });
-
-  it('builds a tagged bug email with the user fields + recipient', async () => {
-    const r = await sendFeedback({
-      type: 'bug',
-      fields: { whatHappened: 'crash on save', expected: 'it should save' },
-      includeLogs: false,
-    });
-    expect(r.status).toBe('composed');
-    expect(MailComposer.composeAsync).toHaveBeenCalledTimes(1);
-    const arg = MailComposer.composeAsync.mock.calls[0][0];
-    expect(arg.recipients).toEqual(['feedback@example.test']);
-    expect(arg.subject).toMatch(/^\[Bug\] /);
-    expect(arg.body).toContain('crash on save');
-    expect(arg.body).toContain('it should save');
-  });
-
-  it('uses an English subject tag regardless of the body language', async () => {
-    await sendFeedback({ type: 'feature', fields: { want: 'dark mode' }, includeLogs: false });
-    const arg = MailComposer.composeAsync.mock.calls[0][0];
-    expect(arg.subject).toMatch(/^\[Feature\] /);
-  });
-
-  it('falls back to a pre-filled mailto: when no mail composer is available', async () => {
-    MailComposer.isAvailableAsync.mockResolvedValue(false);
-    const spy = jest.spyOn(Linking, 'openURL').mockResolvedValue(true as never);
-    const r = await sendFeedback({
-      type: 'general',
-      fields: { message: 'just saying thanks' },
-      includeLogs: false,
-    });
-    expect(r.status).toBe('mailto');
-    expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy.mock.calls[0][0]).toMatch(/^mailto:feedback@example\.test\?/);
-    expect(decodeURIComponent(spy.mock.calls[0][0])).toContain('just saying thanks');
-    spy.mockRestore();
-  });
-});
-
-describe('the opted-in log is always delivered', () => {
-  it('attaches the report file when it can be written', async () => {
-    logEvent('test', 'BREADCRUMB-MARKER');
-    const r = await sendFeedback({ type: 'bug', fields: {}, includeLogs: true });
-    expect(r.attachedLog).toBe(true);
-    expect(r.inlinedLog).toBe(false);
-    const arg = MailComposer.composeAsync.mock.calls[0][0];
-    expect(arg.attachments).toHaveLength(1);
-    // The file we handed to the composer really carries the trail.
-    expect(fileStore.writeText.mock.calls.some(([, text]: [string, string]) =>
-      text.includes('BREADCRUMB-MARKER')
-    )).toBe(true);
-  });
-
-  it('REGRESSION: inlines the log in the body when the attachment cannot be written', async () => {
-    // This is the shipped defect. `writeAsStringAsync` throws on SDK 54, the
-    // throw was swallowed, and the log the user agreed to share reached nobody
-    // while the UI said it had been attached.
-    fileStore.writeText.mockResolvedValue(null);
-    logEvent('test', 'BREADCRUMB-MARKER');
-
-    const r = await sendFeedback({ type: 'bug', fields: {}, includeLogs: true });
-
-    expect(r.attachedLog).toBe(false);
-    expect(r.inlinedLog).toBe(true);
-    const arg = MailComposer.composeAsync.mock.calls[0][0];
-    expect(arg.attachments).toBeUndefined();
-    expect(arg.body).toContain('BREADCRUMB-MARKER'); // it went out anyway
-  });
-
-  it('inlines the log on the mailto floor, which can never carry an attachment', async () => {
-    MailComposer.isAvailableAsync.mockResolvedValue(false);
-    const spy = jest.spyOn(Linking, 'openURL').mockResolvedValue(true as never);
-    logEvent('test', 'BREADCRUMB-MARKER');
-
-    const r = await sendFeedback({ type: 'bug', fields: {}, includeLogs: true });
-
-    expect(r.status).toBe('mailto');
-    expect(r.inlinedLog).toBe(true);
-    expect(decodeURIComponent(spy.mock.calls[0][0])).toContain('BREADCRUMB-MARKER');
-    spy.mockRestore();
-  });
-
-  it('never sends the log when the user did not opt in', async () => {
-    logEvent('test', 'BREADCRUMB-MARKER');
-    const r = await sendFeedback({ type: 'general', fields: {}, includeLogs: false });
-    expect(r.attachedLog).toBe(false);
-    expect(r.inlinedLog).toBe(false);
-    const arg = MailComposer.composeAsync.mock.calls[0][0];
-    expect(arg.attachments).toBeUndefined();
-    expect(arg.body).not.toContain('BREADCRUMB-MARKER');
   });
 });

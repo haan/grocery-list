@@ -1,8 +1,0 @@
-{
-  "appId": "known.bad.fixture",
-  "steps": [
-    { "waitFor": "@home" },
-    { "tap": "@add" },
-    { "screenshot": "home" }
-  ]
-}

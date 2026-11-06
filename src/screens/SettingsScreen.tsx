@@ -1,9 +1,4 @@
-/**
- * Settings / About — the one known-shape destination (canon § Settings /
- * About). App-specific settings sit above the About block; the canonical
- * entries (support, feedback, review, privacy, source, version, the stamp) are
- * the floor, not the ceiling.
- */
+/** Appearance, language, import/export, and project information. */
 
 import React, { useCallback, useState } from 'react';
 import {
@@ -16,9 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ChevronLeft,
-  HandHeart,
   Mail,
-  Star,
   Shield,
   Code2,
   Library,
@@ -32,19 +25,11 @@ import { exportLists, pickAndParseLists } from '../lib/transfer';
 import { AboutRow } from '../components/AboutRow';
 import { Wordmark } from '../components/Wordmark';
 import { LanguageSetting } from '../components/LanguageSetting';
-import { SiriSetting } from '../components/SiriSetting';
-import { isSiriSupported } from '../siri';
-import TipJarSheet from '../components/TipJarSheet';
-import { TIP_PRODUCT_IDS } from '../constants/tipProducts';
 import { t } from '../i18n';
 import {
-  APP_NAME,
-  TIP_JAR_ENABLED,
-  STORE_REVIEWS_ENABLED,
   PRIVACY_URL,
   REPO_URL,
-  STUDIO_URL,
-  openReview,
+  PROJECT_URL,
   openUrl,
   versionLabel,
 } from '../lib/links';
@@ -69,8 +54,6 @@ export default function SettingsScreen({ navigation }: Props) {
   const lists = useListsStore((st) => st.lists);
   const importLists = useListsStore((st) => st.importLists);
   const [status, setStatus] = useState<string | null>(null);
-  const [tipVisible, setTipVisible] = useState(false);
-  const siriSupported = React.useMemo(() => isSiriSupported(), []);
 
   const onExport = useCallback(() => {
     exportLists(lists).catch(() => setStatus(t('settings.couldntExport')));
@@ -112,18 +95,16 @@ export default function SettingsScreen({ navigation }: Props) {
 
       <ScrollView contentContainerStyle={s.content}>
         <Text style={s.sectionLabel}>{t('settings.appearance')}</Text>
-        <AppearanceToggle />
+        <AppearanceToggle labels={{
+          title: t('settings.appearance'),
+          system: t('settings.themeSystem'),
+          light: t('settings.themeLight'),
+          dark: t('settings.themeDark'),
+        }} />
 
         <Text style={s.sectionLabel}>{t('settings.language')}</Text>
         <LanguageSetting />
 
-        {siriSupported && (
-          <>
-            <Text style={s.sectionLabel}>{t('settings.siri')}</Text>
-            <Text style={s.status}>{t('settings.siriHint')}</Text>
-            <SiriSetting />
-          </>
-        )}
 
         <Text style={s.sectionLabel}>{t('settings.yourData')}</Text>
         <AboutRow label={t('settings.exportLists')} icon={Upload} onPress={onExport} />
@@ -131,9 +112,7 @@ export default function SettingsScreen({ navigation }: Props) {
         {status ? <Text style={s.status}>{status}</Text> : null}
 
         <Text style={s.sectionLabel}>{t('settings.about')}</Text>
-        {TIP_JAR_ENABLED && <AboutRow label={t('about.support')} icon={HandHeart} onPress={() => setTipVisible(true)} />}
         <AboutRow label={t('about.feedback')} icon={Mail} onPress={() => openFeedback()} />
-        {STORE_REVIEWS_ENABLED && <AboutRow label={t('about.review')} icon={Star} onPress={openReview} />}
         <AboutRow label={t('about.privacy')} icon={Shield} onPress={() => openUrl(PRIVACY_URL)} />
         <AboutRow label={t('about.source')} icon={Code2} onPress={() => openUrl(REPO_URL)} />
         <AboutRow label={t('about.acknowledgements')} icon={Library} onPress={() => navigation.navigate('Acknowledgements')} />
@@ -143,7 +122,7 @@ export default function SettingsScreen({ navigation }: Props) {
           <Wordmark />
           <Text style={s.stampLine}>{t('about.oneLiner')}</Text>
           <Pressable
-            onPress={() => openUrl(STUDIO_URL)}
+            onPress={() => openUrl(PROJECT_URL)}
             hitSlop={8}
             accessibilityRole="button"
             accessibilityLabel={t('about.learnMore')}
@@ -153,13 +132,6 @@ export default function SettingsScreen({ navigation }: Props) {
           </Pressable>
         </View>
       </ScrollView>
-      {tipVisible && (
-        <TipJarSheet
-          visible
-          onDismiss={() => setTipVisible(false)}
-          productIds={TIP_PRODUCT_IDS}
-        />
-      )}
     </SafeAreaView>
   );
 }

@@ -2,7 +2,7 @@
  * Intent fuzzer — the fast-check MODEL-BASED port (Uplevel 3 / T1).
  *
  * This is the grocery hand-rolled `intentFuzz.test.ts` re-expressed on the
- * factory `qa/intent-fuzz` kit (fast-check `fc.commands`). It drives the SAME
+ * local `qa/intent-fuzz` harness (fast-check `fc.commands`). It drives the SAME
  * REAL store per simulated device through the SAME `simHarness`, judged by the
  * SAME user-intent oracles — nothing weakened. What the port adds over the
  * hand-rolled loop is exactly the two things fast-check gives:

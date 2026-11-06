@@ -16,8 +16,8 @@ import { View, Text, Pressable } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const METRICS = {
-  frame: { x: 0, y: 0, width: 390, height: 844 },
-  insets: { top: 47, left: 0, right: 0, bottom: 34 },
+  frame: { x: 0, y: 0, width: 412, height: 915 },
+  insets: { top: 24, left: 0, right: 0, bottom: 24 },
 };
 
 jest.mock('expo-haptics', () => ({
@@ -160,7 +160,7 @@ describe('useItemEditor', () => {
     await openEditor(user);
 
     expect(useAccountStore.getState().isStaple('Milk')).toBe(false);
-    // Named by its VISIBLE word, "Usual", so Voice Control can match what is
+    // Named by its VISIBLE word, "Usual", so Voice Access can match what is
     // on screen; the verb lives in the hint. `toggleUsual` reads the live
     // staple state on each press and flips it, so pressing the same control
     // twice toggles on then back off.
