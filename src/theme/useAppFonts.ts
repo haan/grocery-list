@@ -1,7 +1,7 @@
 import { useFonts } from 'expo-font';
 
 /**
- * Loads all Josh Approved typefaces. Call once at the app root and gate render
+ * Loads the bundled IBM Plex typefaces. Call once at the app root and gate render
  * on the returned `loaded` flag (or render a splash until it's true).
  *
  *   const [loaded] = useAppFonts();

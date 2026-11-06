@@ -1,7 +1,0 @@
-{
-  "appId": "known.bad.fixture",
-  "steps": [
-    { "waitFor": "@missingAnchor" },
-    { "tap": "@alsoMissing" }
-  ]
-}

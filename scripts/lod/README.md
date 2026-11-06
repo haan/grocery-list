@@ -52,8 +52,7 @@ development dependency only.
   together, using the existing list/item/preference synchronization clocks.
   Empty names, built-in aisle keys, and duplicate names are rejected. Built-in
   labels stay fixed; custom names keep the existing 40-character limit.
-- The old `scratch/seed` assets and keyword tables are historical upstream data;
-  they are not used by the runtime catalog or classifier.
+- The obsolete upstream English seed assets and keyword classifier have been removed.
 
 ## Device acceptance
 
@@ -75,7 +74,7 @@ Use a disposable list, separate from household lists. With Metro running:
       unrelated corrections while disconnected, reconnect, and verify both rules.
 
 Automated tests cover classification, learning, real SQLite migration/round trips,
-export/import, UI controls, and simulated merge convergence. Physical-device
+restart persistence, UI controls, and simulated merge convergence. Physical-device
 acceptance remains separate from those checks.
 
 Verified on 2026-11-06: clean `npm ci --offline`, TypeScript, all 515 tests in

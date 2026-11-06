@@ -1,16 +1,3 @@
-/**
- * Canonical, app-agnostic — synced by `sync.mjs qa`; do not fork.
- *
- * The proof half of the edge-inset audit. A gate that never demonstrated
- * failure is a hope, not a gate, so this file pins the shape that shipped —
- * workout-timer's Settings "Sounds" card (2026-10): a DrilldownRow dropped
- * straight into a card, so "Warm up start" touched the card's left border and
- * the chevron its right one — next to the shapes the audit must leave alone.
- *
- * This app's own screens are audited in edgeInset.screens.test.tsx, which the
- * app owns.
- */
-
 import React from 'react';
 import { View, Text, TextInput, Pressable, ScrollView } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';

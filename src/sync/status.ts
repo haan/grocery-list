@@ -65,7 +65,7 @@ export function markConnected(secret: string, connected: boolean): void {
   useSyncStatusStore.getState().patch(secret, { connected });
 }
 /** "Last heard from the other phone." Keeps the LATEST time: a cold start
- *  replays several deposited slots (list, kits) in relay order, and an older
+ *  replays several devices' deposited list states in relay order, and an older
  *  one must not roll the clock back. */
 export function markReceived(secret: string, at: number): void {
   const prev = useSyncStatusStore.getState().bySecret[secret]?.lastReceivedAt ?? 0;

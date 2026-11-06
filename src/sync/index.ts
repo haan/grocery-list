@@ -1,43 +1,5 @@
-/**
- * Sync engine — wires the store to the drop-box transport.
- *
- * For every list that has a share identity it keeps one transport open,
- * publishes the (encrypted) whole list when it changes locally, and merges
- * anything that arrives. The merge is conflict-free, so this can be
- * best-effort: a missed message re-converges on the next publish.
- *
- * Durable by construction: the channel is derived from the persistent
- * per-list secret, so a paired list reconnects forever with nothing from the
- * user ("pair once, synced forever"). Devices have different local list ids;
- * the shared secret — not the id — is the join key.
- *
- * STORE-AND-FORWARD (defect grocery-list-20261018-1). State is DEPOSITED in
- * the drop box as a replaceable event (transport.publishStored: one slot per
- * device per channel, relays keep the latest copy), so a phone that opens
- * hours or days later receives what its partner left without the partner
- * being online. Before this, state rode an ephemeral event and a shared list
- * only synced while BOTH apps were open at the same moment. The slots: `list`
- * (this list's full state) and `kits` (the kit collection). Only the hello
- * stays live-only — it means "I am here now" and must never occupy a slot.
- *
- * COLD-START, BOTH ONLINE. The deposit covers the partner-is-closed case; the
- * "hello" handshake still covers the partner-is-open-right-now case: on each
- * (re)connect a device announces itself; any peer that hears a hello
- * force-republishes its current full state, so the newcomer converges within
- * seconds instead of waiting for an edit. Hello carries no list data; old app
- * versions simply ignore it (no `shareIdentity`), so it is wire-compatible.
- *
- * Merge correctness across skewed device clocks is handled by the logical
- * clock (see ./clock.ts); `mergeRemoteList` folds the peer's timestamps in
- * before merging.
- *
- * NOT DEVICE-VERIFIED end-to-end (see transport.ts / crypto.ts headers).
- */
-
 import { useListsStore } from '../store/lists';
-import { useKitsStore } from '../store/kits';
 import type { GroceryList } from '../data/list';
-import type { Kit } from '../data/kit';
 import { authorSeed, channelId, seal, open } from './crypto';
 import { logEvent, logWarn } from '../feedback/log';
 import { DropBoxTransport } from './transport';
@@ -110,22 +72,6 @@ interface Channel {
 const channels = new Map<string, Channel>();
 let unsub: (() => void) | null = null;
 
-// --- Kits ride the same channels as a separate control message ----------------
-// Kits are a global collection (not owned by one list), so they can't live in a
-// per-list payload. Instead the whole kit collection is broadcast on EVERY open
-// channel as `{_sync:'kits', kits:[…]}`. A device that shares any list with you
-// therefore converges on the same kits; a solo user (no channels) keeps kits
-// purely local. Wire-compatible: a state message is a bare GroceryList (no
-// `_sync`), and old app versions ignore anything carrying `_sync`.
-let unsubKits: (() => void) | null = null;
-let kitsTimer: ReturnType<typeof setTimeout> | null = null;
-// Stryker disable next-line StringLiteral: equivalent mutant, the sentinel is only ever compared against a serialized kits payload, which can never equal it
-let lastKitsPayload = '';
-
-function kitsPayload(): string {
-  return JSON.stringify({ _sync: 'kits', kits: useKitsStore.getState().kits });
-}
-
 function sharedSecret(l: GroceryList): string | undefined {
   return l.shareIdentity?.secret;
 }
@@ -145,11 +91,14 @@ function chTag(secret: string): string {
 function ensureChannel(secret: string, deviceSalt: string): Channel {
   let ch = channels.get(secret);
   if (ch) return ch;
+  const active = () => channels.get(secret) === ch && !useListsStore.getState().transitioning
+    && useListsStore.getState().lists[0]?.shareIdentity?.secret === secret;
   const transport = makeTransport(
     channelId(secret),
-    (ct, at) => receive(secret, ct, at),
-    () => onReconnect(secret),
+    (ct, at) => { if (active()) receive(secret, ct, at); },
+    () => { if (active()) onReconnect(secret); },
     (openRelays) => {
+      if (!active()) return;
       logEvent('sync', openRelays > 0 ? 'connected' : 'offline', {
         ch: chTag(secret),
         relays: openRelays,
@@ -157,6 +106,7 @@ function ensureChannel(secret: string, deviceSalt: string): Channel {
       markConnected(secret, openRelays > 0);
     },
     (delivered) => {
+      if (!active()) return;
       // A send nobody accepted: the socket is up, but what we just published
       // never left the device — the exact shape of "I ticked it and the other
       // phone never saw it", and until now the one sync outcome that left no
@@ -170,7 +120,6 @@ function ensureChannel(secret: string, deviceSalt: string): Channel {
     },
     authorSeed(secret, deviceSalt)
   );
-  // Stryker disable next-line StringLiteral: equivalent mutant, lastSent exists only to be compared against a serialized list payload, which can never equal the sentinel
   ch = { transport, lastSent: '', timer: null, lastHelloAt: 0 };
   channels.set(secret, ch);
   transport.start();
@@ -195,27 +144,18 @@ function receive(secret: string, ct: string, at?: number): void {
   try {
     obj = JSON.parse(json);
   }
-  // Stryker disable next-line BlockStatement: equivalent mutant, the early return is redundant — `obj` stays undefined, the object guard below is false and `remote?.shareIdentity` short-circuits, so a malformed frame is dropped either way
   catch {
     return; // malformed — next publish re-converges
   }
-  // Stryker disable next-line ConditionalExpression: equivalent mutant, the typeof half only guards the property access below it, and reading `._sync` off a truthy non-object yields undefined rather than throwing — the `obj &&` half already excludes null/undefined
   if (obj && typeof obj === 'object') {
     const sync = (obj as { _sync?: string })._sync;
     if (sync === 'hello') {
-      // A newcomer: re-publish both our list state AND our kits so they converge.
+      // A newcomer: re-publish our current list state.
       forcePublish(secret);
-      forcePublishKitsOn(secret);
       return;
     }
-    if (sync === 'kits') {
-      const kits = (obj as { kits?: Kit[] }).kits;
-      if (Array.isArray(kits)) {
-        useKitsStore.getState().mergeRemoteKits(kits);
-        markReceived(secret, heardAt);
-      }
-      return;
-    }
+    // Unsupported control messages must never be interpreted as list state.
+    if ('_sync' in obj) return;
   }
   const remote = obj as GroceryList;
   if (remote?.shareIdentity?.secret === secret) {
@@ -224,8 +164,15 @@ function receive(secret: string, ct: string, at?: number): void {
       ch: chTag(secret),
       items: Array.isArray(remote.items) ? remote.items.length : 0,
     });
-    useListsStore.getState().mergeRemoteList(remote);
-    markReceived(secret, heardAt);
+    const id = useListsStore.getState().lists[0]?.id;
+    const result = useListsStore.getState().mergeRemoteList(remote);
+    const accepted = (ok: boolean) => {
+      const state = useListsStore.getState();
+      if (ok && !state.transitioning && state.lists[0]?.id === id
+        && state.lists[0]?.shareIdentity?.secret === secret) markReceived(secret, heardAt);
+    };
+    if (result instanceof Promise) void result.then(accepted);
+    else accepted(result);
   }
 }
 
@@ -236,7 +183,6 @@ function receive(secret: string, ct: string, at?: number): void {
  *  online would never re-share its own state. */
 function onReconnect(secret: string): void {
   forcePublish(secret);
-  forcePublishKitsOn(secret);
   sendHello(secret);
 }
 
@@ -255,16 +201,15 @@ function sendHello(secret: string): void {
  *  hasn't changed since we last sent) and on every (re)connect, so the drop
  *  box always holds this device's latest copy. */
 function forcePublish(secret: string): void {
+  if (useListsStore.getState().pendingJoin || useListsStore.getState().transitioning) return;
   const ch = channels.get(secret);
   if (!ch) return;
   const list = useListsStore
     .getState()
     .lists.find((l) => sharedSecret(l) === secret);
-  // Stryker disable next-line ConditionalExpression: equivalent mutant, a channel whose secret no list carries cannot exist — channels are created only by publish() from reconcile() with the secret-carrying list, and the same reconcile deletes the channel synchronously when it stops carrying it
   if (!list) return;
   // Cancel any pending debounced publish: it captured an OLDER snapshot, and
   // letting it fire after this one would re-send stale state.
-  // Stryker disable next-line ConditionalExpression: equivalent mutant, clearTimeout(null) is a no-op and the `= null` is idempotent, so the guard changes nothing
   if (ch.timer) {
     clearTimeout(ch.timer);
     ch.timer = null;
@@ -275,53 +220,16 @@ function forcePublish(secret: string): void {
   markSent(secret, Date.now());
 }
 
-/** Publish the full kit collection immediately on ONE channel — used to answer
- *  a peer's hello (its kit copy may be empty/stale even if ours is unchanged). */
-function forcePublishKitsOn(secret: string): void {
-  const ch = channels.get(secret);
-  if (!ch) return;
-  ch.transport.publishStored(seal(secret, kitsPayload()), 'kits');
-  markSent(secret, Date.now());
-}
-
-/** Broadcast the current kit collection on every open channel, now. */
-function publishKitsNow(): void {
-  const payload = kitsPayload();
-  lastKitsPayload = payload;
-  for (const [secret, ch] of channels) {
-    ch.transport.publishStored(seal(secret, payload), 'kits');
-    markSent(secret, Date.now());
-  }
-}
-
-/** Debounced kit broadcast — called when the local kit collection changes.
- *  Skips a no-op (same serialized collection as last sent). */
-function scheduleKitsPublish(): void {
-  if (kitsPayload() === lastKitsPayload) return;
-  // Braced on purpose: the ConditionalExpression suppression below is line-and-mutator
-  // granular, so a bare one-liner would leave this line with no live mutant at all. The
-  // block mints a BlockStatement mutant (dropping the clear leaks the old timer) that the
-  // suite still has to kill.
-  // Stryker disable next-line ConditionalExpression: equivalent mutant, clearTimeout(null) is a no-op, so the guard cannot change behaviour
-  if (kitsTimer) {
-    clearTimeout(kitsTimer);
-  }
-  kitsTimer = setTimeout(() => {
-    kitsTimer = null;
-    publishKitsNow();
-  }, 700);
-}
-
 function publish(secret: string, list: GroceryList): void {
   const ch = ensureChannel(secret, list.id);
+  if (useListsStore.getState().pendingJoin) { sendHello(secret); return; }
   const payload = JSON.stringify(list);
   if (payload === ch.lastSent) return; // nothing changed since last send
-  // Braced on purpose — see scheduleKitsPublish above.
-  // Stryker disable next-line ConditionalExpression: equivalent mutant, clearTimeout(null) is a no-op, so the guard cannot change behaviour
   if (ch.timer) {
     clearTimeout(ch.timer);
   }
   ch.timer = setTimeout(() => {
+    if (channels.get(secret) !== ch || useListsStore.getState().transitioning || useListsStore.getState().pendingJoin) return;
     ch.lastSent = payload;
     ch.transport.publishStored(seal(secret, payload), 'list');
     markSent(secret, Date.now());
@@ -335,6 +243,7 @@ export function resyncNow(secret: string): void {
 }
 
 function reconcile(lists: GroceryList[]): void {
+  if (useListsStore.getState().transitioning) lists = [];
   const live = new Set<string>();
   for (const l of lists) {
     const secret = sharedSecret(l);
@@ -345,8 +254,6 @@ function reconcile(lists: GroceryList[]): void {
   // Close channels for lists that are gone / no longer shared.
   for (const [secret, ch] of channels) {
     if (!live.has(secret)) {
-      // Braced on purpose — see scheduleKitsPublish above.
-      // Stryker disable next-line ConditionalExpression: equivalent mutant, clearTimeout(null) is a no-op, so the guard cannot change behaviour
       if (ch.timer) {
         clearTimeout(ch.timer);
       }
@@ -362,9 +269,6 @@ export function startSyncEngine(): void {
   if (unsub) return;
   reconcile(useListsStore.getState().lists);
   unsub = useListsStore.subscribe((state) => reconcile(state.lists));
-  // Kit edits broadcast on every open channel (debounced). The initial push to
-  // already-connected peers is handled by onReconnect's forcePublishKitsOn.
-  unsubKits = useKitsStore.subscribe(() => scheduleKitsPublish());
 }
 
 /** Push current state immediately on every channel, skipping the debounce.
@@ -374,21 +278,12 @@ export function startSyncEngine(): void {
 export function flushSyncEngine(): void {
   for (const secret of channels.keys()) {
     const ch = channels.get(secret);
-    // Stryker disable next-line ConditionalExpression,OptionalChaining,BlockStatement: equivalent mutant, this whole block is redundant with the forcePublish below (which clears the same timer), and `ch` comes from channels.get() inside a channels.keys() loop so it is never undefined
     if (ch?.timer) {
       clearTimeout(ch.timer);
       ch.timer = null;
     }
     forcePublish(secret);
   }
-  // Push kit edits too — the 700ms kit debounce would otherwise be suspended
-  // mid-wait when the app backgrounds, stranding a just-made kit change.
-  // Stryker disable next-line ConditionalExpression: equivalent mutant, clearTimeout(null) is a no-op and the `= null` is idempotent, so the guard changes nothing
-  if (kitsTimer) {
-    clearTimeout(kitsTimer);
-    kitsTimer = null;
-  }
-  if (channels.size > 0) publishKitsNow();
 }
 
 export function stopSyncEngine(): void {
@@ -396,20 +291,8 @@ export function stopSyncEngine(): void {
     unsub();
     unsub = null;
   }
-  if (unsubKits) {
-    unsubKits();
-    unsubKits = null;
-  }
-  // Stryker disable next-line ConditionalExpression: equivalent mutant, clearTimeout(null) is a no-op and the `= null` is idempotent, so the guard changes nothing
-  if (kitsTimer) {
-    clearTimeout(kitsTimer);
-    kitsTimer = null;
-  }
-  // Stryker disable next-line StringLiteral: equivalent mutant, the sentinel is only ever compared against a serialized kits payload, which can never equal it
-  lastKitsPayload = '';
-  for (const ch of channels.values()) {
-    // Braced on purpose — see scheduleKitsPublish above.
-    // Stryker disable next-line ConditionalExpression: equivalent mutant, clearTimeout(null) is a no-op, so the guard cannot change behaviour
+  for (const [secret, ch] of channels) {
+    dropStatus(secret);
     if (ch.timer) {
       clearTimeout(ch.timer);
     }

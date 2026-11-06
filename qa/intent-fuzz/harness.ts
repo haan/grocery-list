@@ -1,31 +1,3 @@
-/**
- * harness.ts — the intent-fuzz runner (Uplevel 3 / T1). Wraps fast-check's
- * model-based mode (`fc.commands` + `fc.modelRun`) with the factory's
- * failure-crystallization contract, so every app's fuzzer is three things at
- * once: a nightly bug-finder, a self-articulating defect reporter, and a
- * forever-green regression suite.
- *
- * WHY MODEL-BASED. A `fc.commands` model IS the grocery intent fuzzer,
- * formalized: each Command is one real user action with a `check(model)`
- * precondition and a `run(model, real)` that drives the REAL store (never a
- * re-implementation of it) and asserts INTENT oracles — "your check-off
- * survives", "re-add is a fresh need", "nothing resurrects by id". fast-check
- * adds the two things the hand-rolled loop lacked: exhaustive shrinking (a
- * failure minimizes itself to the shortest reproducing story) and an exact
- * replay path (seed + path re-runs that minimal case forever).
- *
- * WHAT THIS FILE OWNS. Reading FUZZ_RUNS/FUZZ_PROFILE, running `fc.check`
- * (which returns details instead of throwing), logging the seed, and — on
- * failure — handing the shrunk details to `harnessCore.crystallizeFailure`
- * (fixture + intake line + fuzz-log), then throwing so Jest goes red.
- *
- * tsc stays clean against a fresh Expo app: the only static import is
- * `fast-check` (an app devDep); all fs/path/node work lives in the CommonJS
- * `harnessCore.cjs`, pulled in via `require` (a call — tsc never resolves it).
- *
- * Synced into apps by `sync.mjs intent-fuzz` as `qa/intent-fuzz/harness.ts`.
- */
-
 import fc from 'fast-check';
 
 // Runtime-only bridge to the pure core (see file header — keeps this module

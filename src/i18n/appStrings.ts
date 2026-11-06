@@ -1,15 +1,4 @@
-/**
- * App-specific copy. APP-OWNED — sync drops this once (ifAbsent) and never
- * overwrites it. Every user-facing string in this app's domain screens lives
- * here (canon § Translations: no copy hardcoded in components). Reference it
- * via `t('<key>')` from `../i18n`.
- *
- * Voice canon applies (canonical-voice.md): sentence case, plain second person,
- * no emoji. These overlay the shell strings, so the `common`/`settings`/`about`
- * namespaces extend (not replace) the shell's — reuse the shell keys
- * (save/cancel/done/delete/rename/add, the About + Settings labels) rather than
- * redefining a word the shell already translates.
- */
+/** Shopping-list interface strings; overlay the shared English controls. */
 
 export const APP_STRINGS = {
   // Extends the shell common namespace (back/cancel/done/save/delete/edit/rename/add).
@@ -37,50 +26,20 @@ export const APP_STRINGS = {
     personalCare: 'Personal care',
     other: 'Other',
   },
-  // Bottom tab bar.
-  tabs: {
-    lists: 'Lists',
-    kits: 'Kits',
-  },
-  home: {
-    title: 'Grocery List',
-    subtitle: 'Shop together, off one list.',
-    newList: 'New list',
-    newListPlaceholder: 'Groceries',
-    renameList: 'Rename list',
-    share: 'Share',
-    sharingSettings: 'Sharing settings',
-    duplicate: 'Duplicate',
-    listSummary: '{name}, {checked} of {total} checked',
-    listSummaryShared: '{name}, shared, {checked} of {total} checked',
-    emptyTitle: 'No lists yet',
-    emptyBody:
-      'Create a list, then share it so anyone in your household can add to it and check things off as you shop.',
-    createList: 'Create a list',
-  },
+  home: { title: 'Grocery List' },
   detail: {
-    renameList: 'Rename list',
-    renameA11y: '{name}, rename',
-    renameSharedA11y: '{name}, shared list, rename',
-    listOptions: 'List options',
     addItem: 'Add an item',
     addItemButton: 'Add item',
     addItemHint: 'Adds it to your list.',
-    // Full-screen Add-items sheet (your usuals + recent history + a built-in
+    // Full-screen Add-items sheet (recent history + a built-in
     // "common items" seed list). All copy routes through here — no hardcoding.
     addItemsTitle: 'Add items',
-    // The Items / Kits segmented control at the top of the Add-items sheet.
-    tabItems: 'Items',
-    tabKits: 'Kits',
     searchOrAdd: 'Search or add an item',
-    yourUsuals: 'Your usuals',
     recent: 'Recent',
     commonItems: 'Common items',
     onList: 'On list',
     onListItemA11y: '{name}, on your list',
-    starterHint: 'Your usuals and recent items will show here as you shop.',
-    showAll: 'Show all',
-    showLess: 'Show less',
+    starterHint: 'Recent items will show here as you shop.',
     allOnList:
       "Everything's already on your list. Type above to add anything else.",
     checked: 'Checked ({count})',
@@ -97,11 +56,10 @@ export const APP_STRINGS = {
     newAisle: 'New aisle',
     newAislePlaceholder: 'Name this aisle',
     emptyTitle: 'Nothing on this list yet',
-    emptyBody: "Type an item above and it'll sort itself into the right aisle.",
+    emptyBody: "Tap Add an item to get started. Items sort into aisles automatically.",
     // Ambient "tidy away what you've crossed off" — no moment-in-time finish.
     clearChecked: 'Clear',
     clearCheckedA11y: 'Clear {count} crossed-off items',
-    clearCheckedMenu: 'Clear crossed off ({count})',
     // Light-haptic toast shown when you cross an item off.
     crossedOff: 'Crossed off {name}',
     // Gentle reopen prompt to clear last shop's leftovers.
@@ -110,7 +68,7 @@ export const APP_STRINGS = {
     removed: 'Removed {name}',
     clearedOne: 'Cleared {count} item',
     clearedOther: 'Cleared {count} items',
-    addedToList: 'Added to {name}',
+    addedToList: 'Added to list',
     forgetSuggestion: 'Forget {name}',
     forgotSuggestion: 'Forgot {name}',
     swipeToDeleteA11y: 'Remove {name}',
@@ -120,16 +78,8 @@ export const APP_STRINGS = {
     noteMessage: 'Brand, size, anything useful at the shelf.',
     notePlaceholder: 'e.g. the big one',
     moveToAisle: 'Move to aisle',
-    removeFromUsuals: 'Remove from usuals',
-    saveAsUsual: 'Save as a usual',
-    usual: 'Usual',
     remove: 'Remove',
-    shareThis: 'Share this list',
-    sharingSettings: 'Sharing settings',
     reorderAisles: 'Manage aisles',
-    addUsuals: 'Add usuals',
-    deleteList: 'Delete list',
-    deleteListConfirm: 'Delete this list and everything on it? This cannot be undone.',
     sync: {
       connected: 'Connected',
       offline: 'Offline',
@@ -146,15 +96,25 @@ export const APP_STRINGS = {
     },
   },
   share: {
-    shareThis: 'Share this list',
+    title: 'Sharing',
+    saving: 'Saving sharing changes…',
+    start: 'Start sharing',
+    syncNow: 'Sync now',
+    stop: 'Stop sharing',
+    stopBody: 'Keep a private copy on this phone. Other phones keep their shared list. Starting sharing again creates a new code.',
+    private: 'Not shared',
+    connecting: 'Connecting',
+    openSettings: 'Open sharing settings',
+    privateHelp: 'Your list stays on this phone until you start sharing or scan another phone’s code.',
+    sharedHelp: 'Scan this code on another phone to shop together. Anyone with the code or link can access the list.',
+    waiting: 'Waiting for the shared list. Connect to the internet and keep the sharing phone online. Items will appear when the first copy arrives.',
+    replaceTitle: 'Replace this list?',
+    replaceBody: 'Joining replaces the shopping list on this phone with the shared list. Your recent suggestions remain. This cannot be undone.',
+    join: 'Join shared list',
+    failed: 'The sharing change could not be saved. Please try again.',
     scanCode: 'Scan a list code',
     scanHint: "Point at the other phone's QR code.",
-    leadBefore: 'Anyone with this can see and edit',
-    thisList: 'this list',
-    leadAfter: '. No account needed. You only do this once.',
     sendLink: 'Send link',
-    scanInsteadA11y: 'Scan a list code instead',
-    scanInstead: 'Scan a code instead',
   },
   reorder: {
     drag: 'Reorder {name}',
@@ -178,56 +138,5 @@ export const APP_STRINGS = {
     decrease: 'Decrease',
     increase: 'Increase',
   },
-  // Kits — reusable bundles of items you buy together for one thing you make.
-  kits: {
-    title: 'Kits',
-    subtitle: 'Bundles you add to a list in one tap.',
-    newKit: 'New kit',
-    newKitPlaceholder: 'Chicken salad',
-    renameKit: 'Rename kit',
-    renameA11y: '{name}, rename',
-    deleteKit: 'Delete kit',
-    deleteKitConfirm: 'Delete this kit? This cannot be undone.',
-    duplicate: 'Duplicate',
-    kitOptions: 'Kit options',
-    kitSummary: '{name}, {count} items',
-    itemsOne: '{count} item',
-    itemsOther: '{count} items',
-    emptyTitle: 'No kits yet',
-    emptyBody:
-      'A kit is a bundle of items you buy together — like everything for chicken salad, minus the staples you always have. Build one, then add it to any list in one tap.',
-    createKit: 'Create a kit',
-    // Kit detail — adding/editing ingredients.
-    addIngredient: 'Add an ingredient',
-    addIngredientsTitle: 'Add ingredients',
-    inKit: 'In kit',
-    inKitItemA11y: '{name}, in this kit',
-    detailEmptyTitle: 'Nothing in this kit yet',
-    detailEmptyBody:
-      'Add the few things this kit needs — skip the staples you always have.',
-    // The Kits tab inside the Add-items sheet (selecting a kit onto a list).
-    pickHint: 'Tap a kit to add its items to your list.',
-    previewMore: '{names} +{count}',
-    addKitA11y: '{name}, {count} items',
-    addKitHint: 'Adds every item in this kit to your list.',
-    addIngredientHint: 'Adds it to this kit.',
-    emptyInSheet: 'Build kits in the Kits tab, then add them here.',
-    kitEmpty: 'This kit has no items yet.',
-    allPresent: "Everything in this kit is already on your list.",
-    addedOne: 'Added {count} item',
-    addedOther: 'Added {count} items',
-  },
-  // Extends the shell settings namespace (title/appearance/theme*/language*/
-  // yourData/about/export/import/nothingImported/couldntExport/couldntRead).
-  settings: {
-    exportLists: 'Export lists',
-    importLists: 'Import lists',
-    addedListsOne: 'Added {count} list.',
-    addedListsOther: 'Added {count} lists.',
-    learnMoreA11y: 'Learn more at joshapproved.com',
-    siri: 'Siri',
-    siriHint: 'Add items hands-free. Say "Add milk to Grocery List."',
-    siriDefaultList: 'Default list',
-    siriAskEachTime: 'Ask each time',
-  },
+
 } as const;

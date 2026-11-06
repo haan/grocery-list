@@ -1,28 +1,3 @@
-/**
- * The canonical Light / Dark / System appearance control.
- *
- * Synced into each app at src/theme/AppearanceToggle.tsx by
- * `sync.mjs design-system-native`. Edit HERE, not per app — every app renders
- * the same control so the catalogue stays sibling-consistent (canon § Theming).
- *
- * It lives in the design system (not the app shell) because that's the one
- * module every app already syncs into src/theme/, and it is intrinsically a
- * theme surface. It is self-contained: colors from `useTheme()`, the preference
- * from `useThemePreference()`. Copy is passed in via `labels` (English
- * defaults) so it has no i18n dependency — apps with the i18n module pass
- * translated strings, apps without get sensible English.
- *
- *   // In the Settings screen, under an "Appearance" section label:
- *   <AppearanceToggle />
- *   // or, in an app with i18n:
- *   <AppearanceToggle labels={{
- *     title: t('settings.appearance'),
- *     system: t('settings.themeSystem'),
- *     light: t('settings.themeLight'),
- *     dark: t('settings.themeDark'),
- *   }} />
- */
-
 import React from 'react';
 import { View, Text, Pressable, StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
 import { useTheme, type Colors } from './colors';

@@ -1,30 +1,3 @@
-/**
- * Regression — defect grocery-list-20261018-1: a shared list only synced while
- * BOTH phones had the app open at the same moment.
- *
- * As shipped, list state left the device only as an ephemeral relay event
- * (kind 20001 — relays forward it to whoever is listening right now and keep
- * nothing), and the cold-start "hello" handshake only works if a live partner
- * answers it. So an edit made while the other phone was closed was never
- * delivered: it sat on the editing phone until both apps happened to be open
- * together. Store-and-forward fixes it: the engine now DEPOSITS its latest
- * full state in the drop box as a replaceable event (kind 30078, one slot per
- * channel + author), relays keep the latest copy, and a device that connects
- * later REQUESTS those slots on open — no partner needed.
- *
- * Three layers, each proven failing-first on the pre-fix code:
- *   • Engine (fake transport + fake drop box): device A edits with B offline,
- *     A closes, B opens ALONE → B has A's edit. Kits ride the same path. A
- *     hello is never deposited (it would overwrite the state slot).
- *   • Transport (REAL DropBoxTransport over fake WebSockets): the stored
- *     filter is requested on open, deposits are kind-30078 replaceable events
- *     under a stable per-device author, a replayed slot from the partner is
- *     delivered with its publish time, our own slot is skipped.
- *   • Status bar: "Connected" means the drop boxes are reachable, NOT that the
- *     partner is there — the bar now says when the other phone was last heard
- *     from, so the two can never be confused again.
- */
-
 jest.mock('expo-font', () => ({
   useFonts: () => [true, null],
   isLoaded: () => true,
@@ -41,8 +14,6 @@ jest.mock('../../store/db', () => ({
   removeTombstone: jest.fn(async () => {}),
   getSyncMeta: jest.fn(async () => null),
   setSyncMeta: jest.fn(async () => {}),
-  loadAllKits: jest.fn(async () => []),
-  saveKit: jest.fn(async () => {}),
 }));
 // @noble/* is pure ESM (jest doesn't transform it). The transport's wire
 // protocol IS the SUT here, so stub only the crypto primitives: real sha256
@@ -75,7 +46,6 @@ import React from 'react';
 import { render, screen, act, cleanup } from '@testing-library/react-native';
 
 import { useListsStore } from '../../store/lists';
-import { useKitsStore } from '../../store/kits';
 import { channelId, newSecret, seal, open } from '../crypto';
 import { DropBoxTransport, STORED_KIND, LIVE_KIND, STORED_WINDOW_S } from '../transport';
 import { useSyncStatusStore, markConnected, markReceived } from '../status';
@@ -87,7 +57,6 @@ import {
 } from '../index';
 import { SyncStatusBar } from '../../components/SyncStatusBar';
 import type { GroceryList } from '../../data/list';
-import type { Kit } from '../../data/kit';
 
 const SECRET = newSecret();
 const CHANNEL = channelId(SECRET);
@@ -115,9 +84,6 @@ function item(id: string, updatedAt = 1000) {
     addedAt: updatedAt,
     updatedAt,
   };
-}
-function kit(id: string): Kit {
-  return { id, name: id, nameUpdatedAt: 1000, items: [], createdAt: 1000, updatedAt: 1000 };
 }
 
 // ---------------------------------------------------------------------------
@@ -178,7 +144,6 @@ describe('engine store-and-forward (defect grocery-list-20261018-1)', () => {
       return t;
     });
     useListsStore.setState({ lists: [], hydrated: true });
-    useKitsStore.setState({ kits: [], hydrated: true });
     useSyncStatusStore.setState({ bySecret: {} });
   });
   afterEach(() => {
@@ -188,10 +153,9 @@ describe('engine store-and-forward (defect grocery-list-20261018-1)', () => {
   });
 
   /** One phone's session: boot the engine over this phone's local copy. */
-  function openAs(name: string, lists: GroceryList[], kits: Kit[] = []) {
+  function openAs(name: string, lists: GroceryList[]) {
     device = name;
     useListsStore.setState({ lists, hydrated: true });
-    useKitsStore.setState({ kits, hydrated: true });
     startSyncEngine();
   }
   function closeApp() {
@@ -210,16 +174,6 @@ describe('engine store-and-forward (defect grocery-list-20261018-1)', () => {
 
     const b = useListsStore.getState().lists[0];
     expect(b.items.map((i) => i.id)).toEqual(['milk']);
-  });
-
-  test('a kit created while the partner is closed arrives the same way', () => {
-    openAs('A', [list('a-local', [item('eggs')])], [kit('taco-night')]);
-    jest.advanceTimersByTime(700);
-    closeApp();
-
-    openAs('B', [list('b-local', [item('eggs')])]);
-
-    expect(useKitsStore.getState().kits.map((k) => k.id)).toContain('taco-night');
   });
 
   test('the hello handshake is never deposited — it must not overwrite a state slot', () => {

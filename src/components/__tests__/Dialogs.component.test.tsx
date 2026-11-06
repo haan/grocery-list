@@ -1,35 +1,11 @@
-/**
- * Component test — the cross-platform dialog hooks (Uplevel-3 T3 action coverage).
- *
- * Canonical, app-agnostic — rides `sync.mjs app-shell` with the Dialogs.tsx it
- * tests; do not fork.
- *
- * useActionMenu / usePrompt / useConfirm each return `{ open, element }`. A tiny
- * harness component calls the hook, renders `element`, and exposes a test-only
- * "trigger" button that fires `open(config)` so the dialog becomes visible; we
- * then press its real buttons and assert the observable outcome (a config
- * callback fired, or the dialog closed). Queries go by role/label/text only —
- * no testID, no snapshots.
- *
- * Menu-option handlers are deferred ~260ms past the sheet dismissal (so native
- * presentations aren't rejected by iOS mid-animation) — those assertions go
- * through waitFor, never a bare expect right after the press.
- *
- * These tests wait on real animation wall-clock, so jest's 5s default is too
- * tight on a 2-core CI runner — they pass in about a second locally and time
- * out there. The app's jest config carries a `testTimeout` generous enough to
- * absorb that. Do not "fix" a timeout here by shortening the deferral; it
- * exists to keep iOS from rejecting a native presentation mid-animation.
- */
-
 import React from 'react';
 import { fireEvent, render, screen, userEvent, waitFor } from '@testing-library/react-native';
 import { View, Text, Pressable, TextInput } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const METRICS = {
-  frame: { x: 0, y: 0, width: 390, height: 844 },
-  insets: { top: 47, left: 0, right: 0, bottom: 34 },
+  frame: { x: 0, y: 0, width: 412, height: 915 },
+  insets: { top: 24, left: 0, right: 0, bottom: 24 },
 };
 
 // Virtual: not every app ships expo-haptics; the mock applies when it does and

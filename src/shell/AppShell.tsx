@@ -1,33 +1,4 @@
-/**
- * The canonical app shell — the chrome that wraps every Josh Approved app:
- * gesture root, safe-area provider, error boundary, the themed
- * NavigationContainer + status bar, and the cold-start splash overlay. Removes
- * ~40 lines of identical boilerplate that used to live in every App.tsx.
- *
- * Canonical, app-agnostic — synced by `sync.mjs app-shell`; do not fork.
- *
- * Usage in App.tsx (the app owns only the readiness gate + the screen list):
- *
- *   <AppShell
- *     ready={fontsLoaded && hydrated}
- *     navigationRef={navigationRef}
- *     review={{
- *       appName: 'Grocery list',
- *       iosAppStoreId: '6779417031',
- *       androidPackageName: 'com.joshapproved.grocerylist',
- *       waitForSuccessMoment: true, // optional — see the `review` prop below
- *     }}
- *     launchedAt="2026-08-09"
- *   >
- *     <Stack.Navigator screenOptions={{ headerShown: false }}>
- *       <Stack.Screen name="Home" component={HomeScreen} />
- *       ...
- *     </Stack.Navigator>
- *   </AppShell>
- *
- * Keep `SplashScreen.preventAutoHideAsync()` at module scope in App.tsx (it
- * must run before first paint); AppShell owns hiding it via AnimatedSplash.
- */
+/** Android app shell: navigation, theme, diagnostics, safe areas, and splash. */
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useColorScheme } from 'react-native';
@@ -42,21 +13,12 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import AnimatedSplash from '../components/AnimatedSplash';
-import ReviewModal from '../components/ReviewModal';
-import LaunchNoticeModal from '../components/LaunchNoticeModal';
-import { FeedbackProvider } from '../feedback/FeedbackProvider';
+import { installDiagnostics } from '../feedback/log';
+import { collectDiagnostics } from '../feedback/diagnostics';
 import { buildNavTheme } from './navTheme';
 import { useApplyThemePreference } from '../theme';
 import { useApplyLocalePreference, useLocaleVersion } from '../i18n/localePreference';
-import { recordSessionStart, subscribeSuccessMoments } from '../storage/reviewPrompt';
-import { shouldShowLaunchNotice } from '../storage/launchNotice';
 import { logEvent, logNav } from '../feedback/log';
-import { QA_MODE } from '../qa/qaMode';
-
-/** Beat between the trigger (splash finishing, or a success moment) and the
- *  review prompt appearing, so the sheet lands on a settled screen instead of
- *  racing the splash out or a completion cue. */
-const REVIEW_PROMPT_DELAY_MS = 800;
 
 /**
  * The name of the screen the user is actually looking at, walking down through
@@ -85,45 +47,20 @@ type Props = {
   /** Content is ready (fonts loaded + stores hydrated). Until true, the splash
    *  holds and the navigator is not mounted. */
   ready: boolean;
+  onReady?: () => void;
   /** The navigator tree (a <Stack.Navigator> with the app's screens). */
   children: React.ReactNode;
   /** Optional navigation ref for deep-linking / share-link pairing. */
   navigationRef?: React.Ref<NavigationContainerRef<any>>;
-  /**
-   * Store identity for the canonical review prompt. Pass it and the shell owns
-   * the whole thing — session counting, the 3/15/30 schedule, the 3-per-install
-   * cap, and mounting <ReviewModal>. Apps carry NO trigger code (canon §
-   * Review prompt). Omit it and no prompt is ever counted or shown.
-   */
-  review?: {
-    /** App name as shown in the title — sentence case, no trademark. */
-    appName: string;
-    /** Numeric App Store ID (e.g. "6766071864"). */
-    iosAppStoreId: string;
-    /** Android applicationId (e.g. "com.joshapproved.grocerylist"). */
-    androidPackageName: string;
-    /**
-     * Present at the app's first success moment of the session instead of
-     * right after the splash. Opt in ONLY if the app also calls
-     * `onSuccessMoment()` (from `src/storage/reviewPrompt`) at a real "done"
-     * state — a finished workout, a saved list, an export that landed. The
-     * session gate is unchanged either way; this only moves WHEN in an
-     * eligible boot the ask happens. If no success moment occurs in an
-     * eligible boot, the prompt rolls to the next eligible session. Declared
-     * but never called is the dead-prompt defect `review-prompt/wired` fails.
-     */
-    waitForSuccessMoment?: boolean;
-  };
-  /**
-   * The app's public launch date as an ISO date string ("2026-08-09"). Pass it
-   * and the shell owns the launch notice too — the window, the 3-session cap,
-   * and mounting <LaunchNoticeModal> (canon / templates/launch-notice). Omit it
-   * and no notice is ever shown. Apps carry no trigger code for this either.
-   */
-  launchedAt?: string;
+
 };
 
-export function AppShell({ ready, children, navigationRef, review, launchedAt }: Props) {
+export function AppShell({ ready, children, navigationRef, onReady }: Props) {
+  useEffect(() => {
+    const d = collectDiagnostics();
+    installDiagnostics({ version: d.version, device: d.device, locale: d.locale });
+  }, []);
+
   // Restore + apply the saved appearance preference (System/Light/Dark) once,
   // before first paint. Drives useColorScheme() below and in every screen.
   useApplyThemePreference();
@@ -148,107 +85,6 @@ export function AppShell({ ready, children, navigationRef, review, launchedAt }:
     logEvent('app', 'ready', { theme: isDark ? 'dark' : 'light' });
   }, [ready, isDark]);
 
-  // ---- One shell modal per session -----------------------------------------
-  // Two cards can want this cold start: the launch notice (canon /
-  // templates/launch-notice — sessions 1-3 inside a 60-day launch window) and
-  // the review prompt (canon § Review prompt — sessions 3/15/30, capped at 3
-  // per install). Both triggers are a SESSION, one app cold start i.e. one JS
-  // boot, so this effect must run exactly once per boot no matter how many
-  // times the shell re-renders. The ref is that guard; state can't be (a
-  // re-render reads the stale value before the async resolve lands).
-  //
-  // Three hard rules, all encoded below:
-  //   1. Never under QA_MODE. The deterministic capture pipeline must never
-  //      meet a surprise modal, and a capture run must not burn a session
-  //      either — so QA_MODE doesn't even count the boot.
-  //   2. Never over the splash. A card waits for `splashDone && ready`, so it
-  //      lands on a settled first screen (the review one after a short beat).
-  //   3. PRECEDENCE: the launch notice wins. Stacking two cards on a cold
-  //      start is exactly the "vies for the user's attention" pattern tenet 5
-  //      forbids, and the notice is the more time-sensitive of the two (it has
-  //      a 60-day window; the review ask does not). Nothing is lost by
-  //      yielding — the session is still counted, and eligibility is a `>=`
-  //      check on that count, so the review prompt simply re-fires the next
-  //      session.
-  //   4. WHEN, not whether: with `review.waitForSuccessMoment`, an eligible
-  //      boot does not present after the splash. It ARMS, and the first
-  //      `onSuccessMoment()` the app fires this session presents (after the
-  //      same short beat). Both stores ask for exactly this — a request right
-  //      after the user got something done — and a launch-time ask is the
-  //      opposite of it. The session is already counted, so a boot with no
-  //      success moment simply rolls the ask to the next eligible session.
-  const [showReview, setShowReview] = useState(false);
-  const [showLaunchNotice, setShowLaunchNotice] = useState(false);
-  const sessionCounted = useRef(false);
-  // Set when this boot is eligible AND the app asked to wait for a success
-  // moment. Consumed by the first success moment; never re-armed this boot.
-  const reviewArmed = useRef(false);
-  // Depend on the BOOLEANS, never the `review` object: apps pass it as an inline
-  // literal, so its identity changes on every render — depending on it would
-  // re-run the effect, and the cleanup would cancel the pending prompt forever.
-  const hasReview = !!review;
-  const waitForSuccessMoment = !!review?.waitForSuccessMoment;
-  useEffect(() => {
-    if (QA_MODE) return;
-    if (!hasReview && !launchedAt) return;
-    if (!ready || !splashDone) return;
-    if (sessionCounted.current) return;
-    sessionCounted.current = true;
-    let cancelled = false;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-
-    (async () => {
-      // Resolve BOTH before showing anything. recordSessionStart() counts the
-      // boot, so it must run even when the notice pre-empts the prompt —
-      // otherwise a user inside the launch window never accrues sessions and
-      // the review ask is deferred forever, not by one session.
-      const noticeDue = launchedAt ? await shouldShowLaunchNotice(launchedAt) : false;
-      const reviewDue = hasReview ? await recordSessionStart() : false;
-      if (cancelled) return;
-      if (noticeDue) {
-        logEvent('launchNotice', 'notice shown');
-        setShowLaunchNotice(true);
-        return;
-      }
-      if (!reviewDue) return;
-      if (waitForSuccessMoment) {
-        reviewArmed.current = true;
-        logEvent('review', 'eligible, waiting for a success moment');
-        return;
-      }
-      timer = setTimeout(() => {
-        if (cancelled) return;
-        logEvent('review', 'prompt shown');
-        setShowReview(true);
-      }, REVIEW_PROMPT_DELAY_MS);
-    })();
-
-    return () => {
-      cancelled = true;
-      if (timer) clearTimeout(timer);
-    };
-  }, [hasReview, waitForSuccessMoment, launchedAt, ready, splashDone]);
-
-  // The success-moment channel (reviewPrompt.ts § Success moments). Subscribed
-  // for the shell's whole life; the arm flag decides whether a call does
-  // anything, so an app can fire `onSuccessMoment()` as often as it likes.
-  useEffect(() => {
-    if (!hasReview) return;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const unsubscribe = subscribeSuccessMoments(() => {
-      if (!reviewArmed.current) return;
-      reviewArmed.current = false;
-      timer = setTimeout(() => {
-        logEvent('review', 'prompt shown', { at: 'success moment' });
-        setShowReview(true);
-      }, REVIEW_PROMPT_DELAY_MS);
-    });
-    return () => {
-      unsubscribe();
-      if (timer) clearTimeout(timer);
-    };
-  }, [hasReview]);
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
@@ -257,6 +93,7 @@ export function AppShell({ ready, children, navigationRef, review, launchedAt }:
             <NavigationContainer
               key={localeVersion}
               ref={navigationRef}
+              onReady={onReady}
               theme={buildNavTheme(isDark)}
               onStateChange={(state) => {
                 const name = activeRouteName(state);
@@ -267,25 +104,10 @@ export function AppShell({ ready, children, navigationRef, review, launchedAt }:
               }}
             >
               <StatusBar style={isDark ? 'light' : 'dark'} />
-              <FeedbackProvider>{children}</FeedbackProvider>
+              {children}
             </NavigationContainer>
           )}
-          {launchedAt && (
-            <LaunchNoticeModal
-              visible={showLaunchNotice}
-              onDismiss={() => setShowLaunchNotice(false)}
-            />
-          )}
-          {review && (
-            <ReviewModal
-              visible={showReview}
-              onDismiss={() => setShowReview(false)}
-              appName={review.appName}
-              iosAppStoreId={review.iosAppStoreId}
-              androidPackageName={review.androidPackageName}
-            />
-          )}
-          {!QA_MODE && !splashDone && (
+          {!splashDone && (
             <AnimatedSplash ready={ready} onFinish={() => setSplashDone(true)} />
           )}
         </ErrorBoundary>

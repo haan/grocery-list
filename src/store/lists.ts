@@ -5,9 +5,8 @@
  * fire-and-forget in the background. The store is the single source of truth
  * in memory; db.ts is durable backup + (build step 4) the sync substrate.
  *
- * Deletes are soft (item.deletedAt / a list-level tombstone) so the shared-
- * sync module can converge a delete across devices instead of resurrecting
- * it. `applySync` is the reserved entry point step 4 fills in.
+ * Item deletes remain tombstones for compatible cross-device merges.
+ * The array contains exactly one list after initialization.
  */
 
 import { assignedCategory, learnedCategory, preferenceKey, sanitizePreferences } from '../data/aislePreferences';
@@ -21,11 +20,10 @@ import {
   makeItem,
   makeList,
   pruneTombstones,
-  visibleItems,
 } from '../data/list';
 import { DEFAULT_CATEGORY_ORDER, isBuiltinCategory, type Category } from '../data/categories';
 import { makeId } from '../lib/id';
-import { makeShareIdentity } from '../sync/share';
+import { makeShareIdentity, isShareSecret } from '../sync/share';
 import { mergeList } from '../sync/merge';
 import {
   now as clockNow,
@@ -37,15 +35,13 @@ import {
 import {
   loadAllLists,
   saveList,
-  deleteListFromDb,
-  putTombstone,
-  removeTombstone,
+  replaceCurrentList,
+  getAppSetting,
   getSyncMeta,
   setSyncMeta,
 } from './db';
+import { isListSnapshot } from '../sync/validateList';
 import { logEvent, logError } from '../feedback/log';
-import { QA_MODE } from '../qa/qaMode';
-import { qaLists } from '../qa/fixtures';
 
 /** Heal duplicate ids in loaded data (legacy/edge collisions corrupt React
  *  keys and would let two devices share an id once sync lands). */
@@ -88,21 +84,14 @@ function repairIds(lists: GroceryList[]): {
 interface ListsState {
   lists: GroceryList[];
   hydrated: boolean;
+  pendingJoin: boolean;
+  transitioning: boolean;
 
   hydrate: () => Promise<void>;
 
-  createList: (name?: string) => string;
   getList: (id: string) => GroceryList | undefined;
-  renameList: (id: string, name: string) => void;
-  duplicateList: (id: string) => string | null;
-  deleteList: (id: string) => void;
-  /** Additive import (canon Layer 3). Lists arrive with fresh ids already
-   *  (see lib/transfer), so this never clobbers existing data. Returns the
-   *  number added. */
-  importLists: (incoming: GroceryList[]) => number;
-
   /** Add an item or re-add its existing row. Learned list preferences override
-   * supplied catalog/kit aisles. The locale argument remains for callers;
+   * supplied catalog aisles. The locale argument remains for callers;
    * classification itself is independent of the interface language. */
   addItem: (
     listId: string,
@@ -110,18 +99,6 @@ interface ListsState {
     locale?: string,
     category?: Category
   ) => void;
-  /** Add a kit's items to a list in one shot. Skips any name already WANTED
-   *  on the list; a crossed-off match is revived (unchecked, qty 1 — the kit
-   *  says you need it again). Items arrive with their remembered quantity +
-   *  pre-assigned aisle, so they land sorted instantly. Returns the new items
-   *  (`added`) and pre-change snapshots of revived or reclassified ones (`revived`) so the
-   *  caller's Undo can remove the former and restore the latter. */
-  addKitItems: (
-    listId: string,
-    items: { name: string; quantity: number; category: Category }[]
-  ) => { added: GroceryItem[]; revived: GroceryItem[] };
-  /** Soft-delete a batch of items in a single mutate — the Undo for a kit add. */
-  removeItems: (listId: string, itemIds: string[]) => void;
   setChecked: (listId: string, itemId: string, checked: boolean) => void;
   setQuantity: (listId: string, itemId: string, qty: number) => void;
   setNote: (listId: string, itemId: string, note: string) => void;
@@ -153,24 +130,17 @@ interface ListsState {
    *  tombstone, restores checked state). Used by delete + clear-checked undo. */
   restoreItems: (listId: string, items: GroceryItem[]) => void;
 
-  /** Mint (or return the existing) share secret for a list. Sharing is
-   *  permanent once minted — the secret never rotates. */
-  shareList: (listId: string) => string | null;
+  /** Mint (or return the existing) share secret for a list. Stopping sharing keeps a private copy; starting again mints a new secret. */
+  shareList: (listId: string) => Promise<string | null>;
   /** Create a local list paired to an existing shared secret (tapped link /
    *  scanned QR). Idempotent: re-joining the same secret returns the list
    *  already paired to it. Returns the local list id. */
-  joinShared: (secret: string) => string;
+  joinShared: (secret: string) => Promise<string>;
+  stopSharing: () => Promise<void>;
   /** Merge an incoming remote copy, matched by shared secret (NOT id —
    *  devices have independent local ids). Conflict-free per merge.ts. */
-  mergeRemoteList: (remote: GroceryList) => void;
+  mergeRemoteList: (remote: GroceryList) => boolean | Promise<boolean>;
 
-  /** Reserved generic sync entry (kept for symmetry with other apps). */
-  applySync: (changes: { upserts: GroceryList[]; deletes: string[] }) => void;
-
-  /** Durably write all current state, AWAITED. Per-list saves are otherwise
-   *  fire-and-forget, so a check made right before the app is backgrounded can
-   *  be lost if iOS suspends/kills the app before the write lands. The App-level
-   *  AppState handler awaits this on background. */
   flushPending: () => Promise<void>;
 }
 
@@ -187,6 +157,7 @@ function persist(list: GroceryList): void {
 export const useListsStore = create<ListsState>()((set, get) => {
   /** Map one list by id through `fn`, bump its updatedAt, persist. */
   function mutate(id: string, fn: (l: GroceryList) => GroceryList): void {
+    if (get().pendingJoin || get().transitioning) return;
     let updated: GroceryList | undefined;
     set((s) => ({
       lists: s.lists.map((l) => {
@@ -224,20 +195,24 @@ export const useListsStore = create<ListsState>()((set, get) => {
   return {
     lists: [],
     hydrated: false,
+    pendingJoin: false,
+    transitioning: false,
 
     hydrate: async () => {
       const persistClock = (v: number) => {
         setSyncMeta('clock', String(v)).catch(() => {});
       };
       try {
-        const [persistedClock, loaded] = await Promise.all([
+        const [persistedClock, loaded, pendingId] = await Promise.all([
           getSyncMeta('clock'),
           loadAllLists(),
+          getAppSetting('pending-join'),
         ]);
         // Hygiene before anything reads the data: clamp far-future stamps
         // (poison left by the pre-logical-clock skew era — they'd keep beating
         // fresh edits until real time caught up) and prune old tombstones (an
         // unpruned list grows until public relays reject its published state).
+        if (loaded.length !== 1) throw new Error('Expected exactly one shopping list');
         const phys = Date.now();
         const healed = loaded.map((l) =>
           pruneTombstones(healFutureStamps(l, phys + MAX_SKEW_MS), phys)
@@ -263,13 +238,6 @@ export const useListsStore = create<ListsState>()((set, get) => {
         }
         initClock(maxTs, persistClock);
 
-        // QA capture boots cleared (clearState:true); seed deterministic data so
-        // every screen is screenshot-ready without typing live. Compile-time
-        // false in production (EXPO_PUBLIC_QA_MODE unset) → tree-shaken out.
-        if (QA_MODE && healed.length === 0) {
-          set({ lists: qaLists(), hydrated: true });
-          return;
-        }
         const { lists, changed } = repairIds(healed);
         // The counts that answer "I opened it and my lists were gone": how many
         // came off disk, how many were shared, how many needed repair.
@@ -279,7 +247,7 @@ export const useListsStore = create<ListsState>()((set, get) => {
           healed: hygieneChanged.length,
           repaired: changed.length,
         });
-        set({ lists, hydrated: true });
+        set({ lists, hydrated: true, pendingJoin: pendingId === lists[0].id, transitioning: false });
         const dirty = new Set([...hygieneChanged, ...changed].map((l) => l.id));
         for (const l of lists) if (dirty.has(l.id)) persist(l);
       } catch (err) {
@@ -287,77 +255,11 @@ export const useListsStore = create<ListsState>()((set, get) => {
         // home screen with all their lists still on disk.
         logError('lists', err, { during: 'hydrate' });
         console.warn('grocery-list: failed to load lists from disk', err);
-        initClock(Date.now(), persistClock);
-        set({ hydrated: true });
+        throw err;
       }
     },
 
-    createList: (name) => {
-      const list = makeList(name);
-      set((s) => ({ lists: [list, ...s.lists] }));
-      persist(list);
-      return list.id;
-    },
-
-    getList: (id) => get().lists.find((l) => l.id === id),
-
-    renameList: (id, name) => {
-      const trimmed = name.trim();
-      if (!trimmed) return;
-      // Stamp the name's own clock so this explicit rename wins the merge on
-      // every paired device, no matter what they last called the list.
-      mutate(id, (l) => ({ ...l, name: trimmed, nameUpdatedAt: clockNow() }));
-    },
-
-    duplicateList: (id) => {
-      const original = get().lists.find((l) => l.id === id);
-      if (!original) return null;
-      const now = clockNow();
-      const dup: GroceryList = {
-        ...original,
-        id: makeId('l'),
-        name: `${original.name} (copy)`,
-        nameUpdatedAt: now,
-        // Fresh ids; reset checked; drop tombstoned items and the share
-        // identity (a copy is a new, unshared list).
-        items: original.items
-          .filter((it) => it.deletedAt == null)
-          .map((it) => ({
-            ...it,
-            id: makeId('i'),
-            checked: false,
-            checkedAt: undefined,
-            checkedUpdatedAt: now,
-            addedAt: now,
-            updatedAt: now,
-          })),
-        aislePreferences: original.aislePreferences?.map(p => ({ ...p })),
-        shareIdentity: undefined,
-        createdAt: now,
-        updatedAt: now,
-      };
-      set((s) => ({ lists: [dup, ...s.lists] }));
-      persist(dup);
-      return dup.id;
-    },
-
-    deleteList: (id) => {
-      set((s) => ({ lists: s.lists.filter((l) => l.id !== id) }));
-      deleteListFromDb(id).catch((err) =>
-        console.warn('grocery-list: failed to delete list', err)
-      );
-      putTombstone(id, clockNow()).catch((err) =>
-        console.warn('grocery-list: failed to write tombstone', err)
-      );
-    },
-
-    importLists: (incoming) => {
-      if (incoming.length === 0) return 0;
-      logEvent('lists', 'imported', { lists: incoming.length });
-      set((s) => ({ lists: [...incoming, ...s.lists] }));
-      for (const l of incoming) persist(l);
-      return incoming.length;
-    },
+    getList: (id) => get().lists.find(l => l.id === id),
 
     addItem: (listId, name, locale = 'en', category) => {
       const trimmed = name.trim();
@@ -393,97 +295,6 @@ export const useListsStore = create<ListsState>()((set, get) => {
         ...l,
         items: [...l.items, makeItem(trimmed, locale, assignedCategory(l, trimmed, category))],
       }));
-    },
-
-    addKitItems: (listId, kitItems) => {
-      const list = get().lists.find((l) => l.id === listId);
-      if (!list) return { added: [], revived: [] };
-      // Skip anything already wanted on the list (by name), and de-dupe within
-      // the kit itself, so one tap can't double up a row. A CHECKED match is
-      // revived instead of skipped — the kit says you need it again. Revived
-      // items are not in the returned array (the caller's Undo tombstones
-      // those ids, which must never delete a pre-existing item).
-      const wanted = new Set<string>();
-      const activeByName = new Map<string, GroceryItem>();
-      const checkedByName = new Map<string, GroceryItem>();
-      for (const it of visibleItems(list)) {
-        const lower = it.name.toLowerCase();
-        if (it.checked) checkedByName.set(lower, it);
-        else { wanted.add(lower); activeByName.set(lower, it); }
-      }
-      const added: GroceryItem[] = [];
-      const reviveIds = new Set<string>();
-      const recategorizeIds = new Set<string>();
-      for (const ki of kitItems) {
-        const name = ki.name.trim();
-        if (!name) continue;
-        const lower = name.toLowerCase();
-        if (wanted.has(lower)) {
-          const active = activeByName.get(lower);
-          const learned = learnedCategory(list, name);
-          if (active && learned && learned !== active.category) recategorizeIds.add(active.id);
-          continue;
-        }
-        wanted.add(lower);
-        const crossed = checkedByName.get(lower);
-        if (crossed) {
-          reviveIds.add(crossed.id);
-          continue;
-        }
-        const item = makeItem(name, 'en', assignedCategory(list, name, ki.category));
-        item.quantity = clampQty(ki.quantity);
-        added.push(item);
-      }
-      if (added.length === 0 && reviveIds.size === 0 && recategorizeIds.size === 0)
-        return { added: [], revived: [] };
-      const revived = visibleItems(list)
-        .filter((it) => reviveIds.has(it.id) || recategorizeIds.has(it.id))
-        .map((it) => ({ ...it })); // pre-change snapshots for the caller's Undo
-      const at = clockNow();
-      mutate(listId, (l) => ({
-        ...l,
-        items: [
-          ...l.items.map((it) =>
-            reviveIds.has(it.id)
-              ? {
-                  ...it,
-                  category: learnedCategory(l, it.name) ?? it.category,
-                  quantity: 1,
-                  checked: false,
-                  checkedAt: undefined,
-                  checkedUpdatedAt: at,
-                  // The quantity reset is a CONTENT change — without this
-                  // stamp the revive ties with the partner's stale copy and
-                  // can lose the merge (reverting to the old quantity).
-                  updatedAt: at,
-                }
-              : recategorizeIds.has(it.id)
-                ? { ...it, category: learnedCategory(l, it.name) ?? it.category, updatedAt: at }
-                : it
-          ),
-          ...added,
-        ],
-      }));
-      return { added, revived };
-    },
-
-    removeItems: (listId, itemIds) => {
-      if (itemIds.length === 0) return;
-      const idSet = new Set(itemIds);
-      const at = clockNow();
-      // Prune wherever tombstones are minted — a long-resident app that only
-      // ever swipe-deletes must still keep its payload bounded.
-      mutate(listId, (l) =>
-        pruneTombstones(
-          {
-            ...l,
-            items: l.items.map((it) =>
-              idSet.has(it.id) ? { ...it, deletedAt: at, updatedAt: at } : it
-            ),
-          },
-          Date.now()
-        )
-      );
     },
 
     setChecked: (listId, itemId, checked) => {
@@ -601,7 +412,7 @@ export const useListsStore = create<ListsState>()((set, get) => {
 
     deleteItem: (listId, itemId) => {
       const at = clockNow();
-      // Same prune-at-mint rule as removeItems.
+      // Prune old tombstones whenever new ones are minted.
       mutate(listId, (l) =>
         pruneTombstones(
           {
@@ -664,53 +475,62 @@ export const useListsStore = create<ListsState>()((set, get) => {
       }));
     },
 
-    shareList: (listId) => {
+    shareList: async (listId) => {
       const list = get().lists.find((l) => l.id === listId);
-      if (!list) return null;
+      if (!list || get().transitioning || get().pendingJoin) return null;
       if (list.shareIdentity) return list.shareIdentity.secret;
       const identity = makeShareIdentity();
       // The share/join pair is the app's hardest support surface, so both ends
       // leave a mark. The SECRET is never logged — only that sharing began.
       logEvent('share', 'list shared', { items: list.items.length });
-      mutate(listId, (l) => ({ ...l, shareIdentity: identity }));
-      return identity.secret;
+      set({ transitioning: true });
+      try {
+        const shared = { ...list, shareIdentity: identity, updatedAt: clockNow() };
+        await replaceCurrentList(shared, false);
+        set({ lists: [shared], transitioning: false });
+        return identity.secret;
+      } catch (err) { set({ transitioning: false }); throw err; }
     },
 
-    joinShared: (secret) => {
-      const existing = get().lists.find(
-        (l) => l.shareIdentity?.secret === secret
-      );
-      if (existing) return existing.id;
-      const base = makeList('Shared list');
-      const list: GroceryList = {
-        ...base,
-        // "Shared list" is only a placeholder shown until the first sync
-        // arrives. nameUpdatedAt:0 makes it lose the name merge to whatever
-        // the list is actually called, so joining never renames the other
-        // person's list — they keep the name they chose.
-        nameUpdatedAt: 0,
-        shareIdentity: { secret, createdAt: clockNow() },
-      };
-      logEvent('share', 'joined a shared list');
-      set((s) => ({ lists: [list, ...s.lists] }));
-      persist(list);
-      return list.id;
+    joinShared: async (secret) => {
+      if (!isShareSecret(secret)) throw new Error('Invalid sharing code');
+      const existing = get().lists[0];
+      if (existing?.shareIdentity?.secret === secret) return existing.id;
+      if (get().transitioning) throw new Error('Sharing change already in progress');
+      const list = { ...makeList(), nameUpdatedAt: 0, shareIdentity: { secret, createdAt: clockNow() } };
+      set({ transitioning: true }); // disconnect before any disk awaits
+      try {
+        await replaceCurrentList(list, true);
+        set({ lists: [list], pendingJoin: true, transitioning: false });
+        return list.id;
+      } catch (err) { set({ transitioning: false }); throw err; }
+    },
+
+    stopSharing: async () => {
+      const current = get().lists[0];
+      if (!current?.shareIdentity || get().transitioning) return;
+      const list = { ...current, id: makeId('l'), shareIdentity: undefined };
+      set({ transitioning: true });
+      try {
+        await replaceCurrentList(list, false);
+        set({ lists: [list], pendingJoin: false, transitioning: false });
+      } catch (err) { set({ transitioning: false }); throw err; }
     },
 
     mergeRemoteList: (remote) => {
       const secret = remote.shareIdentity?.secret;
-      if (!secret) return;
+      if (!secret || get().transitioning || !isListSnapshot(remote, secret)) return false;
       const local = get().lists.find(
         (l) => l.shareIdentity?.secret === secret
       );
-      if (!local) return;
+      if (!local) return false;
       // Heal the INCOMING copy too (hydrate only heals what's on disk): a
       // peer still running the pre-clock build republishes far-future
       // poisoned stamps on every sync, which would otherwise out-clock every
       // fresh local edit and undo the hydrate heal seconds after each launch.
       // The receive boundary is side-effect territory, so the merge itself
       // stays a pure function.
-      const healed = healFutureStamps(remote, Date.now() + MAX_SKEW_MS);
+      const healed = healFutureStamps({ ...remote, nameUpdatedAt: remote.nameUpdatedAt ?? remote.createdAt, aislePreferences: sanitizePreferences(remote.aislePreferences) }, Date.now() + MAX_SKEW_MS);
       // Advance our clock past every timestamp in the incoming copy, so our
       // NEXT local edit out-clocks whatever the peer last did — this is what
       // turns "fastest wall clock wins" into "last action in causal order wins".
@@ -729,43 +549,33 @@ export const useListsStore = create<ListsState>()((set, get) => {
         );
       }
       observeClock(remoteMax);
+      if (get().pendingJoin) {
+        const adopted = { ...healed, id: local.id, shareIdentity: local.shareIdentity };
+        // Keep the pending gate closed until the snapshot is durable. Other
+        // snapshots queue in SQLite; only the still-current pending ID may adopt.
+        set({ transitioning: true });
+        return replaceCurrentList(adopted, false).then(() => {
+          set({ lists: [adopted], pendingJoin: false, transitioning: false });
+          return true;
+        }).catch(err => {
+          set({ transitioning: false });
+          logError('share', err, { during: 'initial snapshot' });
+          return false;
+        });
+      }
       const merged = mergeList(local, healed);
       // A converged echo (peer answering hello, reconnect force-publish) must
       // not cost a store update + full-list SQLite write + re-render.
-      if (JSON.stringify(merged) === JSON.stringify(local)) return;
+      if (JSON.stringify(merged) === JSON.stringify(local)) return true;
       set((s) => ({
         lists: s.lists.map((l) => (l.id === local.id ? merged : l)),
       }));
       persist(merged);
-    },
-
-    applySync: ({ upserts, deletes }) => {
-      if (upserts.length === 0 && deletes.length === 0) return;
-      const delSet = new Set(deletes);
-      const upMap = new Map(upserts.map((l) => [l.id, l]));
-      set((s) => {
-        const next: GroceryList[] = [];
-        for (const l of s.lists) {
-          if (delSet.has(l.id)) continue;
-          next.push(upMap.get(l.id) ?? l);
-        }
-        for (const l of upserts) {
-          if (!s.lists.some((x) => x.id === l.id)) next.push(l);
-        }
-        next.sort((a, b) => b.updatedAt - a.updatedAt);
-        return { lists: next };
-      });
-      for (const l of upserts) {
-        persist(l);
-        removeTombstone(l.id).catch(() => {});
-      }
-      for (const id of deletes) {
-        deleteListFromDb(id).catch(() => {});
-        putTombstone(id, clockNow()).catch(() => {});
-      }
+      return true;
     },
 
     flushPending: async () => {
+      if (get().pendingJoin || get().transitioning) return;
       const lists = get().lists;
       await Promise.all(lists.map((l) => saveList(l).catch(() => {})));
       try {

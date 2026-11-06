@@ -1,28 +1,3 @@
-/**
- * The canonical in-app language control — a Settings row that opens a sheet to
- * pick the app's language. The translation sibling of the design system's
- * <AppearanceToggle/> (System / Light / Dark): a drop-in control, configured by
- * props, never forked, so every app's language picker is identical (canon
- * § Translations). The appearance control is a 3-up segmented toggle; language
- * has too many options for that, so it's a row + selection sheet (the platform
- * convention, and identical on iOS and Android — canon § Cross-platform parity).
- *
- * Self-contained on purpose: it depends only on the design-system theme (every
- * app has it) and the i18n module — NOT on the app shell's AboutRow — so it
- * drops into any app, shell or pre-shell-with-i18n, without pulling chrome.
- *
- * Canonical, app-agnostic — synced by `sync.mjs app-shell`; do not fork.
- *
- * Why an in-app picker rather than the OS per-app language screen: iOS and
- * Android 13+ expose one in system settings, but Android 12 and below do not —
- * shipping only that would leave older Android with no way to change just this
- * app's language, a § Cross-platform functional parity defect. This works on
- * every version of both platforms.
- *
- *   // In the Settings screen, under a "Language" section label:
- *   <LanguageSetting />
- */
-
 import React, { useEffect, useState } from 'react';
 import {
   View,

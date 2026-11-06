@@ -1,7 +1,7 @@
 /**
  * App-specific merge for grocery lists.
  *
- * The per-item LWW-element-set + tombstone logic lives in the factory module
+ * The per-item LWW-element-set + tombstone logic lives in the shared helper
  * (`./mergeRecordSet.ts`). This file resolves the *list-level* fields and
  * delegates item-set merging to the generic helper. Aisle order and share
  * identity follow the whole-list `updatedAt`; the **name merges on its own

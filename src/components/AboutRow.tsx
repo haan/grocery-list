@@ -1,14 +1,3 @@
-/**
- * A single Settings/About row: optional leading Lucide icon, label, and either
- * a trailing value (e.g. the version) or an external-link chevron. Hairline-
- * separated, no button chrome — design-system restraint. One component for
- * every canonical entry — no per-row restyling.
- *
- * Canonical, app-agnostic — synced by `sync.mjs app-shell`; do not fork. (This
- * is the de-drifted single source: grocery-list / packing-list had forked
- * variants before the app-shell module.)
- */
-
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { ChevronRight, type LucideIcon } from 'lucide-react-native';

@@ -1,8 +1,9 @@
+import { sharedFixture, seedList, pairedFixture } from '../../../qa/singleListFixture';
 /**
  * Intent fuzzer — the fast-check MODEL-BASED port (Uplevel 3 / T1).
  *
  * This is the grocery hand-rolled `intentFuzz.test.ts` re-expressed on the
- * factory `qa/intent-fuzz` kit (fast-check `fc.commands`). It drives the SAME
+ * local `qa/intent-fuzz` harness (fast-check `fc.commands`). It drives the SAME
  * REAL store per simulated device through the SAME `simHarness`, judged by the
  * SAME user-intent oracles — nothing weakened. What the port adds over the
  * hand-rolled loop is exactly the two things fast-check gives:
@@ -38,6 +39,7 @@
  */
 
 jest.mock('../../store/db', () => ({
+  getAppSetting: jest.fn(async () => null),
   loadAllLists: jest.fn(async () => []),
   saveList: jest.fn(async () => {}),
   deleteListFromDb: jest.fn(async () => {}),
@@ -45,8 +47,6 @@ jest.mock('../../store/db', () => ({
   removeTombstone: jest.fn(async () => {}),
   getSyncMeta: jest.fn(async () => null),
   setSyncMeta: jest.fn(async () => {}),
-  loadAllKits: jest.fn(async () => []),
-  saveKit: jest.fn(async () => {}),
 }));
 
 import fc from 'fast-check';
@@ -333,9 +333,9 @@ function setup(): { model: Model; real: Real } {
   const world = makeWorld();
   worldRef.current = world;
   const devs = DEV_SKEWS.map((skew, i) => makeDev(world, `d${i}`, skew));
-  const listId0 = on(devs[0], () => devs[0].store.getState().createList('Groceries'));
-  const secret = on(devs[0], () => devs[0].store.getState().shareList(listId0))!;
-  for (const d of devs.slice(1)) on(d, () => d.store.getState().joinShared(secret));
+  const listId0 = on(devs[0], () => seedList(devs[0].store, 'Groceries'));
+  const secret = on(devs[0], () => sharedFixture(devs[0].store, listId0))!;
+  for (const d of devs.slice(1)) on(d, () => pairedFixture(d.store, secret));
   converge(devs, secret);
   return {
     model: { check: new Map(), exist: new Map(), rowFate: new Map() },

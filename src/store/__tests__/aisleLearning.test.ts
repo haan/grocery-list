@@ -1,4 +1,6 @@
+import { sharedFixture, seedList } from '../../../qa/singleListFixture';
 jest.mock('../db', () => ({
+  getAppSetting: jest.fn(async () => null),
   loadAllLists: jest.fn(async () => []), saveList: jest.fn(async () => {}),
   getSyncMeta: jest.fn(async () => null), setSyncMeta: jest.fn(async () => {}),
 }));
@@ -20,7 +22,7 @@ function correct(id: string, name: string, category = 'Pantry') {
 beforeEach(() => { useListsStore.setState({ lists: [], hydrated: true }); jest.clearAllMocks(); });
 
 test('manual correction survives delete/re-add, aliases, and catalog-supplied categories', () => {
-  const id = store().createList('Test');
+  const id = seedList(useListsStore, 'Test');
   const itemId = correct(id, 'Mëllech');
   store().deleteItem(id, itemId);
   store().addItem(id, 'Mëllech', 'en', 'Dairy & eggs');
@@ -30,7 +32,7 @@ test('manual correction survives delete/re-add, aliases, and catalog-supplied ca
 });
 
 test('selecting the current aisle teaches; automatic additions do not', () => {
-  const id = store().createList();
+  const id = seedList(useListsStore, );
   store().addItem(id, 'Ee');
   expect(list(id).aislePreferences).toBeUndefined();
   store().recategorize(id, live(id)[0].id, 'Dairy & eggs');
@@ -38,7 +40,7 @@ test('selecting the current aisle teaches; automatic additions do not', () => {
 });
 
 test('full-name corrections override product preferences without spreading to other names', () => {
-  const id = store().createList();
+  const id = seedList(useListsStore, );
   correct(id, 'Mëllech', 'Pantry');
   correct(id, 'Bio Mëllech 1L', 'Beverages');
   expect(learnedCategory(list(id), 'BIO  mellech 1l')).toBe('Beverages');
@@ -48,16 +50,18 @@ test('full-name corrections override product preferences without spreading to ot
 });
 
 test('personal history names preserve spelling and use the destination list preference', () => {
-  const a = store().createList(), b = store().createList();
+  const a = seedList(useListsStore);
   correct(a, 'Gromper', 'Pantry');
   store().addItem(a, 'Gromperen');
-  store().addItem(b, 'Gromperen');
+
   expect(live(a)[1]).toMatchObject({ name: 'Gromperen', category: 'Pantry' });
+  const b = seedList(useListsStore);
+  store().addItem(b, 'Gromperen');
   expect(live(b)[0].category).toBe('Produce');
 });
 
 test('re-adding active and checked items applies preferences but preserves categories without one', () => {
-  const id = store().createList();
+  const id = seedList(useListsStore, );
   store().addItem(id, 'Milch');
   correct(id, 'Mëllech', 'Pantry');
   expect(live(id)[0].category).toBe('Dairy & eggs'); // no retrospective reorganization
@@ -71,33 +75,9 @@ test('re-adding active and checked items applies preferences but preserves categ
   expect(live(id).at(-1)?.category).toBe('Bakery');
 });
 
-test('kit additions and revivals honor preferences without learning from kit categories', () => {
-  const id = store().createList();
-  const itemId = correct(id, 'Mëllech', 'Pantry');
-  store().setChecked(id, itemId, true);
-  store().addKitItems(id, [
-    {name: 'Mëllech', category: 'Dairy & eggs', quantity: 3},
-    {name: 'Milch', category: 'Dairy & eggs', quantity: 2},
-    {name: 'custom', category: 'Bakery', quantity: 1},
-  ]);
-  expect(live(id).map(i => i.category)).toEqual(['Pantry', 'Pantry', 'Bakery']);
-  expect(list(id).aislePreferences).toHaveLength(1);
-});
-
-test('re-adding an already active kit item updates its learned aisle with reversible snapshots', () => {
-  const id = store().createList();
-  store().addItem(id, 'Milch');
-  correct(id, 'Mëllech', 'Pantry');
-  const {revived} = store().addKitItems(id, [{name:'Milch',category:'Dairy & eggs',quantity:5}]);
-  expect(live(id)[0]).toMatchObject({category:'Pantry',quantity:1,checked:false});
-  store().restoreItems(id, revived);
-  expect(live(id)[0].category).toBe('Dairy & eggs');
-  expect(learnedCategory(list(id),'Milch')).toBe('Pantry');
-});
-
 test('receiving an item category edit without a preference never teaches a rule', () => {
-  const id = store().createList();
-  const secret = store().shareList(id)!;
+  const id = seedList(useListsStore, );
+  const secret = sharedFixture(useListsStore, id)!;
   store().addItem(id, 'Mëllech');
   const remote = {...list(id), shareIdentity:{secret,createdAt:1},
     items:list(id).items.map(i => ({...i,category:'Pantry',updatedAt:i.updatedAt+1}))};
@@ -107,7 +87,7 @@ test('receiving an item category edit without a preference never teaches a rule'
 });
 
 test('creating/reordering aisles does not learn; deleting clears rules and moves items', () => {
-  const id = store().createList();
+  const id = seedList(useListsStore, );
   expect(store().addCategory(id, '  ')).toBeNull();
   expect(store().addCategory(id, ' Local ')).toBe('Local');
   expect(store().addCategory(id, 'local')).toBe('Local');
@@ -128,7 +108,7 @@ test('creating/reordering aisles does not learn; deleting clears rules and moves
 });
 
 test('deleting an aisle reclassifies live items using remaining rules without learning or changing check state', () => {
-  const id = store().createList();
+  const id = seedList(useListsStore, );
   store().addCategory(id, 'Local');
   correct(id, 'Mëllech', 'Pantry');
   const milk = correct(id, 'Bio Mëllech 1L', 'Local');
@@ -161,8 +141,8 @@ test('deleting an aisle reclassifies live items using remaining rules without le
   }
 });
 
-test('preferences persist through hydration and duplicate lists are independent', async () => {
-  const id = store().createList();
+test('preferences persist through hydration', async () => {
+  const id = seedList(useListsStore, );
   correct(id, 'Mëllech');
   const saved = JSON.parse(JSON.stringify(list(id)));
   expect(saveList).toHaveBeenLastCalledWith(list(id));
@@ -170,14 +150,11 @@ test('preferences persist through hydration and duplicate lists are independent'
   useListsStore.setState({ lists: [] });
   await store().hydrate();
   expect(learnedCategory(list(id), 'Milch')).toBe('Pantry');
-  const copy = store().duplicateList(id)!;
-  expect(list(copy).aislePreferences).not.toBe(list(id).aislePreferences);
-  correct(copy, 'Milch', 'Beverages');
-  expect(learnedCategory(list(id), 'Milch')).toBe('Pantry');
+
 });
 
 test('renaming an aisle preserves its position, items, and alias learning through sync and restart', async () => {
-  const id = store().createList();
+  const id = seedList(useListsStore, );
   store().addCategory(id, 'Local');
   const milk = correct(id, 'Mëllech', 'Local');
   store().setChecked(id, milk, true);
@@ -209,7 +186,7 @@ test('renaming an aisle preserves its position, items, and alias learning throug
 });
 
 test('rename validates names, permits case changes, and never revives deleted preferences', () => {
-  const id = store().createList();
+  const id = seedList(useListsStore, );
   store().addCategory(id,'Local');
   store().addCategory(id,'Deli');
   correct(id,'Mëllech','Local');
@@ -264,8 +241,8 @@ test('validates and heals remote preference clocks before the next local correct
   expect(sanitizePreferences([null, {id: 'oops'}, {id: milk, category: 'Pantry', updatedAt: NaN}])).toEqual([]);
   const raw = withPrefs([{id: milk, category: 'Pantry', updatedAt: 999, deletedAt: 1000}]);
   expect(healFutureStamps(raw,100).aislePreferences![0]).toMatchObject({updatedAt:100, deletedAt:100});
-  const id = store().createList();
-  const secret = store().shareList(id)!;
+  const id = seedList(useListsStore, );
+  const secret = sharedFixture(useListsStore, id)!;
   const future = Date.now() + 50000;
   const remote = {...list(id), shareIdentity:{secret,createdAt:1}, aislePreferences:[{id:milk,category:'Pantry',updatedAt:future}]};
   store().mergeRemoteList(remote);

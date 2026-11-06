@@ -1,25 +1,8 @@
-/**
- * SQLite persistence for grocery lists.
- *
- * One row per list with JSON-encoded `items` / `categoryOrder` / optional
- * `shareIdentity`. This blob shape is deliberately the same one the shared-
- * sync module (build step 4) replicates, so local and synced storage stay
- * identical and no relational migration is needed when sync lands.
- *
- * Persisting to the app's SQLite DB in the default Documents location also
- * gives us canon § Backup & restore Layer 1 (rides iCloud / Android auto-
- * backup) for free, with zero UI.
- *
- * All functions are async. Writes are fire-and-forget (UI is the source of
- * truth); the single hydrate() is awaited at app start.
- */
-
 import * as SQLite from 'expo-sqlite';
 import { getDb as getSharedDb } from '../storage/kv';
 import type { Category } from '../data/categories';
-import type { GroceryItem, GroceryList, ShareIdentity } from '../data/list';
+import { makeList, type GroceryItem, type GroceryList, type ShareIdentity } from '../data/list';
 import { sanitizePreferences } from '../data/aislePreferences';
-import type { Kit, KitItem } from '../data/kit';
 
 let _dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
@@ -79,15 +62,6 @@ async function openDb(): Promise<SQLite.SQLiteDatabase> {
       count    INTEGER NOT NULL,
       lastUsed INTEGER NOT NULL
     );
-    CREATE TABLE IF NOT EXISTS kits (
-      id            TEXT PRIMARY KEY NOT NULL,
-      name          TEXT NOT NULL,
-      nameUpdatedAt INTEGER,
-      items         TEXT NOT NULL,
-      createdAt     INTEGER NOT NULL,
-      updatedAt     INTEGER NOT NULL,
-      deletedAt     INTEGER
-    );
   `);
   // Migration: `nameUpdatedAt` (the name's own merge clock) was added after
   // first release. Old installs have the column missing; add it. Existing
@@ -111,10 +85,26 @@ async function openDb(): Promise<SQLite.SQLiteDatabase> {
     try { await _db.execAsync('ALTER TABLE lists ADD COLUMN aislePreferences TEXT'); }
     catch (err) { if (!/duplicate column name/i.test(String(err))) throw err; }
   }
+  // One transaction owns the destructive, explicitly requested shopping reset.
+  // Settings unrelated to shopping (appearance/language) remain untouched.
+  await _db.execAsync('BEGIN IMMEDIATE');
+  try {
+    await _db.execAsync('DROP TABLE IF EXISTS kits');
+    const done = await _db.getFirstAsync<{ v: string }>(
+      "SELECT v FROM app_settings WHERE k = 'single-list-v1'"
+    );
+    if (!done) {
+      await _db.execAsync("DELETE FROM lists; DELETE FROM item_history; DELETE FROM tombstones; DELETE FROM sync_meta; DELETE FROM app_settings WHERE k IN ('staples', 'pending-join');");
+      await insertList(_db, makeList());
+      await _db.runAsync("INSERT INTO app_settings (k,v) VALUES ('single-list-v1','1')");
+    }
+    await _db.execAsync('COMMIT');
+  } catch (err) {
+    await _db.execAsync('ROLLBACK');
+    throw err;
+  }
   return _db;
 }
-
-// ---------- Item history (local autocomplete; never synced, never external) --
 
 export interface HistoryRow {
   name: string;
@@ -208,8 +198,7 @@ export async function loadAllLists(): Promise<GroceryList[]> {
   return rows.map(rowToList);
 }
 
-export async function saveList(list: GroceryList): Promise<void> {
-  const db = await getDb();
+async function insertList(db: SQLite.SQLiteDatabase, list: GroceryList): Promise<void> {
   await db.runAsync(
     `INSERT OR REPLACE INTO lists
        (id, name, nameUpdatedAt, items, categoryOrder, shareIdentity, createdAt, updatedAt, aislePreferences)
@@ -228,81 +217,35 @@ export async function saveList(list: GroceryList): Promise<void> {
   );
 }
 
-export async function deleteListFromDb(id: string): Promise<void> {
-  const db = await getDb();
-  await db.runAsync('DELETE FROM lists WHERE id = ?', [id]);
+// Serialize saves and identity replacement. A delayed save of an old local ID
+// can never recreate it after the atomic replacement has committed.
+let writes: Promise<unknown> = Promise.resolve();
+function enqueue<T>(work: () => Promise<T>): Promise<T> {
+  const result = writes.then(work);
+  writes = result.catch(() => {});
+  return result;
 }
-
-// ---------- Kits (reusable item bundles) ----------
-// Same blob-per-row shape as lists. Soft-deleted kits stay in the table with
-// `deletedAt` set so a delete converges across devices (the kit collection is a
-// record set, like list items); loadAllKits returns them and the store filters
-// for the UI but keeps them for merge.
-
-interface KitRow {
-  id: string;
-  name: string;
-  nameUpdatedAt: number | null;
-  items: string;
-  createdAt: number;
-  updatedAt: number;
-  deletedAt: number | null;
+export function saveList(list: GroceryList): Promise<void> {
+  return enqueue(async () => {
+    const db = await getDb();
+    const current = await db.getFirstAsync<{ id: string }>('SELECT id FROM lists');
+    if (current?.id === list.id) await insertList(db, list);
+  });
 }
-
-function rowToKit(row: KitRow): Kit {
-  return {
-    id: row.id,
-    name: row.name,
-    nameUpdatedAt: row.nameUpdatedAt ?? row.createdAt,
-    items: JSON.parse(row.items) as KitItem[],
-    createdAt: row.createdAt,
-    updatedAt: row.updatedAt,
-    deletedAt: row.deletedAt ?? undefined,
-  };
-}
-
-export async function loadAllKits(): Promise<Kit[]> {
-  const db = await getDb();
-  const rows = await db.getAllAsync<KitRow>(
-    'SELECT * FROM kits ORDER BY updatedAt DESC'
-  );
-  return rows.map(rowToKit);
-}
-
-export async function saveKit(kit: Kit): Promise<void> {
-  const db = await getDb();
-  await db.runAsync(
-    `INSERT OR REPLACE INTO kits
-       (id, name, nameUpdatedAt, items, createdAt, updatedAt, deletedAt)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    [
-      kit.id,
-      kit.name,
-      kit.nameUpdatedAt,
-      JSON.stringify(kit.items),
-      kit.createdAt,
-      kit.updatedAt,
-      kit.deletedAt ?? null,
-    ]
-  );
-}
-
-// ---------- Cross-device sync support ----------
-// Tombstones let a list delete propagate: without "list X deleted at T" a
-// pull would re-adopt X from a paired device. Written on delete (putTombstone)
-// and cleared when a list is re-imported (removeTombstone).
-
-export async function putTombstone(id: string, deletedAt: number): Promise<void> {
-  const db = await getDb();
-  await db.runAsync(
-    'INSERT OR REPLACE INTO tombstones (id, deletedAt) VALUES (?, ?)',
-    [id, deletedAt]
-  );
-}
-
-export async function removeTombstone(id: string): Promise<void> {
-  const db = await getDb();
-  await db.runAsync('DELETE FROM tombstones WHERE id = ?', [id]);
+export function replaceCurrentList(list: GroceryList, pending: boolean): Promise<void> {
+  return enqueue(async () => {
+    const db = await getDb();
+    await db.execAsync('BEGIN IMMEDIATE');
+    try {
+      await db.execAsync('DELETE FROM lists');
+      await insertList(db, list);
+      await db.runAsync("INSERT OR REPLACE INTO app_settings (k,v) VALUES ('pending-join',?)", [pending ? list.id : '']);
+      await db.execAsync('COMMIT');
+    } catch (err) {
+      await db.execAsync('ROLLBACK');
+      throw err;
+    }
+  });
 }
 
 export async function getSyncMeta(k: string): Promise<string | null> {
@@ -331,12 +274,4 @@ export async function getAppSetting(k: string): Promise<string | null> {
     [k]
   );
   return row?.v ?? null;
-}
-
-export async function setAppSetting(k: string, v: string): Promise<void> {
-  const db = await getDb();
-  await db.runAsync(
-    'INSERT OR REPLACE INTO app_settings (k, v) VALUES (?, ?)',
-    [k, v]
-  );
 }

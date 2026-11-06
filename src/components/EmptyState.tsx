@@ -1,10 +1,3 @@
-/**
- * The canonical empty state — a single muted sentence, centered, no
- * illustration (design-system restraint; canon voice). Used by every list /
- * tracker home screen ("No lists yet. Tap + to add one."). Canonical,
- * app-agnostic — synced by `sync.mjs app-shell`; do not fork.
- */
-
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useTheme, fontFamily, space, type as ty, type Colors } from '../theme';

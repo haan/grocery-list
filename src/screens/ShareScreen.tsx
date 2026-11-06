@@ -1,146 +1,105 @@
-/**
- * Share a list — the entire pairing UX.
- *
- * Person 1: a QR + a link, sent however they like. Person 2: scan it or tap
- * it. No account, no sign-up, ever. After this one handshake the two devices
- * stay synced forever (the link is just the introduction).
- */
-
-import React, { useCallback, useState } from 'react';
-import {
-  View,
-  Text,
-  Pressable,
-  Share,
-  StyleSheet,
-} from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { View, Text, Pressable, Share, StyleSheet, ScrollView, BackHandler } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import QRCode from 'react-native-qrcode-svg';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { X, Share2, ScanLine } from 'lucide-react-native';
+import { X } from 'lucide-react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
 import { useListsStore } from '../store/lists';
 import { buildShareLink, parseShareLink } from '../sync/share';
+import { resyncNow } from '../sync';
+import { useConfirm } from '../components/Dialogs';
+import { SyncStatusBar } from '../components/SyncStatusBar';
 import { t } from '../i18n';
-import {
-  useTheme,
-  fontFamily,
-  space,
-  radius,
-  target,
-  type as ty,
-  hairline,
-  type Colors,
-} from '../theme';
-import { boundedContent } from '../theme';
+import { useTheme, fontFamily, space, radius, target, type as ty, hairline, type Colors, boundedContent } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Share'>;
-
 export default function ShareScreen({ route, navigation }: Props) {
-  const { listId } = route.params;
   const { c } = useTheme();
   const s = makeStyles(c);
-
-  const list = useListsStore((st) => st.lists.find((l) => l.id === listId));
-  const shareList = useListsStore((st) => st.shareList);
-  const joinShared = useListsStore((st) => st.joinShared);
-
+  const list = useListsStore(st => st.lists[0]);
+  const busy = useListsStore(st => st.transitioning);
+  const pending = useListsStore(st => st.pendingJoin);
   const [scanning, setScanning] = useState(false);
+  const scanConsumed = useRef(false);
   const [permission, requestPermission] = useCameraPermissions();
-
-  const secret = list ? shareList(listId) : null;
+  const [error, setError] = useState(false);
+  const confirm = useConfirm();
+  const secret = list?.shareIdentity?.secret;
   const link = secret ? buildShareLink(secret) : '';
-
-  const onSend = useCallback(() => {
-    if (link) Share.share({ message: link }).catch(() => {});
-  }, [link]);
-
-  const onScanned = useCallback(
-    ({ data }: { data: string }) => {
-      const sec = parseShareLink(data);
-      if (!sec) return;
-      setScanning(false);
-      const id = joinShared(sec);
-      navigation.replace('ListDetail', { listId: id });
-    },
-    [joinShared, navigation]
-  );
-
-  const startScan = useCallback(async () => {
-    if (!permission?.granted) {
-      const res = await requestPermission();
-      if (!res.granted) return;
-    }
+  const join = useCallback((incoming: string) => {
+    setScanning(false);
+    if (incoming === useListsStore.getState().lists[0]?.shareIdentity?.secret) return;
+    confirm.open({ title: t('share.replaceTitle'), message: t('share.replaceBody'),
+      confirmLabel: t('share.join'), destructive: true,
+      onConfirm: () => {
+        setError(false);
+        void useListsStore.getState().joinShared(incoming).then(() => navigation.popToTop()).catch(() => setError(true));
+      },
+    });
+  }, [confirm.open, navigation]);
+  useEffect(() => {
+    const incoming = route.params?.joinSecret;
+    if (!incoming) return;
+    navigation.setParams({ joinSecret: undefined });
+    join(incoming);
+  }, [route.params?.joinSecret, navigation, join]);
+  useEffect(() => {
+    if (!scanning) return;
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => { setScanning(false); return true; });
+    return () => sub.remove();
+  }, [scanning]);
+  const startScan = async () => {
+    if (!permission?.granted && !(await requestPermission()).granted) return;
+    scanConsumed.current = false;
     setScanning(true);
-  }, [permission, requestPermission]);
-
-  return (
-    <SafeAreaView style={s.safe} edges={['top', 'left', 'right', 'bottom']}>
-      <View style={s.header}>
-        <Text style={s.title}>
-          {scanning ? t('share.scanCode') : t('share.shareThis')}
-        </Text>
-        <Pressable
-          onPress={() =>
-            scanning ? setScanning(false) : navigation.goBack()
-          }
-          hitSlop={8}
-          accessibilityRole="button"
-          accessibilityLabel={t('common.close')}
-          style={({ pressed }) => [s.iconBtn, pressed && s.pressed]}
-        >
-          <X size={22} color={c.fg} strokeWidth={1.5} />
-        </Pressable>
-      </View>
-
-      {scanning ? (
-        <View style={s.scanWrap}>
-          <CameraView
-            style={s.camera}
-            facing="back"
-            barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
-            onBarcodeScanned={onScanned}
-          />
-          <Text style={s.hint}>{t('share.scanHint')}</Text>
-        </View>
-      ) : (
-        <View style={s.body}>
-          <Text style={s.lead}>
-            {t('share.leadBefore')}{' '}
-            <Text style={s.leadStrong}>{list?.name ?? t('share.thisList')}</Text>
-            {t('share.leadAfter')}
-          </Text>
-          {link ? (
-            <View style={s.qrCard}>
-              <QRCode value={link} size={216} backgroundColor="#FFFFFF" />
-            </View>
-          ) : null}
-          <Pressable
-            onPress={onSend}
-            accessibilityRole="button"
-            accessibilityLabel={t('share.sendLink')}
-            style={({ pressed }) => [s.primaryBtn, pressed && s.pressed]}
-          >
-            <Share2 size={18} color={c.inkButtonText} strokeWidth={1.5} />
-            <Text style={s.primaryText}>{t('share.sendLink')}</Text>
-          </Pressable>
-          <Pressable
-            onPress={startScan}
-            accessibilityRole="button"
-            // Label is the visible words so Voice Control can match them; the
-            // "list code" clarification moves to the hint.
-            accessibilityLabel={t('share.scanInstead')}
-            accessibilityHint={t('share.scanInsteadA11y')}
-            style={({ pressed }) => [s.ghostBtn, pressed && s.pressed]}
-          >
-            <ScanLine size={18} color={c.fg} strokeWidth={1.5} />
-            <Text style={s.ghostText}>{t('share.scanInstead')}</Text>
-          </Pressable>
-        </View>
-      )}
-    </SafeAreaView>
-  );
+  };
+  const stop = () => confirm.open({ title: t('share.stop'), message: t('share.stopBody'),
+    confirmLabel: t('share.stop'), destructive: true,
+    onConfirm: () => { setError(false); void useListsStore.getState().stopSharing().catch(() => setError(true)); },
+  });
+  const action = (label: string, onPress: () => void, primary = false) => <Pressable
+    accessibilityRole="button" accessibilityLabel={label} disabled={busy} accessibilityState={{ disabled: busy }}
+    onPress={onPress} style={primary ? s.primaryBtn : s.ghostBtn}>
+    <Text style={primary ? s.primaryText : s.ghostText}>{label}</Text>
+  </Pressable>;
+  return <SafeAreaView style={s.safe} edges={['top', 'left', 'right', 'bottom']}>
+    <View style={s.header}>
+      <Text style={s.title}>{scanning ? t('share.scanCode') : t('share.title')}</Text>
+      <Pressable onPress={() => scanning ? setScanning(false) : navigation.goBack()}
+        accessibilityRole="button" accessibilityLabel={t('common.close')} style={s.iconBtn}>
+        <X size={22} color={c.fg} />
+      </Pressable>
+    </View>
+    {scanning ? <View style={s.scanWrap}>
+      <CameraView style={s.camera} facing="back" barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
+        onBarcodeScanned={({ data }) => {
+          if (scanConsumed.current) return;
+          const incoming = parseShareLink(data);
+          if (!incoming) return;
+          scanConsumed.current = true;
+          join(incoming);
+        }} />
+      <Text style={s.hint}>{t('share.scanHint')}</Text>
+    </View> : <ScrollView contentContainerStyle={s.body}>
+      {error && <Text style={s.hint} accessibilityRole="alert">{t('share.failed')}</Text>}
+      <Text style={s.lead}>{pending ? t('share.waiting') : secret ? t('share.sharedHelp') : t('share.privateHelp')}</Text>
+      {secret ? <>
+        <SyncStatusBar secret={secret} />
+        {action(t('share.syncNow'), () => resyncNow(secret))}
+        {!pending && <>
+          <View style={s.qrCard}><QRCode value={link} size={216} backgroundColor="#FFFFFF" /></View>
+          {action(t('share.sendLink'), () => { void Share.share({ message: link }).catch(() => setError(true)); }, true)}
+        </>}
+        {action(t('share.stop'), stop)}
+      </> : action(t('share.start'), () => {
+        if (list) { setError(false); void useListsStore.getState().shareList(list.id).catch(() => setError(true)); }
+      }, true)}
+      {action(t('share.scanCode'), () => { void startScan().catch(() => setError(true)); })}
+    </ScrollView>}
+    {confirm.element}
+  </SafeAreaView>;
 }
 
 function makeStyles(c: Colors) {
@@ -162,7 +121,7 @@ function makeStyles(c: Colors) {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    body: { ...boundedContent, flex: 1, alignItems: 'center', paddingHorizontal: space.s7, gap: space.s6 },
+    body: { ...boundedContent, flexGrow: 1, paddingBottom: space.s7, alignItems: 'center', paddingHorizontal: space.s7, gap: space.s6 },
     lead: {
       ...ty.base,
       fontFamily: fontFamily.sans,

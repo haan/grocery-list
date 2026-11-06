@@ -1,15 +1,3 @@
-/**
- * Regression: the clock-skew failure modes Josh reported are fixed.
- *
- * Models two paired devices, each with its OWN logical clock (one phone an hour
- * fast), stamping edits and exchanging whole-list copies through the real
- * `mergeList` — exactly the engine's data path. Before this fix these scenarios
- * lost edits and made items disappear; the asserts pin the corrected behaviour.
- *
- * The companion `_scratch_skew` demonstration (run during diagnosis, not kept)
- * showed the OLD raw-`Date.now()` merge losing a fresh edit and vanishing an
- * item. Here the same scenarios converge correctly.
- */
 import { LogicalClock } from '../clock';
 import { mergeList } from '../merge';
 import type { GroceryItem, GroceryList } from '../../data/list';

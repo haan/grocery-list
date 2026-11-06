@@ -1,27 +1,3 @@
-/**
- * Swipe-to-reveal-delete row.
- *
- * Wrap any row in this to add a left-swipe that slides the content aside and
- * reveals a Delete button. Tapping Delete fires `onDelete` (callers pair it
- * with an Undo snackbar — accidental delete is the universal grocery-app
- * complaint and the tenet here is "hard to lose").
- *
- * Why reveal-then-tap, not full-swipe-to-delete: a full swipe fires on the
- * release and is easy to trigger by accident while scrolling a list with a
- * thumb. Reveal-then-tap takes two deliberate gestures, which suits a
- * destructive action even with Undo behind it.
- *
- * Built on RN-core PanResponder + Animated — NO react-native-gesture-handler /
- * reanimated. Those native libs aren't installed (the ReorderAisles screen
- * deliberately avoids them) and adding them would force a rebuild. This is
- * pure JS, so it drops in with zero new native deps, iOS and Android alike.
- *
- * Accessibility: the Delete button is always mounted in the view hierarchy
- * (just visually occluded until the swipe), so VoiceOver / TalkBack reach it by
- * sequential navigation without needing the gesture. Swipe stays purely
- * additive — every caller keeps a non-swipe path to the same action too.
- */
-
 import React, { useCallback, useRef } from 'react';
 import {
   Animated,

@@ -1,43 +1,3 @@
-/**
- * Cold-start splash that bridges the native launch screen into the app.
- *
- * Canonical across the catalogue — synced into each app at
- * src/components/AnimatedSplash.tsx by
- *   node josh-approved-factory/scripts/sync.mjs splash <app>
- * Edit HERE (the factory template), never the per-app copy.
- *
- * The native launch screen shows the app icon glyph (`splash-icon.png`)
- * contained on paper. This component renders that *same* asset the same way, so
- * the native -> JS handoff has no visible cut. Then the "josh approved" wordmark
- * (the same mark that sits at the bottom of every Settings screen) pops in
- * toward the bottom of the screen, and the whole layer crossfades into the app.
- *
- * The wordmark's font (IBM Plex Sans SemiBold) is loaded BY THIS COMPONENT and
- * the mark is held back until it's ready, so the wordmark always renders in
- * IBM Plex — identically on every app. Otherwise the mark races the app's own
- * font load, which finishes at a different moment per app (a font-only gate vs.
- * a fonts+store-hydration gate), so the mark would show the system fallback on
- * one app and IBM Plex on another. A short fallback timer guarantees the splash
- * still proceeds even if the bundled font somehow never resolves (never hangs).
- *
- * Always paper/light, on purpose: the native launch screen is locked light
- * (app.json `splash.backgroundColor`), so matching it is what makes the handoff
- * seamless. The exit crossfade absorbs the paper -> app (incl. dark) transition.
- *
- * Motion is the system's single ease-out curve, no bounce — a crisp pop, not a
- * bounce. Reduce-motion collapses every duration to 0 (the mark is just there).
- * Total intro is ~1s — a deliberate launch beat, longer than the 150/250ms UI
- * interaction tokens.
- *
- * Wiring (per app, in App.tsx — see the design-system skill / sync nextSteps):
- *   import * as SplashScreen from 'expo-splash-screen';
- *   SplashScreen.preventAutoHideAsync().catch(() => {});   // module scope
- *   const ready = <app's existing first-paint gate (fonts + any store hydration)>;
- *   const [splashDone, setSplashDone] = useState(false);
- *   // render app content when `ready`; overlay until splashDone:
- *   {!splashDone && <AnimatedSplash ready={ready} onFinish={() => setSplashDone(true)} />}
- */
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
@@ -80,16 +40,10 @@ const ICON = Math.round(Math.min(WIN_W, WIN_H));
 const WORDMARK_BOTTOM = Math.round(WIN_H * 0.16);
 const CHECK_SIZE = 22;
 // Trailing room so the final glyph's ink can NEVER be clipped. The wordmark uses
-// a NEGATIVE letterSpacing (tracking.mark ≈ -0.5), which narrows iOS's *measured*
+
 // text frame to just inside where the last glyph ("d" of "approved") actually
-// paints — the well-known RN iOS letterSpacing measurement gap. In the static
-// Settings wordmark that overflow harmlessly overdraws, but HERE the mark is
-// wrapped in a TRANSFORMED layer (the scale/translateY intro animation), and a
-// transform composites the text into a bounds-clipped layer — so without this pad
-// the "d" gets cut on *some* devices/SDKs (sub-pixel rounding at @2x vs @3x, the
-// live mid-animation scale value, or the wider system-fallback font when it wins
-// the load race). That intermittency is exactly the recurring "the d is cut off"
-// splash bug. Do NOT remove — guarded by qa-canonical `rn/splash-wordmark-clip`.
+
+// Extra trailing space prevents clipping while the wordmark is transformed.
 const WORDMARK_TRAILING_PAD = 6;
 
 type Props = {

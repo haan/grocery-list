@@ -1,3 +1,4 @@
+import { sharedFixture, seedList, pairedFixture } from '../../../qa/singleListFixture';
 /**
  * Regression fixtures for the 2026-07-03 Josh-reported shared-list defects.
  *
@@ -25,6 +26,7 @@
 
 // SQLite can't load in node; persistence is fire-and-forget and not the SUT.
 jest.mock('../../store/db', () => ({
+  getAppSetting: jest.fn(async () => null),
   loadAllLists: jest.fn(async () => []),
   saveList: jest.fn(async () => {}),
   deleteListFromDb: jest.fn(async () => {}),
@@ -32,8 +34,6 @@ jest.mock('../../store/db', () => ({
   removeTombstone: jest.fn(async () => {}),
   getSyncMeta: jest.fn(async () => null),
   setSyncMeta: jest.fn(async () => {}),
-  loadAllKits: jest.fn(async () => []),
-  saveKit: jest.fn(async () => {}),
 }));
 
 import type { GroceryList, GroceryItem } from '../../data/list';
@@ -114,9 +114,9 @@ function converge(a: Device, b: Device, secret: string): void {
 
 /** Pair two devices on one shared list; returns the shared secret. */
 function pair(a: Device, b: Device): string {
-  const listId = on(a, () => a.store.getState().createList('Groceries'));
-  const secret = on(a, () => a.store.getState().shareList(listId))!;
-  on(b, () => b.store.getState().joinShared(secret));
+  const listId = on(a, () => seedList(a.store, 'Groceries'));
+  const secret = on(a, () => sharedFixture(a.store, listId))!;
+  on(b, () => pairedFixture(b.store, secret));
   converge(a, b, secret);
   return secret;
 }
@@ -152,7 +152,7 @@ afterEach(() => {
 describe('R1: re-adding a crossed-off item', () => {
   test('single device: cross off milk, add milk again → ONE milk, qty 1, unchecked', () => {
     const a = makeDevice('a');
-    const listId = on(a, () => a.store.getState().createList('Groceries'));
+    const listId = on(a, () => seedList(a.store, 'Groceries'));
     on(a, () => a.store.getState().addItem(listId, 'Milk'));
     tick(60_000);
     const milk = a.store.getState().getList(listId)!.items[0];
@@ -171,7 +171,7 @@ describe('R1: re-adding a crossed-off item', () => {
 
   test('adding an item that is on the list UNCHECKED still bumps quantity (want two)', () => {
     const a = makeDevice('a');
-    const listId = on(a, () => a.store.getState().createList('Groceries'));
+    const listId = on(a, () => seedList(a.store, 'Groceries'));
     on(a, () => a.store.getState().addItem(listId, 'Eggs'));
     tick(1000);
     on(a, () => a.store.getState().addItem(listId, 'Eggs'));
@@ -185,7 +185,7 @@ describe('R1: re-adding a crossed-off item', () => {
 
   test('weekly cycle never inflates: check off + re-add across 4 weeks stays qty 1', () => {
     const a = makeDevice('a');
-    const listId = on(a, () => a.store.getState().createList('Groceries'));
+    const listId = on(a, () => seedList(a.store, 'Groceries'));
     on(a, () => a.store.getState().addItem(listId, 'Milk'));
     for (let week = 0; week < 4; week++) {
       tick(7 * 24 * 3600 * 1000);
@@ -332,8 +332,8 @@ describe('R2c: same-millisecond edits on two devices still converge', () => {
 describe('R2d: full-state payload stays under relay event-size limits', () => {
   test('52 weekly shops of 25 items → serialized list stays small enough to publish', () => {
     const a = makeDevice('a');
-    const listId = on(a, () => a.store.getState().createList('Groceries'));
-    on(a, () => a.store.getState().shareList(listId));
+    const listId = on(a, () => seedList(a.store, 'Groceries'));
+    on(a, () => sharedFixture(a.store, listId));
 
     for (let week = 0; week < 52; week++) {
       tick(7 * 24 * 3600 * 1000);

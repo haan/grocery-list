@@ -1,164 +1,97 @@
 # Architecture
 
-A map of the codebase for someone about to change it. For what the app *is* and
-how to install it, see the [README](README.md). This is the engineering view:
-where things live, how state flows, and the handful of invariants you must not
-break.
+An Android-only Expo SDK 57 app, maintained independently in haan/grocery-list.
+SQLite stores one list locally; encrypted Nostr messages synchronize shared
+data without an application server or user account. Node 26.12.1 is required.
+See [development](docs/development.md) and [repository audit](docs/repository-audit.md).
 
-## What it is, in code terms
+## Startup and UI
 
-A local-first React Native (Expo) app. Every list lives in a SQLite database on
-the phone. Two phones can pair once and then shop off one list that stays in sync:
-no account, no server we run. Sync is peer-to-peer over public relays, with the
-payload end-to-end encrypted, so the relays only ever carry ciphertext.
+App.tsx hydrates list and account stores before showing navigation, starts
+synchronization, handles share links, and flushes pending writes on backgrounding.
+It never seeds demo data. The app shell owns safe areas, gestures, navigation theme,
+language preference, local diagnostics, and splash. Lists is the initial stack route;
+there is no overview or bottom-tab navigator. ListsHomeScreen renders the items directly.
+Add items opens the item picker directly; the bottom sharing indicator opens Sharing.
 
-Stack: React Native + Expo, TypeScript, React Navigation, Zustand for state,
-`expo-sqlite` for storage, `@noble/*` + `tweetnacl` for the sync crypto.
+The package is io.github.haan.grocerylist.dev; links use haan-grocerylist-dev.
+Settings offers appearance, language, sharing, Manage aisles, and a standalone version line.
+The feedback/About UI and decorative footers have been removed. Local diagnostics
+are initialized by the app shell, independently of any reporting UI.
+There are no purchase, store-review, launch-promotion, email-report, or other-app
+promotion flows. All first-party files are independently maintained here; no
+external template synchronization is active. Preserve licenses and attribution.
 
-## Entry points
+## Code ownership
 
-- **`App.tsx`**: the root. Hydrates the stores, gates the UI on readiness (so a
-  populated database never flashes an empty state), sets up navigation (a
-  `Lists | Kits` tab bar inside a stack), starts the sync engine, flushes state
-  to disk when the app backgrounds, and handles a tapped share link.
-- **`index.ts`**: registers the app. Its first import is the
-  `react-native-get-random-values` polyfill so the crypto has a secure RNG.
-- **`src/shell/AppShell.tsx`**: shared "chrome" (gesture root, safe area, error
-  boundary, themed navigation container, splash). It is synced from a shared
-  template; don't fork it per app.
+| Area | Purpose |
+| --- | --- |
+| src/data | Domain types, catalog matching, aisle preferences. |
+| src/store | Zustand state and SQLite persistence. |
+| src/sync | Logical clock, encryption, relay transport, list merges. |
+| src/screens, src/components, src/shell | Android UI and application shell. |
+| src/theme, src/i18n | Fonts, styling, interface translations. |
+| src/feedback | Bounded local diagnostics; no feedback UI or upload. |
+| src/qa | Test-only layout helpers and checks. |
+| qa/intent-fuzz | Active model-based testing, seed logging, replay. |
+| scripts/lod | Reviewed LOD source references and deterministic generation. |
 
-## Directory layout
+## Persistence and sharing invariants
 
-The `src/` tree is layered, and dependencies point one way only:
-`data → store → sync → screens`. Keeping that arrow straight is what lets the
-sync logic be unit-tested without a running app.
+Database initialization runs the atomic single-list-v1 migration before either
+store hydrates or sync starts. It clears shopping tables and the old favorites
+setting, inserts one empty private list, and writes its marker in one transaction.
+Failures roll back and show Retry; subsequent launches preserve the list/history.
+Appearance, language, and bounded local diagnostics are retained.
 
-| dir | role |
-|---|---|
-| `src/data/` | Pure domain types + pure functions (`makeItem`, `visibleItems`, category logic). No React, no I/O. |
-| `src/store/` | Zustand stores (the in-memory source of truth) plus `db.ts`, the SQLite persistence under them. |
-| `src/sync/` | The shared-list engine: CRDT merge, the logical clock, encryption, and the relay transport. |
-| `src/screens/` | One file per route. Composes stores + components. |
-| `src/components/` | Reusable presentational pieces. |
-| `src/lib/` | Small pure helpers (ids, links, transfer). |
-| `src/theme/`, `src/i18n/` | Design tokens/fonts and translations (6 locales). |
+Ordinary item edits update memory immediately and queue SQLite saves. Saves only
+update the current local ID, so stale writes cannot resurrect a replaced list.
+Sharing identity changes await an atomic replacement before exposing their result.
+The store has exactly one list after hydration (the array remains an internal
+container). Public create/rename/duplicate/delete/import/bulk-sync APIs are gone.
 
-## State & persistence
+Join confirmation replaces the list with a persisted pending identity. Pending
+joins send hello requests but cannot edit or publish snapshots. The first valid
+snapshot is adopted durably, retaining this phone's local ID; then normal merging
+begins. Pending state is local metadata, never sent on the wire. Identity changes
+close transports and cancel timers before disk awaits. Callback guards reject old
+channels. Stop sharing makes a fresh private local ID and retains items, aisles,
+and learned rules; starting again mints a fresh secret. Recent history stays local.
+Cold-start links queue until initialization and navigation are ready, then open
+confirmation. Opening Sharing alone has no sharing side effects.
 
-State lives in **Zustand** stores, one per domain aggregate: `useListsStore`,
-`useKitsStore`, `useAccountStore`. The contract, stated in each store's
-docblock and worth internalising:
+Shared lists use encrypted snapshots over public relays. Catch-up requests and
+retained relay deposits support phones that were not online together. Availability
+and retention are best-effort. Merge functions resolve records individually with
+logical timestamps and deterministic tie-breaking. Deletions are tombstones.
+Name, checked-state, items, and preferences retain their clock/validation
+semantics. Check compatibility with installed fork versions before changing them.
 
-- **Memory is the source of truth; disk is a fire-and-forget backup.** A user
-  action calls `set(...)` synchronously (so the UI feels instant), and the
-  SQLite write is kicked off without `await`. A failed write warns, it never
-  crashes the UI.
-- **Every write funnels through one private `mutate(id, fn)` helper** that maps
-  the entity, stamps `updatedAt`, and persists. Actions don't hand-roll `set`.
-  That's what keeps the timestamp and the save from being forgotten.
-- **Deletes are soft.** Removing an item sets a `deletedAt` tombstone instead of
-  dropping the row. This is what lets a delete converge across devices instead of
-  the item reappearing on the next sync.
-- **`flushPending()`** awaits all pending writes; `App.tsx` calls it when the app
-  backgrounds so a check made a split-second before switching apps survives an OS
-  kill.
+Product and built-in aisle labels are Luxembourgish; menus follow the selected
+interface language (currently English). The picker retains System and English;
+future translation dictionaries register in src/i18n/locales.ts. Retired saved
+language preferences migrate to System. The bundled catalog works offline. Manual aisle corrections
+apply to future additions in that list and synchronize with it. Removing a custom
+aisle reclassifies affected items and tombstones its preferences. See the
+[catalog guide](scripts/lod/README.md) for matching and learning rules.
 
-Persistence is `src/store/db.ts` (SQLite, one row per list/kit with the items
-JSON-encoded in a blob). The database sits in the app's default Documents
-location, so it rides the OS's own iCloud / Android backup for free.
+Kit storage is retired with an idempotent DROP TABLE IF EXISTS kits on database
+initialization. The one-time single-list migration supersedes the earlier kit-only
+upgrade; it deliberately resets all old shopping data.
+Unsupported control messages, including legacy kit messages, are ignored without
+updating list data or sync status. Existing list wire format and relay slots remain
+unchanged; no deletion is broadcast to older installations or relay storage.
 
-## The shared-sync data flow
+## Checks and builds
 
-This is the heart of the app and where a change is most likely to bite. Three
-layers, bottom to top:
+The single GitHub workflow runs locked installation, the Android configuration
+guard, fuzz-harness self-tests, TypeScript, and Jest's Android preset. Retained
+tests cover domain behavior, migrations, synchronization, privacy, accessibility,
+and UI interactions/layout. Fuzz logs/intake go to ignored tmp/; minimized
+regression JSON remains tracked under qa/regressions. Fixtures/helpers used only
+by tests are not imported by production code.
 
-1. **Transport: `sync/transport.ts`.** A small swarm of free public Nostr
-   relays, to several at once; only one needs to deliver. Two kinds of event:
-   the "hello" handshake is *ephemeral* (kind 20001 — relays forward it, keep
-   nothing); the list state itself is a *deposit* (kind 30078, parameterized
-   replaceable — each relay keeps this device's latest sealed copy per list and
-   replays it to whoever connects later, so a phone that opens days later gets
-   its partner's edits without the partner being online — store-and-forward,
-   defect grocery-list-20261018-1). The signing key is derived from the list
-   secret plus this device's local list id: stable per device so its deposit is
-   replaced rather than piled up, different per device so nobody overwrites a
-   partner's slot, and it identifies nothing. Studio cost: zero.
-2. **Encryption: `sync/crypto.ts`.** Everything leaving the device is sealed
-   with NaCl secretbox under a key derived from the list's shared secret. Relays
-   see only ciphertext under a random-looking channel id derived from a
-   *different* slice of the same hash. The channel reveals nothing about the key.
-3. **Merge: `sync/merge.ts`, `sync/mergeKits.ts`, `sync/mergeRecordSet.ts`.** A
-   conflict-free, state-based merge (an LWW-element-set with tombstones). Each
-   record wins by timestamp; a delete out-clocks the edit before it. Because the
-   merge is commutative, idempotent, and associative, the transport can be
-   best-effort: drop a message and it re-converges on the next publish.
-
-Tying them together, **`sync/index.ts`** (the engine) keeps one transport per
-shared list, publishes the (encrypted) whole list when it changes locally, and
-merges whatever arrives. Kits ride the same channels as a separate control
-message. On (re)connect it sends a `hello`; any peer that hears one
-re-publishes its full state, which is how a just-opened or just-joined device
-converges within seconds instead of waiting for the other side to make an edit.
-
-### The clock (why merges don't go haywire)
-
-Comparing two phones' raw wall clocks is unsafe: a phone running a few minutes
-fast would win every merge, so a *stale* edit could beat a *fresh* one and a
-delete could make a live item vanish. `sync/clock.ts` is a Hybrid Logical Clock
-that fixes this: it's monotonic per device, and every time we receive a peer's
-data we `observe()` its timestamps so our *next* edit out-clocks them. That turns
-"fastest clock wins" into "last action in causal order wins." Stamp every
-merge-participating field with `clock.now()`, never `Date.now()`.
-
-## Invariants: don't break these
-
-- **The name has its own clock (`nameUpdatedAt`).** A list's name only changes on
-  an explicit rename, never as a side effect of adding an item, and a freshly
-  joined device (which has no name of its own, `nameUpdatedAt: 0`) never
-  overwrites the creator's name.
-- **Merge by shared secret, not by id.** Paired devices have independent local
-  list ids; the shared secret is the join key. Keep the local id through a merge.
-- **Sharing is permanent.** A list's secret is minted once and never rotates:
-  "pair once, synced forever."
-- **Stamp with the logical clock, not the wall clock.** (See above.)
-- **The list contains only what the user typed.** Autocomplete draws only from
-  the user's own history; there is no AI auto-add and no suggested rows.
-
-## Gotchas
-
-- **`store/db.ts` currently keeps its own database connection** and re-declares
-  the cross-cutting `app_settings` / `sync_meta` / `tombstones` tables that the
-  shared `storage/kv.ts` also owns. They point at the same file; consolidating
-  onto one connection is a known cleanup.
-- **The sync merge is the trust core: it has the tests; the engine wiring in
-  `sync/index.ts` does not (yet).** If you touch reconnect/backfill/publish
-  timing, verify on two real devices, not just with the unit tests.
-- **Shell-synced files** (`src/shell/`, most of `src/i18n/` and `src/feedback/`,
-  the generic `src/components/*` chrome, `storage/kv.ts`, `lib/backup.ts`) are
-  overwrite-synced from a shared template. Edit them upstream, not here, or a
-  re-sync will clobber your change.
-
-## Siri (iOS)
-
-"Add milk to Grocery List" spoken to Siri adds an item without opening the app.
-It's iOS-only (no shippable Android voice equivalent exists in 2026: an
-explicit, recorded scope decision). A Swift App Intent in the app target writes
-to a shared App Group container; the JS side (`src/siri/`) mirrors the lists in
-and drains dictated items into the store on launch. Full design, the platform
-rationale, and the Android-deferral plan: [`docs/siri.md`](docs/siri.md).
-
-## Run, test, ship
-
-```
-npm install
-npm run ios        # or: npm run android, or: npx expo start
-npm test           # Jest: the sync trust core lives in src/sync/__tests__
-```
-
-The trust core (the CRDT merge, the clock, and a property fuzzer that throws
-random skew/offline/restart/loss at 2–3 simulated devices and asserts
-convergence) is in `src/sync/__tests__`. If you change anything in `src/sync` or
-`src/store`, those tests are the first gate. Type-check with `npx tsc --noEmit`.
-
-Builds are produced with EAS (`eas build`) for both the App Store and Google
-Play; both platforms ship in lockstep.
+EAS generates the Android native project from configuration and plugins. Preserve
+package identity and signing key when updating the Pixel. Native changes require
+a new APK; JavaScript edits use Metro. No web target, store submission, emulator
+CI, or scheduled build is configured. Third-party framework tooling is unmodified.

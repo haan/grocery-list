@@ -29,7 +29,7 @@ export type TypographyRole = keyof typeof typography;
 
 /**
  * Weight-named family aliases. Prefer `typography` roles in app code; this
- * map exists for shared components (canonical ReviewModal, Credits) that
+ * map exists for shared controls that
  * think in "sans / sans-semibold / mono" rather than role names.
  */
 export const fontFamily = {
@@ -89,9 +89,8 @@ function scaledStep(step: keyof typeof typeBase) {
  *   lineHeight: scaledLineHeight(24)    // ✓ grows with the OS setting
  *
  * Prefer spreading a `type` step when one fits; this exists so that "no step
- * fits" never again means "write a literal". Enforced by the qa-canonical rule
- * `a11y/scalable-line-height`, which bans a numeric lineHeight outside this
- * file.
+ * fits" never again means "write a literal". This keeps text responsive to the
+ * Android font-size setting.
  */
 export function scaledLineHeight(px: number): number {
   return Math.round(px * PixelRatio.getFontScale());

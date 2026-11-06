@@ -2,7 +2,7 @@
 
 An independent Android version of [Josh Williams's Grocery List](https://github.com/Josh-Approved/grocery-list), maintained in [haan/grocery-list](https://github.com/haan/grocery-list).
 
-Phase one provides a development APK for a physical Android phone, with Fast Refresh from a local PC. It retains SQLite storage and encrypted synchronization through public Nostr relays.
+This Android-only app uses a development APK on a physical phone, with Fast Refresh from a local PC. It retains SQLite storage and encrypted synchronization through public Nostr relays.
 
 ## Development
 
@@ -16,6 +16,8 @@ npm run dev
 Install our custom development APK first; Expo Go does not contain all native dependencies. Open the development app on the same Wi-Fi network as your PC and scan Metro's QR code with your phone's camera. No emulator is required. The development server must remain running.
 
 ```sh
+npm run check:android
+npm run test:fuzz-harness
 npm run typecheck
 npm test -- --runInBand
 npm run build:dev
@@ -25,11 +27,27 @@ The cloud build uses Expo project `80882728-1f01-40c5-b4aa-56fcfa53f928`, owned 
 
 See [the development guide](docs/development.md) for installation, debugging, credentials, networking, and the device acceptance checklist.
 
-## Sharing and feedback
+## Shopping and sharing
 
-The development app has its own Android identity and share-link scheme and can coexist with the original app. Use disposable test lists; importing or joining household lists is outside initial setup.
+The app opens directly into one shopping list. The header has Sharing and Settings;
+a compact footer shows connection status. Settings contains Appearance, Language,
+Sharing, Manage aisles, and Version. The language picker offers System and English,
+ready for future Luxembourgish interface translations. Product suggestions and
+built-in aisle labels remain Luxembourgish. Recent items remain local; favorites,
+kits, and file import/export have been removed.
 
-Feedback opens this repository's issue form without automatically including diagnostic logs. Upstream donations and store-review prompts are disabled. Public relay availability is best-effort.
+Opening Sharing does not publish anything. Start sharing creates a QR code/link;
+scanning another code asks before replacing this phone's list. A joining phone
+waits for a valid shared snapshot before editing or publishing. Stop sharing keeps
+a private copy; starting again creates a new code. Other phones keep their own
+copies. Public relay availability and retention are best-effort.
+
+**Single-list upgrade:** the first launch of this phase intentionally clears all
+old shopping lists, sharing identities, learned/custom aisles, history, and
+favorites, then creates one empty private list. This reset is atomic and runs once.
+Appearance and language remain. Use disposable shopping data for development.
+
+See [the repository audit](docs/repository-audit.md) for retained code and removed legacy tooling.
 
 ## License and attribution
 

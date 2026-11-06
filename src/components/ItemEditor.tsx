@@ -1,23 +1,3 @@
-/**
- * Item editor — the bottom sheet behind each row's pencil.
- *
- * The list row itself is now a single tap target that checks/unchecks (the
- * dominant gesture while shopping). Everything else about an item — its name,
- * its note (shown in FULL here, multi-line, where the row only previews it),
- * its quantity, its aisle, whether it's a usual, and deleting it — lives in
- * this one sheet, reached by the row's trailing pencil. That split is what
- * makes "where do I tap to edit vs. check off" unambiguous and kills the old
- * bug where tapping a truncated note crossed the item off.
- *
- * App-specific (not a synced canonical component), so it reads the stores
- * directly. Delete bubbles up via `onRemove` so the screen owns the Undo
- * snackbar (the "hard to lose" tenet). Name/note commit on close; quantity,
- * aisle, and usual apply immediately, matching the app's instant-with-undo feel.
- *
- * Cross-platform: pure RN `Modal` + the shared dialog tokens — no
- * `ActionSheetIOS` / `Alert.prompt` (canon § Cross-platform functional parity).
- */
-
 import React, { useCallback, useState } from 'react';
 import {
   Modal,
@@ -28,13 +8,11 @@ import {
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
-import { Plus, Star, Trash2 } from 'lucide-react-native';
+import { Plus, Trash2 } from 'lucide-react-native';
 import { useReducedMotion } from './Dialogs';
 import { Stepper } from './Stepper';
 import { useListsStore } from '../store/lists';
-import { useAccountStore } from '../store/account';
 import { MAX_QTY, type GroceryItem } from '../data/list';
 import { DEFAULT_CATEGORY_ORDER, categoryLabel } from '../data/categories';
 import { t } from '../i18n';
@@ -72,7 +50,7 @@ export function useItemEditor(): {
   const [addingAisle, setAddingAisle] = useState(false);
   const [aisleDraft, setAisleDraft] = useState('');
 
-  // Live list/item — so quantity/aisle/usual edits reflect instantly in the
+  // Live list/item — so quantity/aisle edits reflect instantly in the
   // sheet, and a freshly created aisle appears among the chips at once.
   const list = useListsStore((st) =>
     target_ ? st.lists.find((l) => l.id === target_.listId) : undefined
@@ -86,9 +64,6 @@ export function useItemEditor(): {
   const setItemName = useListsStore((st) => st.setName);
   const setItemNote = useListsStore((st) => st.setNote);
 
-  const isStaple = useAccountStore((st) => st.isStaple);
-  const addStaple = useAccountStore((st) => st.addStaple);
-  const removeStaple = useAccountStore((st) => st.removeStaple);
 
   const open = useCallback((cfg: EditTarget) => {
     const found = useListsStore
@@ -157,14 +132,6 @@ export function useItemEditor(): {
     setTarget(null);
   }, [target_, item]);
 
-  const toggleUsual = useCallback(() => {
-    if (!item) return;
-    if (isStaple(item.name)) removeStaple(item.name);
-    else addStaple(item.name);
-  }, [item, isStaple, addStaple, removeStaple]);
-
-  const usual = item ? isStaple(item.name) : false;
-
   const element = (
     <Modal
       visible={!!target_ && !!item}
@@ -175,7 +142,7 @@ export function useItemEditor(): {
     >
       <KeyboardAvoidingView
         style={s.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+
       >
         <Pressable
           style={s.overlay}
@@ -317,50 +284,7 @@ export function useItemEditor(): {
 
                 <View style={s.divider} />
 
-                {/*
-                 * Usuals (left) and Remove (right) as two distinct, half-width
-                 * buttons with a real gap between them. They used to be stacked
-                 * full-width rows that were easy to fat-finger; separating them
-                 * side by side — and giving Remove its own danger-tinted button —
-                 * makes the destructive action both easy to hit and hard to hit
-                 * by accident.
-                 */}
                 <View style={s.actions}>
-                  <Pressable
-                    onPress={toggleUsual}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: usual }}
-                    // Voice Control matches the label against what a person can
-                    // SEE, so the label has to be the visible word. The verb
-                    // moves to the hint (de: "Als Stammartikel speichern" put
-                    // the visible "Stammartikel" in the middle, so speaking it
-                    // matched nothing).
-                    accessibilityLabel={t('detail.usual')}
-                    accessibilityHint={
-                      usual
-                        ? t('detail.removeFromUsuals')
-                        : t('detail.saveAsUsual')
-                    }
-                    style={({ pressed }) => [
-                      s.actionBtn,
-                      usual ? s.usualBtnOn : s.usualBtn,
-                      pressed && s.pressed,
-                    ]}
-                  >
-                    <Star
-                      size={18}
-                      color={usual ? c.accent : c.fgMuted}
-                      strokeWidth={1.5}
-                      fill={usual ? c.accent : 'transparent'}
-                    />
-                    <Text
-                      style={[s.actionBtnText, usual && s.usualBtnTextOn]}
-                      numberOfLines={1}
-                    >
-                      {t('detail.usual')}
-                    </Text>
-                  </Pressable>
-
                   <Pressable
                     onPress={handleDelete}
                     accessibilityRole="button"
@@ -550,15 +474,6 @@ function makeStyles(c: Colors) {
       fontFamily: fontFamily.sansSemibold,
       color: c.fg,
     },
-    usualBtn: {
-      backgroundColor: c.bgSubtle,
-      borderColor: c.hairlineStrong,
-    },
-    usualBtnOn: {
-      backgroundColor: c.accentBg,
-      borderColor: c.accent,
-    },
-    usualBtnTextOn: { color: c.accent },
     removeBtn: {
       backgroundColor: c.dangerBg,
       borderColor: c.danger,

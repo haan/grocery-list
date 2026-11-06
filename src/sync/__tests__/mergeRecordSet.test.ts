@@ -409,12 +409,12 @@ describe('mergeList — the name only changes on an explicit rename', () => {
 // Fixture sanity — a broken seed silently poisons every Tier 2/3 capture run.
 // ---------------------------------------------------------------------------
 
-describe('qa fixtures — the seed is internally consistent', () => {
+describe('sample list fixture — the seed is internally consistent', () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { qaLists } = require('../../qa/fixtures');
+  const { sampleLists } = require('./support/listFixture');
 
   it('produces exactly one valid, non-empty list with unique ids', () => {
-    const lists: GroceryList[] = qaLists();
+    const lists: GroceryList[] = sampleLists();
     expect(lists).toHaveLength(1);
     const list = lists[0];
     expect(list.name).toBe('Weekly shop');
@@ -424,7 +424,7 @@ describe('qa fixtures — the seed is internally consistent', () => {
   });
 
   it('every seeded item is well-formed (real category, valid qty, no stray tombstone)', () => {
-    const list = qaLists()[0];
+    const list = sampleLists()[0];
     for (const it of list.items) {
       expect(typeof it.name).toBe('string');
       expect(it.name.length).toBeGreaterThan(0);
@@ -435,7 +435,7 @@ describe('qa fixtures — the seed is internally consistent', () => {
   });
 
   it('checked items carry a checkedAt, and the seed reads as a real mid-shop list', () => {
-    const list: GroceryList = qaLists()[0];
+    const list: GroceryList = sampleLists()[0];
     const checked = list.items.filter((i) => i.checked);
     expect(checked.length).toBeGreaterThan(0); // some progress, per the fixture comment
     expect(checked.length).toBeLessThan(list.items.length); // but not all
@@ -445,7 +445,7 @@ describe('qa fixtures — the seed is internally consistent', () => {
   });
 
   it('the seed survives a self-merge unchanged (it is a valid CRDT state)', () => {
-    const list = qaLists()[0];
+    const list = sampleLists()[0];
     sameSet(mergeRecordSet(list.items, list.items), list.items);
   });
 });

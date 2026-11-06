@@ -90,12 +90,9 @@ jest.mock('../../store/db', () => ({
   removeTombstone: jest.fn(async () => {}),
   getSyncMeta: jest.fn(async () => null),
   setSyncMeta: jest.fn(async () => {}),
-  loadAllKits: jest.fn(async () => []),
-  saveKit: jest.fn(async () => {}),
 }));
 
 import { useListsStore } from '../../store/lists';
-import { useKitsStore } from '../../store/kits';
 import { channelId, newSecret, seal, open } from '../crypto';
 import { useSyncStatusStore } from '../status';
 import { startSyncEngine, stopSyncEngine } from '../index';
@@ -120,7 +117,6 @@ function sharedList(): GroceryList {
 beforeEach(() => {
   built.length = 0;
   useListsStore.setState({ lists: [], hydrated: true });
-  useKitsStore.setState({ kits: [], hydrated: true });
   useSyncStatusStore.setState({ bySecret: {} });
 });
 

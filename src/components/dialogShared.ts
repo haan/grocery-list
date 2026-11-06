@@ -1,11 +1,3 @@
-/**
- * Styles, config types and the reduced-motion hook shared by the dialog hooks
- * in `Dialogs.tsx`.
- *
- * Canonical, app-agnostic — synced by `sync.mjs app-shell` alongside
- * Dialogs.tsx; do not fork.
- */
-
 import { useEffect, useState } from 'react';
 import { StyleSheet, AccessibilityInfo } from 'react-native';
 import { fontFamily, space, radius, target, type as ty, hairline, type Colors } from '../theme';
