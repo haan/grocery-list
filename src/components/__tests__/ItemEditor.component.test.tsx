@@ -111,7 +111,7 @@ describe('useItemEditor', () => {
     await openEditor(user);
 
     expect(curItem().category).toBe('Dairy & eggs');
-    await user.press(screen.getByRole('button', { name: 'Produce' }));
+    await user.press(screen.getByRole('button', { name: 'Uebst a Geméis' }));
     expect(curItem().category).toBe('Produce');
   });
 
@@ -123,6 +123,20 @@ describe('useItemEditor', () => {
     expect(curItem().quantity).toBe(2);
     await user.press(screen.getByRole('button', { name: 'Increase' }));
     expect(curItem().quantity).toBe(3);
+  });
+
+  it('learns the edited name when choosing an aisle before closing', async () => {
+    const user = userEvent.setup({delay:0});
+    await render(wrap(<Harness />));
+    await openEditor(user);
+    const input = screen.getByLabelText('Item', {includeHiddenElements:true});
+    await user.clear(input);
+    await user.type(input, 'Bio Mëllech 1L');
+    await user.press(screen.getByRole('button', {name:'Uebst a Geméis'}));
+    expect(curItem().name).toBe('Bio Mëllech 1L');
+    expect(curList().aislePreferences).toEqual([expect.objectContaining({
+      id:'name:bio mellech 1l', category:'Produce',
+    })]);
   });
 
   it('creates a new aisle and moves the item into it (New aisle → type → Add)', async () => {
@@ -137,6 +151,7 @@ describe('useItemEditor', () => {
 
     expect(curList().categoryOrder).toContain('Deli');
     expect(curItem().category).toBe('Deli');
+    expect(curList().aislePreferences).toEqual([expect.objectContaining({ id: 'name:milk', category: 'Deli' })]);
   });
 
   it('marks the item as a usual and unmarks it (reversible toggle)', async () => {

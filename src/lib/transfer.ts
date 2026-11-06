@@ -15,6 +15,7 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
+import { sanitizePreferences } from '../data/aislePreferences';
 import { makeId } from './id';
 import {
   type GroceryList,
@@ -105,6 +106,9 @@ function sanitizeList(raw: unknown): GroceryList | null {
     name: `${r.name} (imported)`,
     items,
     categoryOrder,
+    aislePreferences: sanitizePreferences(r.aislePreferences).map(p => ({
+      ...p, updatedAt: base.updatedAt, ...(p.deletedAt != null ? { deletedAt: base.updatedAt } : {}),
+    })),
   };
 }
 

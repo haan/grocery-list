@@ -6,13 +6,11 @@
 import { Linking, Platform } from 'react-native';
 import * as Application from 'expo-application';
 
-export const APP_NAME = 'Grocery List - Josh Approved';
+export const APP_NAME = 'Grocery List Dev';
 
-/** Numeric App Store Connect id — filled once the ASC record exists (store
- *  setup). The review deep link no-ops cleanly while empty (the pre-store
- *  state); now that the listing is live, it points at the real record. */
-export const IOS_APP_STORE_ID = '6779417031';
-export const ANDROID_PACKAGE = 'com.joshapproved.grocerylist';
+/** No store listing exists for this independent development app. */
+export const IOS_APP_STORE_ID = '';
+export const ANDROID_PACKAGE = 'io.github.haan.grocerylist.dev';
 
 /**
  * Gates the IAP tip jar — the sanctioned support surface (App Store
@@ -20,12 +18,15 @@ export const ANDROID_PACKAGE = 'com.joshapproved.grocerylist';
  * Powers the home support link and the Settings/About support row, each
  * opening the canonical TipJarSheet.
  */
-export const TIP_JAR_ENABLED: boolean = true;
+export const TIP_JAR_ENABLED: boolean = false;
+export const STORE_REVIEWS_ENABLED: boolean = false;
+// No feedback inbox is configured for the independent app. The UI opens GitHub.
+export const FEEDBACK_EMAIL = '';
 
-export const STUDIO_URL = 'https://joshapproved.com';
-export const REPO_URL = 'https://github.com/josh-approved/grocery-list';
+export const REPO_URL = 'https://github.com/haan/grocery-list';
+export const STUDIO_URL = REPO_URL;
 export const PRIVACY_URL =
-  'https://github.com/josh-approved/grocery-list/blob/master/PRIVACY.md';
+  'https://github.com/haan/grocery-list/blob/main/PRIVACY.md';
 
 /** `1.2.0 (47)` — read from the bundle at runtime, never hardcoded. */
 export function versionLabel(): string {
@@ -39,11 +40,12 @@ export function openUrl(url: string): void {
 }
 
 export function openFeedbackMail(): void {
-  const subject = encodeURIComponent(`${APP_NAME} ${versionLabel()}`);
-  openUrl(`mailto:feedback@joshapproved.com?subject=${subject}`);
+  // Open an empty issue form; never attach logs or list contents automatically.
+  openUrl(`${REPO_URL}/issues/new`);
 }
 
 export function openReview(): void {
+  if (!STORE_REVIEWS_ENABLED) return;
   const url =
     Platform.OS === 'ios'
       ? `itms-apps://apps.apple.com/app/id${IOS_APP_STORE_ID}?action=write-review`

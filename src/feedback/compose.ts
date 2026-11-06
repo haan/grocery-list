@@ -23,14 +23,14 @@
 
 import { Linking } from 'react-native';
 import * as MailComposer from 'expo-mail-composer';
+import { FEEDBACK_EMAIL } from '../lib/links';
 import { t } from '../i18n';
 import { collectDiagnostics, formatDiagnostics, type Diagnostics } from './diagnostics';
 import { serialize, serializeBounded, writeReportFile, logEvent, logWarn } from './log';
 
 export type FeedbackType = 'bug' | 'feature' | 'general';
 
-/** The studio feedback inbox (canon § Funding & feedback — pinned, all apps). */
-export const FEEDBACK_EMAIL = 'feedback@joshapproved.com';
+export { FEEDBACK_EMAIL } from '../lib/links';
 
 export type FeedbackInput = {
   type: FeedbackType;
@@ -144,6 +144,9 @@ async function openMailto(input: FeedbackInput, d: Diagnostics, inlineLog: boole
  * attached when the user opted in); falls back to a pre-filled `mailto:`.
  */
 export async function sendFeedback(input: FeedbackInput): Promise<SendResult> {
+  if (!FEEDBACK_EMAIL) {
+    return { status: 'failed', attachedLog: false, inlinedLog: false };
+  }
   const d = collectDiagnostics();
 
   // Write the attachment up front (best-effort) so we know whether we can attach.

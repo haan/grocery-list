@@ -9,6 +9,10 @@
 
 import { Linking } from 'react-native';
 
+// Exercise the retained generic email composer with an explicit test recipient.
+// The app itself leaves this empty and uses the fork's GitHub issue form.
+jest.mock('../../lib/links', () => ({ FEEDBACK_EMAIL: 'feedback@example.test' }));
+
 // compose.ts imports expo-mail-composer statically, so every app has it
 // installed. Not a `virtual` mock: a virtual mock of an installed module loses
 // to the real one once an earlier test file in the same jest process has
@@ -39,6 +43,7 @@ const MailComposer = require('expo-mail-composer');
 const fileStore = require('../fileStore');
 
 beforeEach(() => {
+  require('../../lib/links').FEEDBACK_EMAIL = 'feedback@example.test';
   clear();
   jest.clearAllMocks();
   MailComposer.isAvailableAsync.mockResolvedValue(true);
@@ -128,6 +133,17 @@ describe('diagnostic log — is it actually readable', () => {
 });
 
 describe('email composition', () => {
+  it('does not compose or attach diagnostics when no feedback inbox is configured', async () => {
+    require('../../lib/links').FEEDBACK_EMAIL = '';
+    const openURL = jest.spyOn(Linking, 'openURL');
+    const result = await sendFeedback({ type: 'bug', fields: {}, includeLogs: true });
+    expect(result.status).toBe('failed');
+    expect(MailComposer.composeAsync).not.toHaveBeenCalled();
+    expect(fileStore.writeText).not.toHaveBeenCalled();
+    expect(openURL).not.toHaveBeenCalled();
+    openURL.mockRestore();
+  });
+
   it('builds a tagged bug email with the user fields + recipient', async () => {
     const r = await sendFeedback({
       type: 'bug',
@@ -137,7 +153,7 @@ describe('email composition', () => {
     expect(r.status).toBe('composed');
     expect(MailComposer.composeAsync).toHaveBeenCalledTimes(1);
     const arg = MailComposer.composeAsync.mock.calls[0][0];
-    expect(arg.recipients).toEqual(['feedback@joshapproved.com']);
+    expect(arg.recipients).toEqual(['feedback@example.test']);
     expect(arg.subject).toMatch(/^\[Bug\] /);
     expect(arg.body).toContain('crash on save');
     expect(arg.body).toContain('it should save');
@@ -159,7 +175,7 @@ describe('email composition', () => {
     });
     expect(r.status).toBe('mailto');
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy.mock.calls[0][0]).toMatch(/^mailto:feedback@joshapproved\.com\?/);
+    expect(spy.mock.calls[0][0]).toMatch(/^mailto:feedback@example\.test\?/);
     expect(decodeURIComponent(spy.mock.calls[0][0])).toContain('just saying thanks');
     spy.mockRestore();
   });

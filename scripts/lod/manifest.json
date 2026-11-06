@@ -1,0 +1,6695 @@
+[
+  {
+    "id": "lod:GROMPER1UNI1",
+    "name": "Gromper",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "GROMPER1",
+        "meaning": "GROMPER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Gromper",
+      "Grompere",
+      "Gromperen",
+      "Kartoffel",
+      "Kartoffeln",
+      "pomme de terre",
+      "pommes de terre"
+    ]
+  },
+  {
+    "id": "lod:GROMPER1UNI3",
+    "name": "Séiss Gromper",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "GROMPER1",
+        "meaning": "GROMPER1UNI3"
+      }
+    ],
+    "aliases": [
+      "Séiss Gromper",
+      "Süßkartoffel",
+      "patate douce"
+    ]
+  },
+  {
+    "id": "lod:TOMAT1UNI2",
+    "name": "Tomat",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "TOMAT1",
+        "meaning": "TOMAT1UNI2"
+      }
+    ],
+    "aliases": [
+      "Tomat",
+      "Tomate",
+      "Tomaten",
+      "tomate",
+      "tomates"
+    ]
+  },
+  {
+    "id": "lod:TOMAT1UNI3",
+    "name": "Kleng Tomat",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "TOMAT1",
+        "meaning": "TOMAT1UNI3"
+      },
+      {
+        "entry": "KIISCHTENTOMAT1",
+        "meaning": "KIISCHTENTOMAT1UNI1"
+      },
+      {
+        "entry": "TOMATECERISE1",
+        "meaning": "TOMATECERISE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kiischtentomat",
+      "Kiischtentomate",
+      "Kiischtentomaten",
+      "Kirschtomate",
+      "Kleng Tomat",
+      "Tomate cerise",
+      "Tomate-cerisen",
+      "Tomate-cerisë",
+      "tomate cerise"
+    ]
+  },
+  {
+    "id": "lod:APEL1UNI1",
+    "name": "Apel",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "APEL1",
+        "meaning": "APEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Apel",
+      "Apfel",
+      "pomme",
+      "pommes",
+      "Äpfel",
+      "Äppel"
+    ]
+  },
+  {
+    "id": "lod:BANANN1UNI1",
+    "name": "Banann",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "BANANN1",
+        "meaning": "BANANN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Banane",
+      "Banann",
+      "Bananne",
+      "Banannen",
+      "banane"
+    ]
+  },
+  {
+    "id": "lod:AERDBIER1UNI3",
+    "name": "Äerdbier",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "AERDBIER1",
+        "meaning": "AERDBIER1UNI3"
+      },
+      {
+        "entry": "AERDBIER2",
+        "meaning": "AERDBIER2UNI2"
+      }
+    ],
+    "aliases": [
+      "Erdbeere",
+      "Erdbeeren",
+      "fraise",
+      "fraises",
+      "Äerdbier",
+      "Äerdbiere",
+      "Äerdbieren"
+    ]
+  },
+  {
+    "id": "lod:MUERT1UNI1",
+    "name": "Muert",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "MUERT1",
+        "meaning": "MUERT1UNI1"
+      },
+      {
+        "entry": "WUERZEL1",
+        "meaning": "WUERZEL1UNI3"
+      }
+    ],
+    "aliases": [
+      "Muert",
+      "Muerte",
+      "Muerten",
+      "Möhre",
+      "Wuerzel",
+      "Wuerzele",
+      "Wuerzelen",
+      "carotte"
+    ]
+  },
+  {
+    "id": "lod:ZWIWWEL1UNI1",
+    "name": "Zwiwwel",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "ZWIWWEL1",
+        "meaning": "ZWIWWEL1UNI1"
+      },
+      {
+        "entry": "ENN2",
+        "meaning": "ENN2UNI1"
+      }
+    ],
+    "aliases": [
+      "Zwiebel",
+      "Zwiwwel",
+      "Zwiwwele",
+      "Zwiwwelen",
+      "oignon",
+      "Ënn",
+      "Ënne",
+      "Ënnen"
+    ]
+  },
+  {
+    "id": "lod:KNUEWELEK1UNI1",
+    "name": "Knuewelek",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KNUEWELEK1",
+        "meaning": "KNUEWELEK1UNI1"
+      }
+    ],
+    "aliases": [
+      "Knoblauch",
+      "Knuewelek",
+      "ail"
+    ]
+  },
+  {
+    "id": "lod:CHAMPIGNON1UNI1",
+    "name": "Champignon",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "CHAMPIGNON1",
+        "meaning": "CHAMPIGNON1UNI1"
+      }
+    ],
+    "aliases": [
+      "Champignon",
+      "Champignone",
+      "Champignonen",
+      "Pilz",
+      "Speisepilz",
+      "champignon",
+      "champignons"
+    ]
+  },
+  {
+    "id": "lod:CONCOMBER1UNI1",
+    "name": "Concomber",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "CONCOMBER1",
+        "meaning": "CONCOMBER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Concomber",
+      "Concombere",
+      "Concomberen",
+      "Salatgurke",
+      "concombre"
+    ]
+  },
+  {
+    "id": "lod:COURGETTE1UNI1",
+    "name": "Courgette",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "COURGETTE1",
+        "meaning": "COURGETTE1UNI1"
+      },
+      {
+        "entry": "ZUCCHINI1",
+        "meaning": "ZUCCHINI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Courgette",
+      "Courgetten",
+      "Courgettë",
+      "Zucchini",
+      "Zucchinie",
+      "Zucchinien",
+      "courgette"
+    ]
+  },
+  {
+    "id": "lod:BROKKOLI1UNI1",
+    "name": "Brokkoli",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "BROKKOLI1",
+        "meaning": "BROKKOLI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Brokkoli",
+      "brocoli"
+    ]
+  },
+  {
+    "id": "lod:CHOUFLEUR1UNI1",
+    "name": "Choufleur",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "CHOUFLEUR1",
+        "meaning": "CHOUFLEUR1UNI1"
+      }
+    ],
+    "aliases": [
+      "Blumenkohl",
+      "Choufleur",
+      "Choufleure",
+      "Choufleuren",
+      "chou-fleur"
+    ]
+  },
+  {
+    "id": "lod:ANDEIF1UNI1",
+    "name": "Andéif",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "ANDEIF1",
+        "meaning": "ANDEIF1UNI1"
+      }
+    ],
+    "aliases": [
+      "Andéif",
+      "Andéiwe",
+      "Andéiwen",
+      "Endivie"
+    ]
+  },
+  {
+    "id": "lod:ARTICHAUT1UNI1",
+    "name": "Artichaut",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "ARTICHAUT1",
+        "meaning": "ARTICHAUT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Artichaut",
+      "Artichaute",
+      "Artichauten",
+      "Artischocke",
+      "artichaut"
+    ]
+  },
+  {
+    "id": "lod:AUBERGINE2UNI1",
+    "name": "Aubergine",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "AUBERGINE2",
+        "meaning": "AUBERGINE2UNI1"
+      }
+    ],
+    "aliases": [
+      "Aubergine",
+      "Auberginne",
+      "Auberginnen",
+      "aubergine"
+    ]
+  },
+  {
+    "id": "lod:AVOCADO1UNI1",
+    "name": "Avocado",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "AVOCADO1",
+        "meaning": "AVOCADO1UNI1"
+      }
+    ],
+    "aliases": [
+      "Avocado",
+      "Avocadoe",
+      "Avocadoen",
+      "avocat"
+    ]
+  },
+  {
+    "id": "lod:ANANAS1UNI1",
+    "name": "Ananas",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "ANANAS1",
+        "meaning": "ANANAS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Ananas",
+      "Ananasse",
+      "Ananassen",
+      "ananas"
+    ]
+  },
+  {
+    "id": "lod:APRIKOS1UNI1",
+    "name": "Aprikos",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "APRIKOS1",
+        "meaning": "APRIKOS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Aprikos",
+      "Aprikose",
+      "Aprikosen",
+      "abricot"
+    ]
+  },
+  {
+    "id": "lod:BIER3UNI1",
+    "name": "Bier",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "BIER3",
+        "meaning": "BIER3UNI1"
+      }
+    ],
+    "aliases": [
+      "Bier",
+      "Biere",
+      "Bieren",
+      "Birne",
+      "poire"
+    ]
+  },
+  {
+    "id": "lod:HAMMBIER1UNI1",
+    "name": "Hammbier",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "HAMMBIER1",
+        "meaning": "HAMMBIER1UNI1"
+      },
+      {
+        "entry": "HAMMBIER2",
+        "meaning": "HAMMBIER2UNI2"
+      }
+    ],
+    "aliases": [
+      "Hammbier",
+      "Hammbiere",
+      "Hammbieren",
+      "Himbeere",
+      "Himbeeren",
+      "framboise",
+      "framboises"
+    ]
+  },
+  {
+    "id": "lod:SCHWAARZBIER1UNI2",
+    "name": "Schwaarzbier",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "SCHWAARZBIER1",
+        "meaning": "SCHWAARZBIER1UNI2"
+      },
+      {
+        "entry": "SCHWAARZBIER2",
+        "meaning": "SCHWAARZBIER2UNI1"
+      }
+    ],
+    "aliases": [
+      "Brombeere",
+      "Brombeeren",
+      "Schwaarzbier",
+      "Schwaarzbiere",
+      "Schwaarzbieren",
+      "mûre",
+      "mûres"
+    ]
+  },
+  {
+    "id": "lod:MOLBIER1UNI1",
+    "name": "Molbier",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "MOLBIER1",
+        "meaning": "MOLBIER1UNI1"
+      },
+      {
+        "entry": "MOLBIER2",
+        "meaning": "MOLBIER2UNI1"
+      }
+    ],
+    "aliases": [
+      "Heidelbeere",
+      "Heidelbeeren",
+      "Molbier",
+      "Molbiere",
+      "Molbieren",
+      "myrtille",
+      "myrtilles"
+    ]
+  },
+  {
+    "id": "lod:KIISCHT1UNI1",
+    "name": "Kiischt",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KIISCHT1",
+        "meaning": "KIISCHT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kiischt",
+      "Kiischte",
+      "Kiischten",
+      "Kirsche",
+      "cerise"
+    ]
+  },
+  {
+    "id": "lod:KIWI1UNI1",
+    "name": "Kiwi",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KIWI1",
+        "meaning": "KIWI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kiwi",
+      "Kiwie",
+      "Kiwien",
+      "kiwi"
+    ]
+  },
+  {
+    "id": "lod:ORANGE1UNI1",
+    "name": "Orange",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "ORANGE1",
+        "meaning": "ORANGE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Orange",
+      "Orangen",
+      "Orangë",
+      "orange"
+    ]
+  },
+  {
+    "id": "lod:CLEMENTINE1UNI1",
+    "name": "Clementine",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "CLEMENTINE1",
+        "meaning": "CLEMENTINE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Clementine",
+      "Clementinne",
+      "Clementinnen",
+      "clémentine"
+    ]
+  },
+  {
+    "id": "lod:MANDARINE1UNI1",
+    "name": "Mandarine",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "MANDARINE1",
+        "meaning": "MANDARINE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mandarine",
+      "Mandarinne",
+      "Mandarinnen",
+      "mandarine"
+    ]
+  },
+  {
+    "id": "lod:ZITROUN1UNI1",
+    "name": "Zitroun",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "ZITROUN1",
+        "meaning": "ZITROUN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Zitrone",
+      "Zitroun",
+      "Zitroune",
+      "Zitrounen",
+      "citron"
+    ]
+  },
+  {
+    "id": "lod:LIMETT1UNI1",
+    "name": "Limett",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "LIMETT1",
+        "meaning": "LIMETT1UNI1"
+      },
+      {
+        "entry": "LIMOUN1",
+        "meaning": "LIMOUN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Limett",
+      "Limette",
+      "Limetten",
+      "Limoun",
+      "Limoune",
+      "Limounen",
+      "citron vert"
+    ]
+  },
+  {
+    "id": "lod:GRAPEFRUIT1UNI1",
+    "name": "Grapefruit",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "GRAPEFRUIT1",
+        "meaning": "GRAPEFRUIT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Grapefruit",
+      "Grapefruite",
+      "Grapefruiten",
+      "grapefruit",
+      "pomélo"
+    ]
+  },
+  {
+    "id": "lod:MELOUN1UNI1",
+    "name": "Meloun",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "MELOUN1",
+        "meaning": "MELOUN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Melone",
+      "Meloun",
+      "Meloune",
+      "Melounen",
+      "melon"
+    ]
+  },
+  {
+    "id": "lod:WAASSERMELOUN1UNI1",
+    "name": "Waassermeloun",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "WAASSERMELOUN1",
+        "meaning": "WAASSERMELOUN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Waassermeloun",
+      "Waassermeloune",
+      "Waassermelounen",
+      "Wassermelone",
+      "pastèque"
+    ]
+  },
+  {
+    "id": "lod:PIISCH1UNI1",
+    "name": "Piisch",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "PIISCH1",
+        "meaning": "PIISCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Pfirsich",
+      "Piisch",
+      "Pije",
+      "Pijen",
+      "pêche"
+    ]
+  },
+  {
+    "id": "lod:NEKTARINN1UNI1",
+    "name": "Nektarinn",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "NEKTARINN1",
+        "meaning": "NEKTARINN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Nektarine",
+      "Nektarinn",
+      "Nektarinne",
+      "Nektarinnen",
+      "brugnon",
+      "nectarine"
+    ]
+  },
+  {
+    "id": "lod:PROMM1UNI1",
+    "name": "Promm",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "PROMM1",
+        "meaning": "PROMM1UNI1"
+      }
+    ],
+    "aliases": [
+      "Pflaume",
+      "Promm",
+      "Promme",
+      "Prommen",
+      "prune"
+    ]
+  },
+  {
+    "id": "lod:QUETSCH1UNI1",
+    "name": "Quetsch",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "QUETSCH1",
+        "meaning": "QUETSCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Quetsch",
+      "Quetsche",
+      "Quetschen",
+      "Zwetschge",
+      "quetsche"
+    ]
+  },
+  {
+    "id": "lod:MIRABELL1UNI1",
+    "name": "Mirabell",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "MIRABELL1",
+        "meaning": "MIRABELL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mirabell",
+      "Mirabelle",
+      "Mirabellen",
+      "mirabelle"
+    ]
+  },
+  {
+    "id": "lod:DRAUF1UNI2",
+    "name": "Drauf",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "DRAUF1",
+        "meaning": "DRAUF1UNI2"
+      }
+    ],
+    "aliases": [
+      "Drauf",
+      "Drauwe",
+      "Drauwen",
+      "Traube",
+      "raisin"
+    ]
+  },
+  {
+    "id": "lod:MANGO1UNI1",
+    "name": "Mango",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "MANGO1",
+        "meaning": "MANGO1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mango",
+      "Mangoe",
+      "Mangoen",
+      "mangue"
+    ]
+  },
+  {
+    "id": "lod:PAPAYA1UNI1",
+    "name": "Papaya",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "PAPAYA1",
+        "meaning": "PAPAYA1UNI1"
+      }
+    ],
+    "aliases": [
+      "Papaya",
+      "Papayae",
+      "Papayaen",
+      "papaye"
+    ]
+  },
+  {
+    "id": "lod:PASSIOUNSFRUUCHT1UNI1",
+    "name": "Passiounsfruucht",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "PASSIOUNSFRUUCHT1",
+        "meaning": "PASSIOUNSFRUUCHT1UNI1"
+      },
+      {
+        "entry": "MARACUJA1",
+        "meaning": "MARACUJA1UNI1"
+      }
+    ],
+    "aliases": [
+      "Maracuja",
+      "Maracujae",
+      "Maracujaen",
+      "Passionsfrucht",
+      "Passiounsfriichte",
+      "Passiounsfriichten",
+      "Passiounsfruucht",
+      "fruit de la passion",
+      "maracuja"
+    ]
+  },
+  {
+    "id": "lod:GRANATAPEL1UNI1",
+    "name": "Granatapel",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "GRANATAPEL1",
+        "meaning": "GRANATAPEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Granatapel",
+      "Granatapfel",
+      "Granatäppel",
+      "grenade"
+    ]
+  },
+  {
+    "id": "lod:FIG1UNI1",
+    "name": "Fig",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "FIG1",
+        "meaning": "FIG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Feige",
+      "Fig",
+      "Fige",
+      "Figen",
+      "figue"
+    ]
+  },
+  {
+    "id": "lod:KAKI1UNI1",
+    "name": "Kaki",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KAKI1",
+        "meaning": "KAKI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kaki",
+      "Kakie",
+      "Kakien",
+      "kaki"
+    ]
+  },
+  {
+    "id": "lod:DATTEL1UNI1",
+    "name": "Dattel",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "DATTEL1",
+        "meaning": "DATTEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Dattel",
+      "Dattele",
+      "Dattelen",
+      "datte"
+    ]
+  },
+  {
+    "id": "lod:KABES1UNI1",
+    "name": "Kabes",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KABES1",
+        "meaning": "KABES1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kabes",
+      "Kohl",
+      "chou"
+    ]
+  },
+  {
+    "id": "lod:KABES1UNI2",
+    "name": "Gekrauselte Kabes",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KABES1",
+        "meaning": "KABES1UNI2"
+      },
+      {
+        "entry": "WERJEM1",
+        "meaning": "WERJEM1UNI1"
+      }
+    ],
+    "aliases": [
+      "Gekrauselte Kabes",
+      "Werjem",
+      "Wirsing",
+      "chou de Milan"
+    ]
+  },
+  {
+    "id": "lod:KABES1UNI3",
+    "name": "Grénge Kabes",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KABES1",
+        "meaning": "KABES1UNI3"
+      }
+    ],
+    "aliases": [
+      "Grénge Kabes",
+      "Grünkohl",
+      "chou frisé"
+    ]
+  },
+  {
+    "id": "lod:KABES1UNI4",
+    "name": "Roude Kabes",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KABES1",
+        "meaning": "KABES1UNI4"
+      }
+    ],
+    "aliases": [
+      "Rotkohl",
+      "Roude Kabes",
+      "chou rouge"
+    ]
+  },
+  {
+    "id": "lod:KABES1UNI5",
+    "name": "Spatze Kabes",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KABES1",
+        "meaning": "KABES1UNI5"
+      }
+    ],
+    "aliases": [
+      "Spatze Kabes",
+      "Spitzkohl",
+      "chou pointu"
+    ]
+  },
+  {
+    "id": "lod:KABES1UNI6",
+    "name": "Wäisse Kabes",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KABES1",
+        "meaning": "KABES1UNI6"
+      }
+    ],
+    "aliases": [
+      "Weißkohl",
+      "Wäisse Kabes",
+      "chou blanc"
+    ]
+  },
+  {
+    "id": "lod:ZELLERI1UNI1",
+    "name": "Zelleri",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "ZELLERI1",
+        "meaning": "ZELLERI1UNI1"
+      },
+      {
+        "entry": "ZELLERISKAPP1",
+        "meaning": "ZELLERISKAPP1UNI1"
+      },
+      {
+        "entry": "KAPPZELLERI1",
+        "meaning": "KAPPZELLERI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kappzelleri",
+      "Kappzellerie",
+      "Kappzellerien",
+      "Knollensellerie",
+      "Sellerie",
+      "Sellerieknolle",
+      "Zelleri",
+      "Zelleriskapp",
+      "Zelleriskäpp",
+      "céleri",
+      "céleri-rave",
+      "tête de céleri-rave"
+    ]
+  },
+  {
+    "id": "lod:STAANGENZELLERI1UNI1",
+    "name": "Staangenzelleri",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "STAANGENZELLERI1",
+        "meaning": "STAANGENZELLERI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Staangenzelleri",
+      "Stangensellerie",
+      "Staudensellerie",
+      "céleri en branches"
+    ]
+  },
+  {
+    "id": "lod:PORRETT1UNI1",
+    "name": "Porrett",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "PORRETT1",
+        "meaning": "PORRETT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Lauchstange",
+      "Porreestange",
+      "Porrett",
+      "Porrette",
+      "Porretten",
+      "poireau"
+    ]
+  },
+  {
+    "id": "lod:SCHALLOTT1UNI1",
+    "name": "Schallott",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "SCHALLOTT1",
+        "meaning": "SCHALLOTT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Schallott",
+      "Schallotte",
+      "Schallotten",
+      "Schalotte",
+      "échalote"
+    ]
+  },
+  {
+    "id": "lod:FREIJOERSENN1UNI1",
+    "name": "Fréijoersënn",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "FREIJOERSENN1",
+        "meaning": "FREIJOERSENN1UNI1"
+      },
+      {
+        "entry": "FREIJOERSZWIWWEL1",
+        "meaning": "FREIJOERSZWIWWEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Fréijoerszwiwwel",
+      "Fréijoerszwiwwele",
+      "Fréijoerszwiwwelen",
+      "Fréijoersënn",
+      "Fréijoersënne",
+      "Fréijoersënnen",
+      "Frühlingszwiebel",
+      "Lauchzwiebel",
+      "Winterzwiebel",
+      "ciboule",
+      "cive"
+    ]
+  },
+  {
+    "id": "lod:ROMMEL1UNI1",
+    "name": "Rommel",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "ROMMEL1",
+        "meaning": "ROMMEL1UNI1"
+      },
+      {
+        "entry": "NAVET1",
+        "meaning": "NAVET1UNI1"
+      }
+    ],
+    "aliases": [
+      "Navet",
+      "Navete",
+      "Naveten",
+      "Rommel",
+      "Rommele",
+      "Rommelen",
+      "Rübe",
+      "Speiserübe",
+      "betterave",
+      "navet"
+    ]
+  },
+  {
+    "id": "lod:ROMMEL1UNI2",
+    "name": "Rout Rommel",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "ROMMEL1",
+        "meaning": "ROMMEL1UNI2"
+      }
+    ],
+    "aliases": [
+      "Rote Bete",
+      "Rout Rommel",
+      "betterave rouge"
+    ]
+  },
+  {
+    "id": "lod:REIDCHEN1UNI1",
+    "name": "Réidchen",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "REIDCHEN1",
+        "meaning": "REIDCHEN1UNI1"
+      },
+      {
+        "entry": "REIDECH1",
+        "meaning": "REIDECH1UNI2"
+      }
+    ],
+    "aliases": [
+      "Radieschen",
+      "Rettich",
+      "Réidchen",
+      "Réidech",
+      "Réidecher",
+      "Réidercher",
+      "radis"
+    ]
+  },
+  {
+    "id": "lod:PASTINAK1UNI1",
+    "name": "Pastinak",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "PASTINAK1",
+        "meaning": "PASTINAK1UNI1"
+      },
+      {
+        "entry": "PEITENER1",
+        "meaning": "PEITENER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Pastinak",
+      "Pastinake",
+      "Pastinaken",
+      "Péitener",
+      "panais"
+    ]
+  },
+  {
+    "id": "lod:KOLRAF1UNI1",
+    "name": "Kolraf",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KOLRAF1",
+        "meaning": "KOLRAF1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kohlrabi",
+      "Kolraf",
+      "Kolrawe",
+      "Kolrawen",
+      "chou-rave"
+    ]
+  },
+  {
+    "id": "lod:KURBIS1UNI1",
+    "name": "Kürbis",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KURBIS1",
+        "meaning": "KURBIS1UNI1"
+      },
+      {
+        "entry": "KALBASS1",
+        "meaning": "KALBASS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kalbass",
+      "Kalbasse",
+      "Kalbassen",
+      "Kürbis",
+      "Kürbisse",
+      "Kürbissen",
+      "calebasse",
+      "citrouille",
+      "potiron"
+    ]
+  },
+  {
+    "id": "lod:SPINAT1UNI2",
+    "name": "Spinat",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "SPINAT1",
+        "meaning": "SPINAT1UNI2"
+      }
+    ],
+    "aliases": [
+      "Spinat",
+      "épinard"
+    ]
+  },
+  {
+    "id": "lod:SPARGEL1UNI1",
+    "name": "Spargel",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "SPARGEL1",
+        "meaning": "SPARGEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Spargel",
+      "Spargele",
+      "Spargelen",
+      "asperge"
+    ]
+  },
+  {
+    "id": "lod:FENCHEL1UNI1",
+    "name": "Fenchel",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "FENCHEL1",
+        "meaning": "FENCHEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Fenchel",
+      "fenouil"
+    ]
+  },
+  {
+    "id": "lod:IERBES1UNI1",
+    "name": "Ierbes",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "IERBES1",
+        "meaning": "IERBES1UNI1"
+      }
+    ],
+    "aliases": [
+      "Erbse",
+      "Ierbes",
+      "Ierbesse",
+      "Ierbessen",
+      "petit-pois",
+      "pois"
+    ]
+  },
+  {
+    "id": "lod:BOUN1UNI1",
+    "name": "Boun",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "BOUN1",
+        "meaning": "BOUN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Boun",
+      "Boune",
+      "Bounen"
+    ]
+  },
+  {
+    "id": "lod:GAARDEBOUN1UNI2",
+    "name": "Gaardeboun",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "GAARDEBOUN1",
+        "meaning": "GAARDEBOUN1UNI2"
+      },
+      {
+        "entry": "SAUBOUN1",
+        "meaning": "SAUBOUN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Feldbohne",
+      "Gaardeboun",
+      "Gaardeboune",
+      "Gaardebounen",
+      "Saubohne",
+      "Sauboun",
+      "Sauboune",
+      "Saubounen",
+      "fève",
+      "fève des marais"
+    ]
+  },
+  {
+    "id": "lod:MAIS1UNI2",
+    "name": "Mais",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "MAIS1",
+        "meaning": "MAIS1UNI2"
+      }
+    ],
+    "aliases": [
+      "Mais",
+      "maïs"
+    ]
+  },
+  {
+    "id": "lod:BROCKELCHEN1UNI2",
+    "name": "Brockelchen",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "BROCKELCHEN1",
+        "meaning": "BROCKELCHEN1UNI2"
+      }
+    ],
+    "aliases": [
+      "Brockelchen",
+      "Brockelcher",
+      "Rosenkohl",
+      "chou de Bruxelles"
+    ]
+  },
+  {
+    "id": "lod:POIVRON1UNI1",
+    "name": "Poivron",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "POIVRON1",
+        "meaning": "POIVRON1UNI1"
+      },
+      {
+        "entry": "PAPRIKA2",
+        "meaning": "PAPRIKA2UNI2"
+      }
+    ],
+    "aliases": [
+      "Paprika",
+      "Paprikae",
+      "Paprikaen",
+      "Poivron",
+      "Poivrone",
+      "Poivronen",
+      "piment doux",
+      "poivron"
+    ]
+  },
+  {
+    "id": "lod:CHILI1UNI1",
+    "name": "Chili",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "CHILI1",
+        "meaning": "CHILI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Chili",
+      "Chilie",
+      "Chilien",
+      "Chilischote",
+      "piment"
+    ]
+  },
+  {
+    "id": "lod:ZOCKERIERBES1UNI1",
+    "name": "Zockerierbes",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "ZOCKERIERBES1",
+        "meaning": "ZOCKERIERBES1UNI1"
+      },
+      {
+        "entry": "MANGETOUT1",
+        "meaning": "MANGETOUT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mange-tout",
+      "Mange-toute",
+      "Mange-touten",
+      "Zockerierbes",
+      "Zockerierbesse",
+      "Zockerierbessen",
+      "Zuckererbse",
+      "pois gourmand"
+    ]
+  },
+  {
+    "id": "lod:LAITUE1UNI2",
+    "name": "Laitue",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "LAITUE1",
+        "meaning": "LAITUE1UNI2"
+      },
+      {
+        "entry": "HEEDERZALOT1",
+        "meaning": "HEEDERZALOT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Heederzalot",
+      "Heederzalote",
+      "Heederzaloten",
+      "Kopfsalat",
+      "Laitue",
+      "Laituen",
+      "Laituë",
+      "laitue"
+    ]
+  },
+  {
+    "id": "lod:MAUSEIERCHERSZALOT1UNI1",
+    "name": "Mauséiercherszalot",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "MAUSEIERCHERSZALOT1",
+        "meaning": "MAUSEIERCHERSZALOT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Feldsalat",
+      "Mauséiercherszalot",
+      "doucette",
+      "mâche"
+    ]
+  },
+  {
+    "id": "lod:RUCOLA1UNI1",
+    "name": "Rucola",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "RUCOLA1",
+        "meaning": "RUCOLA1UNI1"
+      }
+    ],
+    "aliases": [
+      "Rauke",
+      "Rucola",
+      "roquette"
+    ]
+  },
+  {
+    "id": "lod:RAPPZALOT1UNI1",
+    "name": "Rappzalot",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "RAPPZALOT1",
+        "meaning": "RAPPZALOT1UNI1"
+      },
+      {
+        "entry": "SCHNETTZALOT1",
+        "meaning": "SCHNETTZALOT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Pflücksalat",
+      "Rappzalot",
+      "Schnittsalat",
+      "Schnëttzalot",
+      "salade à couper"
+    ]
+  },
+  {
+    "id": "lod:MANGOLD1UNI1",
+    "name": "Mangold",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "MANGOLD1",
+        "meaning": "MANGOLD1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mangold",
+      "bette",
+      "blette"
+    ]
+  },
+  {
+    "id": "lod:RUBBARB1UNI1",
+    "name": "Rubbarb",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "RUBBARB1",
+        "meaning": "RUBBARB1UNI1"
+      }
+    ],
+    "aliases": [
+      "Rhabarber",
+      "Rubbarb",
+      "rhubarbe"
+    ]
+  },
+  {
+    "id": "lod:GINGEMBRE1UNI1",
+    "name": "Gingembre",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "GINGEMBRE1",
+        "meaning": "GINGEMBRE1UNI1"
+      },
+      {
+        "entry": "INGWER1",
+        "meaning": "INGWER1UNI1"
+      },
+      {
+        "entry": "GEIMER1",
+        "meaning": "GEIMER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Geimer",
+      "Gingembre",
+      "Ingwer",
+      "gingembre"
+    ]
+  },
+  {
+    "id": "lod:BASILIKUM1UNI1",
+    "name": "Basilikum",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "BASILIKUM1",
+        "meaning": "BASILIKUM1UNI1"
+      }
+    ],
+    "aliases": [
+      "Basilikum",
+      "basilic"
+    ]
+  },
+  {
+    "id": "lod:PEITERSEILEG1UNI1",
+    "name": "Péiterséileg",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "PEITERSEILEG1",
+        "meaning": "PEITERSEILEG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Petersilie",
+      "Péiterséileg",
+      "persil"
+    ]
+  },
+  {
+    "id": "lod:BRATZEL2UNI1",
+    "name": "Bratzel",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "BRATZEL2",
+        "meaning": "BRATZEL2UNI1"
+      }
+    ],
+    "aliases": [
+      "Bratzel",
+      "Bratzele",
+      "Bratzelen",
+      "Schnittlauch",
+      "ciboulette"
+    ]
+  },
+  {
+    "id": "lod:ROSMARIN1UNI1",
+    "name": "Rosmarin",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "ROSMARIN1",
+        "meaning": "ROSMARIN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Rosmarin",
+      "romarin"
+    ]
+  },
+  {
+    "id": "lod:THYMIAN1UNI1",
+    "name": "Thymian",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "THYMIAN1",
+        "meaning": "THYMIAN1UNI1"
+      },
+      {
+        "entry": "TEIMERJANNCHEN1",
+        "meaning": "TEIMERJANNCHEN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Teimerjännchen",
+      "Thymian",
+      "thym"
+    ]
+  },
+  {
+    "id": "lod:DELL1UNI1",
+    "name": "Dëll",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "DELL1",
+        "meaning": "DELL1UNI1"
+      },
+      {
+        "entry": "KORNISCHONGSKRAUT1",
+        "meaning": "KORNISCHONGSKRAUT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Dill",
+      "Dëll",
+      "Kornischongskraut",
+      "aneth"
+    ]
+  },
+  {
+    "id": "lod:PEFFERMENZ1UNI1",
+    "name": "Peffermënz",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "PEFFERMENZ1",
+        "meaning": "PEFFERMENZ1UNI1"
+      }
+    ],
+    "aliases": [
+      "Peffermënz",
+      "Pfefferminze"
+    ]
+  },
+  {
+    "id": "lod:KORIANDER1UNI1",
+    "name": "Koriander",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "KORIANDER1",
+        "meaning": "KORIANDER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Koriander",
+      "coriandre"
+    ]
+  },
+  {
+    "id": "lod:BARLAUCH1UNI1",
+    "name": "Bärlauch",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "BARLAUCH1",
+        "meaning": "BARLAUCH1UNI1"
+      },
+      {
+        "entry": "HECKEKNUEWELEK1",
+        "meaning": "HECKEKNUEWELEK1UNI1"
+      },
+      {
+        "entry": "KNUEWELEK1",
+        "meaning": "KNUEWELEK1UNI2"
+      }
+    ],
+    "aliases": [
+      "Bärlauch",
+      "Heckeknuewelek",
+      "Wëlle Knuewelek",
+      "ail des ours",
+      "ail sauvage"
+    ]
+  },
+  {
+    "id": "lod:ESTRAGON1UNI1",
+    "name": "Estragon",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "ESTRAGON1",
+        "meaning": "ESTRAGON1UNI1"
+      }
+    ],
+    "aliases": [
+      "Estragon",
+      "estragon"
+    ]
+  },
+  {
+    "id": "lod:SALBEI1UNI1",
+    "name": "Salbei",
+    "category": "Produce",
+    "sources": [
+      {
+        "entry": "SALBEI1",
+        "meaning": "SALBEI1UNI1"
+      },
+      {
+        "entry": "SAUGE1",
+        "meaning": "SAUGE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Salbei",
+      "Sauge",
+      "sauge"
+    ]
+  },
+  {
+    "id": "lod:BROUT1UNI1",
+    "name": "Brout",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "BROUT1",
+        "meaning": "BROUT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Brot",
+      "Brout",
+      "pain"
+    ]
+  },
+  {
+    "id": "lod:BAGUETTE1UNI1",
+    "name": "Baguette",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "BAGUETTE1",
+        "meaning": "BAGUETTE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Baguette",
+      "Baguetten",
+      "Baguettë",
+      "baguette",
+      "baguettes"
+    ]
+  },
+  {
+    "id": "lod:BREITCHEN1UNI1",
+    "name": "Bréitchen",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "BREITCHEN1",
+        "meaning": "BREITCHEN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Bréidercher",
+      "Bréitchen",
+      "Brötchen",
+      "petit pain"
+    ]
+  },
+  {
+    "id": "lod:CROISSANT1UNI1",
+    "name": "Croissant",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "CROISSANT1",
+        "meaning": "CROISSANT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Croissant",
+      "Croissante",
+      "Croissanten",
+      "Hörnchen",
+      "croissant"
+    ]
+  },
+  {
+    "id": "lod:BRIOSCH1UNI1",
+    "name": "Briosch",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "BRIOSCH1",
+        "meaning": "BRIOSCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Brioche",
+      "Briosch",
+      "Briosche",
+      "Brioschen",
+      "brioche"
+    ]
+  },
+  {
+    "id": "lod:BAUEREBROUT1UNI1",
+    "name": "Bauerebrout",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "BAUEREBROUT1",
+        "meaning": "BAUEREBROUT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Bauerebrout",
+      "Bauernbrot",
+      "pain de campagne"
+    ]
+  },
+  {
+    "id": "lod:KARBROUT1UNI1",
+    "name": "Karbrout",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "KARBROUT1",
+        "meaning": "KARBROUT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Karbrout",
+      "Roggenbrot",
+      "pain de seigle"
+    ]
+  },
+  {
+    "id": "lod:KAREBROUT1UNI1",
+    "name": "Kärebrout",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "KAREBROUT1",
+        "meaning": "KAREBROUT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kärebrout",
+      "Mehrkornbrot",
+      "pain aux céréales"
+    ]
+  },
+  {
+    "id": "lod:VOLLKARBROUT1UNI1",
+    "name": "Vollkarbrout",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "VOLLKARBROUT1",
+        "meaning": "VOLLKARBROUT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Vollkarbrout",
+      "Vollkornbrot",
+      "pain complet"
+    ]
+  },
+  {
+    "id": "lod:TOASTBROUT1UNI1",
+    "name": "Toastbrout",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "TOASTBROUT1",
+        "meaning": "TOASTBROUT1UNI1"
+      },
+      {
+        "entry": "TOAST1",
+        "meaning": "TOAST1UNI1"
+      }
+    ],
+    "aliases": [
+      "Toast",
+      "Toastbrot",
+      "Toastbrout",
+      "Toaste",
+      "Toasten",
+      "pain de mie",
+      "toast"
+    ]
+  },
+  {
+    "id": "lod:KNACKEBROUT1UNI1",
+    "name": "Knäckebrout",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "KNACKEBROUT1",
+        "meaning": "KNACKEBROUT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Knäckebrot",
+      "Knäckebrout",
+      "pain suédois"
+    ]
+  },
+  {
+    "id": "lod:KUCH1UNI1",
+    "name": "Kuch",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "KUCH1",
+        "meaning": "KUCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kuch",
+      "Kuche",
+      "Kuchen",
+      "Torte",
+      "gâteau"
+    ]
+  },
+  {
+    "id": "lod:TAART1UNI1",
+    "name": "Taart",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "TAART1",
+        "meaning": "TAART1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kuchen",
+      "Obstkuchen",
+      "Taart",
+      "Taarte",
+      "Taarten",
+      "tarte"
+    ]
+  },
+  {
+    "id": "lod:APPELTAART1UNI1",
+    "name": "Äppeltaart",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "APPELTAART1",
+        "meaning": "APPELTAART1UNI1"
+      }
+    ],
+    "aliases": [
+      "Apfelkuchen",
+      "tarte aux pommes",
+      "Äppeltaart",
+      "Äppeltaarte",
+      "Äppeltaarten"
+    ]
+  },
+  {
+    "id": "lod:APPELTASCH1UNI1",
+    "name": "Äppeltäsch",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "APPELTASCH1",
+        "meaning": "APPELTASCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Apfeltasche",
+      "chausson aux pommes",
+      "poche aux pommes",
+      "Äppeltäsch",
+      "Äppeltäsche",
+      "Äppeltäschen"
+    ]
+  },
+  {
+    "id": "lod:AERDBIERSTAART1UNI1",
+    "name": "Äerdbierstaart",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "AERDBIERSTAART1",
+        "meaning": "AERDBIERSTAART1UNI1"
+      }
+    ],
+    "aliases": [
+      "Erdbeerkuchen",
+      "tarte aux fraises",
+      "Äerdbierstaart",
+      "Äerdbierstaarte",
+      "Äerdbierstaarten"
+    ]
+  },
+  {
+    "id": "lod:QUETSCHENTAART1UNI1",
+    "name": "Quetschentaart",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "QUETSCHENTAART1",
+        "meaning": "QUETSCHENTAART1UNI1"
+      }
+    ],
+    "aliases": [
+      "Quetschentaart",
+      "Quetschentaarte",
+      "Quetschentaarten",
+      "Zwetschgentorte",
+      "tarte aux quetsches"
+    ]
+  },
+  {
+    "id": "lod:QUETSCHENTASCH1UNI1",
+    "name": "Quetschentäsch",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "QUETSCHENTASCH1",
+        "meaning": "QUETSCHENTASCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Quetschentäsch",
+      "Quetschentäsche",
+      "Quetschentäschen",
+      "Zwetschgentasche",
+      "chausson aux quetsches"
+    ]
+  },
+  {
+    "id": "lod:KIISCHTENTAART1UNI1",
+    "name": "Kiischtentaart",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "KIISCHTENTAART1",
+        "meaning": "KIISCHTENTAART1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kiischtentaart",
+      "Kiischtentaarte",
+      "Kiischtentaarten",
+      "Kirschkuchen",
+      "tarte aux cerises"
+    ]
+  },
+  {
+    "id": "lod:ZITROUNENTAART1UNI1",
+    "name": "Zitrounentaart",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "ZITROUNENTAART1",
+        "meaning": "ZITROUNENTAART1UNI1"
+      }
+    ],
+    "aliases": [
+      "Zitronentarte",
+      "Zitrounentaart",
+      "Zitrounentaarte",
+      "Zitrounentaarten"
+    ]
+  },
+  {
+    "id": "lod:SCHOCKELASKUCH1UNI1",
+    "name": "Schockelaskuch",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "SCHOCKELASKUCH1",
+        "meaning": "SCHOCKELASKUCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Schockelaskuch",
+      "Schockelaskuche",
+      "Schockelaskuchen",
+      "Schokoladenkuchen",
+      "gâteau au chocolat"
+    ]
+  },
+  {
+    "id": "lod:SCHOCKELASRULL1UNI1",
+    "name": "Schockelasrull",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "SCHOCKELASRULL1",
+        "meaning": "SCHOCKELASRULL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Schockelasrull",
+      "Schockelasrulle",
+      "Schockelasrullen",
+      "Schokocroissant",
+      "pain au chocolat"
+    ]
+  },
+  {
+    "id": "lod:MARMERKUCH1UNI1",
+    "name": "Marmerkuch",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "MARMERKUCH1",
+        "meaning": "MARMERKUCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Marmerkuch",
+      "Marmerkuche",
+      "Marmerkuchen",
+      "Marmorkuchen"
+    ]
+  },
+  {
+    "id": "lod:MUFFIN1UNI1",
+    "name": "Muffin",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "MUFFIN1",
+        "meaning": "MUFFIN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Muffin",
+      "Muffinne",
+      "Muffinnen",
+      "Muffins",
+      "muffin"
+    ]
+  },
+  {
+    "id": "lod:ECLAIR1UNI1",
+    "name": "Eclair",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "ECLAIR1",
+        "meaning": "ECLAIR1UNI1"
+      }
+    ],
+    "aliases": [
+      "Eclair",
+      "Eclaire",
+      "Eclairen",
+      "Liebesknochen",
+      "éclair"
+    ]
+  },
+  {
+    "id": "lod:BEIGNET1UNI1",
+    "name": "Beignet",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "BEIGNET1",
+        "meaning": "BEIGNET1UNI1"
+      },
+      {
+        "entry": "DONUT1",
+        "meaning": "DONUT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Beignet",
+      "Beignete",
+      "Beigneten",
+      "Donut",
+      "Donuts",
+      "Donutte",
+      "Donutten",
+      "beignet",
+      "donut"
+    ]
+  },
+  {
+    "id": "lod:BERLINER1UNI1",
+    "name": "Berliner",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "BERLINER1",
+        "meaning": "BERLINER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Berliner",
+      "beignet fourré",
+      "boule de Berlin"
+    ]
+  },
+  {
+    "id": "lod:BAMKUCH1UNI1",
+    "name": "Bamkuch",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "BAMKUCH1",
+        "meaning": "BAMKUCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Bamkuch",
+      "Bamkuche",
+      "Bamkuchen",
+      "Baumkuchen",
+      "gâteau à la broche"
+    ]
+  },
+  {
+    "id": "lod:KEISTAART1UNI1",
+    "name": "Kéistaart",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "KEISTAART1",
+        "meaning": "KEISTAART1UNI1"
+      }
+    ],
+    "aliases": [
+      "Käsekuchen",
+      "Kéistaart",
+      "Kéistaarte",
+      "Kéistaarten",
+      "tarte au fromage blanc"
+    ]
+  },
+  {
+    "id": "lod:EISEKUCH1UNI1",
+    "name": "Eisekuch",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "EISEKUCH1",
+        "meaning": "EISEKUCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Eisekuch",
+      "Eisekuche",
+      "Eisekuchen",
+      "Waffel",
+      "gaufre"
+    ]
+  },
+  {
+    "id": "lod:MADELEINE1UNI1",
+    "name": "Madeleine",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "MADELEINE1",
+        "meaning": "MADELEINE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Madeleine",
+      "Madeleinen",
+      "Madeleinë",
+      "madeleine"
+    ]
+  },
+  {
+    "id": "lod:LIEFKUCH1UNI1",
+    "name": "Liefkuch",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "LIEFKUCH1",
+        "meaning": "LIEFKUCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Lebkuchen",
+      "Liefkuch",
+      "Liefkuche",
+      "Liefkuchen",
+      "pain d'épices"
+    ]
+  },
+  {
+    "id": "lod:SCHNECK1UNI1",
+    "name": "Schneck",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "SCHNECK1",
+        "meaning": "SCHNECK1UNI1"
+      }
+    ],
+    "aliases": [
+      "Schneck",
+      "Schnecke",
+      "Schnecken",
+      "pain aux raisins"
+    ]
+  },
+  {
+    "id": "lod:BOXEMANNCHEN1UNI1",
+    "name": "Boxemännchen",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "BOXEMANNCHEN1",
+        "meaning": "BOXEMANNCHEN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Boxemännchen",
+      "Boxemännercher",
+      "Stutenkerl",
+      "Weckmann"
+    ]
+  },
+  {
+    "id": "lod:FUESKICHELCHEN1UNI1",
+    "name": "Fueskichelchen",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "FUESKICHELCHEN1",
+        "meaning": "FUESKICHELCHEN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Fastnachtsgebäck",
+      "Fueskichelchen",
+      "Fueskichelcher",
+      "beignet de carnaval"
+    ]
+  },
+  {
+    "id": "lod:VERWUERELTEN1UNI1",
+    "name": "Verwuerelten",
+    "category": "Bakery",
+    "sources": [
+      {
+        "entry": "VERWUERELTEN1",
+        "meaning": "VERWUERELTEN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Fastnachtsgebäck",
+      "Verwuerelten",
+      "Verwuerelter",
+      "beignet de carnaval"
+    ]
+  },
+  {
+    "id": "lod:FLEESCH1UNI1",
+    "name": "Fleesch",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "FLEESCH1",
+        "meaning": "FLEESCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Fleesch",
+      "Fleisch",
+      "viande"
+    ]
+  },
+  {
+    "id": "lod:GEHACKTES1UNI1",
+    "name": "Gehacktes",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "GEHACKTES1",
+        "meaning": "GEHACKTES1UNI1"
+      }
+    ],
+    "aliases": [
+      "Gehacktes",
+      "Hackfleisch"
+    ]
+  },
+  {
+    "id": "lod:RENDSGEHACKTES1UNI1",
+    "name": "Rëndsgehacktes",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "RENDSGEHACKTES1",
+        "meaning": "RENDSGEHACKTES1UNI1"
+      }
+    ],
+    "aliases": [
+      "Rinderhackfleisch",
+      "Rëndsgehacktes",
+      "hachis de bœuf"
+    ]
+  },
+  {
+    "id": "lod:RENDFLEESCH1UNI1",
+    "name": "Rëndfleesch",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "RENDFLEESCH1",
+        "meaning": "RENDFLEESCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Rindfleisch",
+      "Rëndfleesch",
+      "viande bovine"
+    ]
+  },
+  {
+    "id": "lod:SCHWENGEFLEESCH1UNI1",
+    "name": "Schwéngefleesch",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "SCHWENGEFLEESCH1",
+        "meaning": "SCHWENGEFLEESCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Schweinefleisch",
+      "Schwéngefleesch",
+      "viande de porc"
+    ]
+  },
+  {
+    "id": "lod:KALLEFFLEESCH1UNI1",
+    "name": "Kalleffleesch",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "KALLEFFLEESCH1",
+        "meaning": "KALLEFFLEESCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kalbfleisch",
+      "Kalleffleesch",
+      "viande de veau"
+    ]
+  },
+  {
+    "id": "lod:HAMMELFLEESCH1UNI1",
+    "name": "Hämmelfleesch",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "HAMMELFLEESCH1",
+        "meaning": "HAMMELFLEESCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Hämmelfleesch"
+    ]
+  },
+  {
+    "id": "lod:POULET1UNI1",
+    "name": "Poulet",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "POULET1",
+        "meaning": "POULET1UNI1"
+      }
+    ],
+    "aliases": [
+      "Huhn",
+      "Poulet",
+      "Poulete",
+      "Pouleten",
+      "poulet"
+    ]
+  },
+  {
+    "id": "lod:GEFLIGEL1UNI1",
+    "name": "Gefligel",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "GEFLIGEL1",
+        "meaning": "GEFLIGEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Gefligel",
+      "Geflügel",
+      "volaille"
+    ]
+  },
+  {
+    "id": "lod:HAM1UNI1",
+    "name": "Ham",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "HAM1",
+        "meaning": "HAM1UNI1"
+      }
+    ],
+    "aliases": [
+      "Ham",
+      "Hame",
+      "Hamen",
+      "Schinken",
+      "jambon"
+    ]
+  },
+  {
+    "id": "lod:SPECK1UNI1",
+    "name": "Speck",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "SPECK1",
+        "meaning": "SPECK1UNI1"
+      }
+    ],
+    "aliases": [
+      "Speck",
+      "lard"
+    ]
+  },
+  {
+    "id": "lod:PANCETTA1UNI1",
+    "name": "Pancetta",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "PANCETTA1",
+        "meaning": "PANCETTA1UNI1"
+      }
+    ],
+    "aliases": [
+      "Pancetta",
+      "Pancettae",
+      "Pancettaen",
+      "pancetta"
+    ]
+  },
+  {
+    "id": "lod:WURSCHT1UNI2",
+    "name": "Wurscht",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "WURSCHT1",
+        "meaning": "WURSCHT1UNI2"
+      }
+    ],
+    "aliases": [
+      "Wurscht",
+      "Wurschte",
+      "Wurschten",
+      "Wurst",
+      "saucisse"
+    ]
+  },
+  {
+    "id": "lod:ZOOSSISS1UNI1",
+    "name": "Zoossiss",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "ZOOSSISS1",
+        "meaning": "ZOOSSISS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Dauerwurst",
+      "Salami",
+      "Zoossiss",
+      "Zoossisse",
+      "Zoossissen",
+      "salami",
+      "saucisson"
+    ]
+  },
+  {
+    "id": "lod:GRILLWURSCHT1UNI1",
+    "name": "Grillwurscht",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "GRILLWURSCHT1",
+        "meaning": "GRILLWURSCHT1UNI1"
+      },
+      {
+        "entry": "THURINGER1",
+        "meaning": "THURINGER1UNI2"
+      }
+    ],
+    "aliases": [
+      "Grillbratwurst",
+      "Grillwurscht",
+      "Grillwurschte",
+      "Grillwurschten",
+      "Grillwurst",
+      "Grillwürstchen",
+      "Rostbratwurst",
+      "Thüringer",
+      "saucisse à griller"
+    ]
+  },
+  {
+    "id": "lod:WIRSCHTCHEN1UNI1",
+    "name": "Wirschtchen",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "WIRSCHTCHEN1",
+        "meaning": "WIRSCHTCHEN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Knackwurst",
+      "Wiener Würstchen",
+      "Wirschtchen",
+      "Wirschtercher",
+      "saucisse de Francfort"
+    ]
+  },
+  {
+    "id": "lod:METTWURSCHT1UNI1",
+    "name": "Mettwurscht",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "METTWURSCHT1",
+        "meaning": "METTWURSCHT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mettwurscht",
+      "Mettwurschte",
+      "Mettwurschten",
+      "Mettwurst",
+      "saucisse fumée"
+    ]
+  },
+  {
+    "id": "lod:LIEWERWURSCHT1UNI1",
+    "name": "Liewerwurscht",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "LIEWERWURSCHT1",
+        "meaning": "LIEWERWURSCHT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Leberwurst",
+      "Liewerwurscht",
+      "Liewerwurschte",
+      "Liewerwurschten",
+      "saucisson de pâté de foie"
+    ]
+  },
+  {
+    "id": "lod:WAINZOOSSISS1UNI1",
+    "name": "Wäinzoossiss",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "WAINZOOSSISS1",
+        "meaning": "WAINZOOSSISS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Weinwurst",
+      "Wäinzoossiss",
+      "Wäinzoossisse",
+      "Wäinzoossissen"
+    ]
+  },
+  {
+    "id": "lod:BIFDECK1UNI1",
+    "name": "Bifdeck",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "BIFDECK1",
+        "meaning": "BIFDECK1UNI1"
+      }
+    ],
+    "aliases": [
+      "Bifdeck",
+      "Bifdecker",
+      "Steak",
+      "bifteck",
+      "steak"
+    ]
+  },
+  {
+    "id": "lod:FAUXFILET1UNI1",
+    "name": "Faux-filet",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "FAUXFILET1",
+        "meaning": "FAUXFILET1UNI1"
+      }
+    ],
+    "aliases": [
+      "Faux-filet",
+      "Faux-filete",
+      "Faux-fileten",
+      "Lende",
+      "Lendenstück",
+      "faux-filet"
+    ]
+  },
+  {
+    "id": "lod:FILETMIGNON1UNI1",
+    "name": "Filet mignon",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "FILETMIGNON1",
+        "meaning": "FILETMIGNON1UNI1"
+      }
+    ],
+    "aliases": [
+      "Filet mignon",
+      "Filet-mignone",
+      "Filet-mignonen",
+      "Filetspitze",
+      "filet mignon"
+    ]
+  },
+  {
+    "id": "lod:RENDSFILET1UNI1",
+    "name": "Rëndsfilet",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "RENDSFILET1",
+        "meaning": "RENDSFILET1UNI1"
+      }
+    ],
+    "aliases": [
+      "Rinderfilet",
+      "Rëndsfilet",
+      "Rëndsfilete",
+      "Rëndsfileten",
+      "filet de bœuf"
+    ]
+  },
+  {
+    "id": "lod:KOTLETT1UNI1",
+    "name": "Kotlett",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "KOTLETT1",
+        "meaning": "KOTLETT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kotelett",
+      "Kotlett",
+      "Kotlette",
+      "Kotletten",
+      "côtelette"
+    ]
+  },
+  {
+    "id": "lod:SCHNITZEL1UNI1",
+    "name": "Schnitzel",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "SCHNITZEL1",
+        "meaning": "SCHNITZEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Schnitzel",
+      "Schnitzele",
+      "Schnitzelen",
+      "escalope"
+    ]
+  },
+  {
+    "id": "lod:KALLEFSSCHNITZEL1UNI1",
+    "name": "Kallefsschnitzel",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "KALLEFSSCHNITZEL1",
+        "meaning": "KALLEFSSCHNITZEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kalbsschnitzel",
+      "Kallefsschnitzel",
+      "Kallefsschnitzele",
+      "Kallefsschnitzelen",
+      "escalope de veau"
+    ]
+  },
+  {
+    "id": "lod:POULETSGESCHNETZELTES1UNI1",
+    "name": "Pouletsgeschnetzeltes",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "POULETSGESCHNETZELTES1",
+        "meaning": "POULETSGESCHNETZELTES1UNI1"
+      }
+    ],
+    "aliases": [
+      "Hähnchengeschnetzeltes",
+      "Pouletsgeschnetzeltes",
+      "émincé de poulet"
+    ]
+  },
+  {
+    "id": "lod:SAUMON1UNI2",
+    "name": "Saumon",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "SAUMON1",
+        "meaning": "SAUMON1UNI2"
+      }
+    ],
+    "aliases": [
+      "Lachs",
+      "Saumon",
+      "Saumone",
+      "Saumonen",
+      "saumon"
+    ]
+  },
+  {
+    "id": "lod:SAUMON1UNI3",
+    "name": "Saumon fumé",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "SAUMON1",
+        "meaning": "SAUMON1UNI3"
+      }
+    ],
+    "aliases": [
+      "Räucherlachs",
+      "Saumon fumé",
+      "saumon fumé"
+    ]
+  },
+  {
+    "id": "lod:THON1UNI2",
+    "name": "Thon",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "THON1",
+        "meaning": "THON1UNI2"
+      }
+    ],
+    "aliases": [
+      "Thon",
+      "Thone",
+      "Thonen",
+      "Thunfisch",
+      "thon"
+    ]
+  },
+  {
+    "id": "lod:SARDINN1UNI2",
+    "name": "Sardinn",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "SARDINN1",
+        "meaning": "SARDINN1UNI2"
+      }
+    ],
+    "aliases": [
+      "Sardine",
+      "Sardinn",
+      "Sardinne",
+      "Sardinnen",
+      "sardine"
+    ]
+  },
+  {
+    "id": "lod:SEELACHS1UNI2",
+    "name": "Seelachs",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "SEELACHS1",
+        "meaning": "SEELACHS1UNI2"
+      }
+    ],
+    "aliases": [
+      "Seelachs",
+      "lieu noir",
+      "merlu"
+    ]
+  },
+  {
+    "id": "lod:CREVETTE1UNI1",
+    "name": "Crevette",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "CREVETTE1",
+        "meaning": "CREVETTE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Crevette",
+      "Crevetten",
+      "Crevettë",
+      "Garnele",
+      "crevette"
+    ]
+  },
+  {
+    "id": "lod:SCAMPI1UNI1",
+    "name": "Scampi",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "SCAMPI1",
+        "meaning": "SCAMPI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Scampi",
+      "Scampie",
+      "Scampien",
+      "scampi"
+    ]
+  },
+  {
+    "id": "lod:MULL1UNI1",
+    "name": "Mull",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "MULL1",
+        "meaning": "MULL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Miesmuschel",
+      "Mull",
+      "Mulle",
+      "Mullen",
+      "moule"
+    ]
+  },
+  {
+    "id": "lod:AUSTER1UNI1",
+    "name": "Auster",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "AUSTER1",
+        "meaning": "AUSTER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Auster",
+      "Austere",
+      "Austeren",
+      "huître"
+    ]
+  },
+  {
+    "id": "lod:KALAMAR1UNI1",
+    "name": "Kalamar",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "KALAMAR1",
+        "meaning": "KALAMAR1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kalamar",
+      "Kalamare",
+      "Kalamaren",
+      "Kalmar",
+      "calamar",
+      "calmar"
+    ]
+  },
+  {
+    "id": "lod:MIERESFRIICHTEN1UNI1",
+    "name": "Mieresfriichten",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "MIERESFRIICHTEN1",
+        "meaning": "MIERESFRIICHTEN1UNI1"
+      },
+      {
+        "entry": "FRUITSDEMER1",
+        "meaning": "FRUITSDEMER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Fruits de mer",
+      "Meeresfrüchte",
+      "Mieresfriichten",
+      "fruits de mer"
+    ]
+  },
+  {
+    "id": "lod:KRABBEFLEESCH1UNI1",
+    "name": "Krabbefleesch",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "KRABBEFLEESCH1",
+        "meaning": "KRABBEFLEESCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Krabbefleesch",
+      "Krabbenfleisch",
+      "chair de crabe"
+    ]
+  },
+  {
+    "id": "lod:ROLLMOPS1UNI2",
+    "name": "Rollmops",
+    "category": "Meat & seafood",
+    "sources": [
+      {
+        "entry": "ROLLMOPS1",
+        "meaning": "ROLLMOPS1UNI2"
+      }
+    ],
+    "aliases": [
+      "Rollmops",
+      "Rollmopse",
+      "Rollmopsen",
+      "rollmops"
+    ]
+  },
+  {
+    "id": "lod:MELLECH1UNI1",
+    "name": "Mëllech",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "MELLECH1",
+        "meaning": "MELLECH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Milch",
+      "Mëllech",
+      "lait"
+    ]
+  },
+  {
+    "id": "lod:EE1UNI1",
+    "name": "Ee",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "EE1",
+        "meaning": "EE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Ee",
+      "Eeër",
+      "Ei",
+      "Eier",
+      "oeufs",
+      "œuf",
+      "œufs"
+    ]
+  },
+  {
+    "id": "lod:BOTTER1UNI1",
+    "name": "Botter",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "BOTTER1",
+        "meaning": "BOTTER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Botter",
+      "Butter",
+      "beurre"
+    ]
+  },
+  {
+    "id": "lod:JUGURT1UNI1",
+    "name": "Jugurt",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "JUGURT1",
+        "meaning": "JUGURT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Joghurt",
+      "Jugurt",
+      "Jugurte",
+      "Jugurten",
+      "yaourt"
+    ]
+  },
+  {
+    "id": "lod:KEIS1UNI1",
+    "name": "Kéis",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "KEIS1",
+        "meaning": "KEIS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Käse",
+      "Kéis",
+      "Kéise",
+      "Kéisen",
+      "Kéiser",
+      "fromage"
+    ]
+  },
+  {
+    "id": "lod:KEIS1UNI3",
+    "name": "Wäisse Kéis",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "KEIS1",
+        "meaning": "KEIS1UNI3"
+      }
+    ],
+    "aliases": [
+      "Quark",
+      "Wäisse Kéis",
+      "fromage blanc"
+    ]
+  },
+  {
+    "id": "lod:RAM1UNI1",
+    "name": "Ram",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "RAM1",
+        "meaning": "RAM1UNI1"
+      },
+      {
+        "entry": "SCHMANT1",
+        "meaning": "SCHMANT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Ram",
+      "Schmant",
+      "crème"
+    ]
+  },
+  {
+    "id": "lod:SAUERRAM1UNI1",
+    "name": "Sauerram",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "SAUERRAM1",
+        "meaning": "SAUERRAM1UNI1"
+      }
+    ],
+    "aliases": [
+      "Sauerram",
+      "saure Sahne"
+    ]
+  },
+  {
+    "id": "lod:KACHKEIS1UNI1",
+    "name": "Kachkéis",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "KACHKEIS1",
+        "meaning": "KACHKEIS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kachkéis",
+      "Kochkäse",
+      "cancoillotte"
+    ]
+  },
+  {
+    "id": "lod:GEESSEKEIS1UNI1",
+    "name": "Geessekéis",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "GEESSEKEIS1",
+        "meaning": "GEESSEKEIS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Geessekéis",
+      "Geessekéise",
+      "Geessekéisen",
+      "Geessekéiser",
+      "Ziegenkäse",
+      "fromage de chèvre"
+    ]
+  },
+  {
+    "id": "lod:SCHOFSKEIS1UNI1",
+    "name": "Schofskéis",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "SCHOFSKEIS1",
+        "meaning": "SCHOFSKEIS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Schafskäse",
+      "Schofskéis",
+      "Schofskéise",
+      "Schofskéisen",
+      "Schofskéiser",
+      "fromage de brebis"
+    ]
+  },
+  {
+    "id": "lod:EMMENTALER1UNI1",
+    "name": "Emmentaler",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "EMMENTALER1",
+        "meaning": "EMMENTALER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Emmentaler",
+      "emmental"
+    ]
+  },
+  {
+    "id": "lod:PARMESAN1UNI1",
+    "name": "Parmesan",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "PARMESAN1",
+        "meaning": "PARMESAN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Parmesan",
+      "parmesan"
+    ]
+  },
+  {
+    "id": "lod:RICOTTA1UNI1",
+    "name": "Ricotta",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "RICOTTA1",
+        "meaning": "RICOTTA1UNI1"
+      }
+    ],
+    "aliases": [
+      "Ricotta",
+      "ricotta"
+    ]
+  },
+  {
+    "id": "lod:ROQUEFORT1UNI1",
+    "name": "Roquefort",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "ROQUEFORT1",
+        "meaning": "ROQUEFORT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Roquefort",
+      "Roqueforte",
+      "Roqueforten",
+      "roquefort"
+    ]
+  },
+  {
+    "id": "lod:COTTAGECHEESE1UNI1",
+    "name": "Cottagecheese",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "COTTAGECHEESE1",
+        "meaning": "COTTAGECHEESE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Cottagecheese",
+      "Hüttenkäse",
+      "cottage cheese",
+      "fromage cottage",
+      "körniger Frischkäse"
+    ]
+  },
+  {
+    "id": "lod:VOLLMELLECH1UNI1",
+    "name": "Vollmëllech",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "VOLLMELLECH1",
+        "meaning": "VOLLMELLECH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Vollmilch",
+      "Vollmëllech",
+      "lait entier"
+    ]
+  },
+  {
+    "id": "lod:BOTTERMELLECH1UNI1",
+    "name": "Bottermëllech",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "BOTTERMELLECH1",
+        "meaning": "BOTTERMELLECH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Bottermëllech",
+      "Buttermilch",
+      "babeurre",
+      "lait battu"
+    ]
+  },
+  {
+    "id": "lod:KOUMELLECH1UNI1",
+    "name": "Koumëllech",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "KOUMELLECH1",
+        "meaning": "KOUMELLECH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Koumëllech",
+      "Kuhmilch",
+      "lait de vache"
+    ]
+  },
+  {
+    "id": "lod:MARGARINN1UNI1",
+    "name": "Margarinn",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "MARGARINN1",
+        "meaning": "MARGARINN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Margarine",
+      "Margarinn",
+      "margarine"
+    ]
+  },
+  {
+    "id": "lod:AERDBIERSJUGURT1UNI1",
+    "name": "Äerdbiersjugurt",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "AERDBIERSJUGURT1",
+        "meaning": "AERDBIERSJUGURT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Erdbeerjoghurt",
+      "yaourt aux fraises",
+      "Äerdbiersjugurt",
+      "Äerdbiersjugurte",
+      "Äerdbiersjugurten"
+    ]
+  },
+  {
+    "id": "lod:SCHLAGSAN1UNI1",
+    "name": "Schlagsan",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "SCHLAGSAN1",
+        "meaning": "SCHLAGSAN1UNI1"
+      },
+      {
+        "entry": "KLAPPSCHMANT1",
+        "meaning": "KLAPPSCHMANT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Klappschmant",
+      "Schlagsahne",
+      "Schlagsan",
+      "crème chantilly"
+    ]
+  },
+  {
+    "id": "lod:PUDDING1UNI1",
+    "name": "Pudding",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "PUDDING1",
+        "meaning": "PUDDING1UNI1"
+      }
+    ],
+    "aliases": [
+      "Pudding",
+      "Puddinge",
+      "Puddingen",
+      "crème",
+      "flan"
+    ]
+  },
+  {
+    "id": "lod:SCHOCKELASPUDDING1UNI1",
+    "name": "Schockelaspudding",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "SCHOCKELASPUDDING1",
+        "meaning": "SCHOCKELASPUDDING1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mousse au Chocolat",
+      "Schockelaspudding",
+      "Schockelaspuddinge",
+      "Schockelaspuddingen",
+      "Schokoladenpudding",
+      "crème au chocolat",
+      "flan au chocolat"
+    ]
+  },
+  {
+    "id": "lod:SCHOCKELASMOUSSE1UNI1",
+    "name": "Schockelasmousse",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "SCHOCKELASMOUSSE1",
+        "meaning": "SCHOCKELASMOUSSE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mousse au Chocolat",
+      "Schockelasmousse",
+      "Schockelasmoussen",
+      "Schockelasmoussë",
+      "Schokoladenmousse",
+      "mousse au chocolat"
+    ]
+  },
+  {
+    "id": "lod:VANILLSCREME1UNI1",
+    "name": "Vanillscrème",
+    "category": "Dairy & eggs",
+    "sources": [
+      {
+        "entry": "VANILLSCREME1",
+        "meaning": "VANILLSCREME1UNI1"
+      }
+    ],
+    "aliases": [
+      "Vanillecreme",
+      "Vanillscrème",
+      "Vanillscrèmen",
+      "Vanillscrèmë",
+      "crème à la vanille"
+    ]
+  },
+  {
+    "id": "lod:VANILLSGLACE1UNI1",
+    "name": "Vanillsglace",
+    "category": "Frozen",
+    "sources": [
+      {
+        "entry": "VANILLSGLACE1",
+        "meaning": "VANILLSGLACE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Vanilleeis",
+      "Vanillsglace",
+      "Vanillsglacen",
+      "Vanillsglacë",
+      "glace à la vanille"
+    ]
+  },
+  {
+    "id": "lod:SCHOCKELASGLACE1UNI1",
+    "name": "Schockelasglace",
+    "category": "Frozen",
+    "sources": [
+      {
+        "entry": "SCHOCKELASGLACE1",
+        "meaning": "SCHOCKELASGLACE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Schockelasglace",
+      "Schockelasglacen",
+      "Schockelasglacë",
+      "Schokoladeneis",
+      "glace au chocolat"
+    ]
+  },
+  {
+    "id": "lod:AERDBIERSGLACE1UNI1",
+    "name": "Äerdbiersglace",
+    "category": "Frozen",
+    "sources": [
+      {
+        "entry": "AERDBIERSGLACE1",
+        "meaning": "AERDBIERSGLACE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Erdbeereis",
+      "glace aux fraises",
+      "glace à la fraise",
+      "Äerdbiersglace",
+      "Äerdbiersglacen",
+      "Äerdbiersglacë"
+    ]
+  },
+  {
+    "id": "lod:BANANNEGLACE1UNI1",
+    "name": "Bananneglace",
+    "category": "Frozen",
+    "sources": [
+      {
+        "entry": "BANANNEGLACE1",
+        "meaning": "BANANNEGLACE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Bananeneis",
+      "Bananneglace",
+      "Bananneglacen",
+      "Bananneglacë",
+      "glace à la banane"
+    ]
+  },
+  {
+    "id": "lod:SORBET1UNI1",
+    "name": "Sorbet",
+    "category": "Frozen",
+    "sources": [
+      {
+        "entry": "SORBET1",
+        "meaning": "SORBET1UNI1"
+      }
+    ],
+    "aliases": [
+      "Sorbet",
+      "Sorbete",
+      "Sorbeten",
+      "sorbet"
+    ]
+  },
+  {
+    "id": "lod:FISCHSTABCHEN1UNI2",
+    "name": "Fischstäbchen",
+    "category": "Frozen",
+    "sources": [
+      {
+        "entry": "FISCHSTABCHEN1",
+        "meaning": "FISCHSTABCHEN1UNI2"
+      },
+      {
+        "entry": "FISHSTICK1",
+        "meaning": "FISHSTICK1UNI2"
+      }
+    ],
+    "aliases": [
+      "Fischstäbchen",
+      "Fischstäbercher",
+      "Fishstick",
+      "Fishsticke",
+      "Fishsticken",
+      "bâtonnet de poisson"
+    ]
+  },
+  {
+    "id": "lod:MIEL1UNI1",
+    "name": "Miel",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MIEL1",
+        "meaning": "MIEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mehl",
+      "Miel",
+      "farine"
+    ]
+  },
+  {
+    "id": "lod:RAIS1UNI2",
+    "name": "Räis",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "RAIS1",
+        "meaning": "RAIS1UNI2"
+      }
+    ],
+    "aliases": [
+      "Reis",
+      "Räis",
+      "riz"
+    ]
+  },
+  {
+    "id": "lod:NUDDEL1UNI1",
+    "name": "Nuddel",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "NUDDEL1",
+        "meaning": "NUDDEL1UNI1"
+      },
+      {
+        "entry": "PASTA1",
+        "meaning": "PASTA1UNI1"
+      },
+      {
+        "entry": "DEEGWUEREN1",
+        "meaning": "DEEGWUEREN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Deegwueren",
+      "Nuddel",
+      "Nuddele",
+      "Nuddelen",
+      "Nudel",
+      "Pasta",
+      "Teigwaren",
+      "nouille",
+      "pâte"
+    ]
+  },
+  {
+    "id": "lod:SPAGHETTI1UNI1",
+    "name": "Spaghetti",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "SPAGHETTI1",
+        "meaning": "SPAGHETTI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Spaghetti",
+      "Spaghettie",
+      "Spaghettien",
+      "spaghetti"
+    ]
+  },
+  {
+    "id": "lod:TAGLIATELLE1UNI1",
+    "name": "Tagliatelle",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "TAGLIATELLE1",
+        "meaning": "TAGLIATELLE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Tagliatelle",
+      "Tagliatellen",
+      "Tagliatellë",
+      "tagliatelle"
+    ]
+  },
+  {
+    "id": "lod:MAKKARONI1UNI1",
+    "name": "Makkaroni",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MAKKARONI1",
+        "meaning": "MAKKARONI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Makkaroni",
+      "Makkaronie",
+      "Makkaronien",
+      "macaroni"
+    ]
+  },
+  {
+    "id": "lod:CANNELLONI1UNI1",
+    "name": "Cannelloni",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "CANNELLONI1",
+        "meaning": "CANNELLONI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Cannelloni",
+      "Cannellonie",
+      "Cannellonien",
+      "cannelloni"
+    ]
+  },
+  {
+    "id": "lod:VOLLKARNUDDEL1UNI1",
+    "name": "Vollkarnuddel",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "VOLLKARNUDDEL1",
+        "meaning": "VOLLKARNUDDEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Vollkarnuddel",
+      "Vollkarnuddele",
+      "Vollkarnuddelen",
+      "Vollkornnudel"
+    ]
+  },
+  {
+    "id": "lod:VOLLKARRAIS1UNI1",
+    "name": "Vollkarräis",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "VOLLKARRAIS1",
+        "meaning": "VOLLKARRAIS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Vollkarräis",
+      "Vollkornreis",
+      "riz complet"
+    ]
+  },
+  {
+    "id": "lod:VOLLKARMIEL1UNI1",
+    "name": "Vollkarmiel",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "VOLLKARMIEL1",
+        "meaning": "VOLLKARMIEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Vollkarmiel",
+      "Vollkornmehl",
+      "farine intégrale"
+    ]
+  },
+  {
+    "id": "lod:MAISMIEL1UNI1",
+    "name": "Maismiel",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MAISMIEL1",
+        "meaning": "MAISMIEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Maismehl",
+      "Maismiel",
+      "farine de maïs"
+    ]
+  },
+  {
+    "id": "lod:WELLKARMIEL1UNI1",
+    "name": "Wëllkarmiel",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "WELLKARMIEL1",
+        "meaning": "WELLKARMIEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Buchweizenmehl",
+      "Wëllkarmiel",
+      "farine de sarrasin"
+    ]
+  },
+  {
+    "id": "lod:PANEIERMIEL1UNI1",
+    "name": "Panéiermiel",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "PANEIERMIEL1",
+        "meaning": "PANEIERMIEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Paniermehl",
+      "Panéiermiel",
+      "chapelure"
+    ]
+  },
+  {
+    "id": "lod:SCHMULL1UNI1",
+    "name": "Schmull",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "SCHMULL1",
+        "meaning": "SCHMULL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Grieß",
+      "Schmull",
+      "semoule"
+    ]
+  },
+  {
+    "id": "lod:POLENTA1UNI1",
+    "name": "Polenta",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "POLENTA1",
+        "meaning": "POLENTA1UNI1"
+      }
+    ],
+    "aliases": [
+      "Polenta",
+      "polenta"
+    ]
+  },
+  {
+    "id": "lod:ZOCKER1UNI1",
+    "name": "Zocker",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "ZOCKER1",
+        "meaning": "ZOCKER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Zocker",
+      "Zucker",
+      "sucre"
+    ]
+  },
+  {
+    "id": "lod:MIELZOCKER1UNI1",
+    "name": "Mielzocker",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MIELZOCKER1",
+        "meaning": "MIELZOCKER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mielzocker",
+      "Puderzucker",
+      "sucre glace"
+    ]
+  },
+  {
+    "id": "lod:VANILLZOCKER1UNI1",
+    "name": "Vanillzocker",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "VANILLZOCKER1",
+        "meaning": "VANILLZOCKER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Vanillezucker",
+      "Vanillzocker",
+      "sucre vanillé"
+    ]
+  },
+  {
+    "id": "lod:KANDISZOCKER1UNI1",
+    "name": "Kandiszocker",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KANDISZOCKER1",
+        "meaning": "KANDISZOCKER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kandiszocker",
+      "Kandiszucker",
+      "sucre candi"
+    ]
+  },
+  {
+    "id": "lod:STECKERZOCKER1UNI1",
+    "name": "Stéckerzocker",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "STECKERZOCKER1",
+        "meaning": "STECKERZOCKER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Stéckerzocker",
+      "Würfelzucker",
+      "sucre en morceaux"
+    ]
+  },
+  {
+    "id": "lod:SALZ1UNI1",
+    "name": "Salz",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "SALZ1",
+        "meaning": "SALZ1UNI1"
+      }
+    ],
+    "aliases": [
+      "Salz",
+      "Salzer",
+      "sel"
+    ]
+  },
+  {
+    "id": "lod:PEFFER1UNI1",
+    "name": "Peffer",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "PEFFER1",
+        "meaning": "PEFFER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Peffer",
+      "Pfeffer",
+      "poivre"
+    ]
+  },
+  {
+    "id": "lod:PEFFERKAR1UNI1",
+    "name": "Pefferkär",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "PEFFERKAR1",
+        "meaning": "PEFFERKAR1UNI1"
+      }
+    ],
+    "aliases": [
+      "Pefferkär",
+      "Pefferkäre",
+      "Pefferkären",
+      "Pfefferkorn",
+      "grain de poivre"
+    ]
+  },
+  {
+    "id": "lod:KANEIL1UNI1",
+    "name": "Kanéil",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KANEIL1",
+        "meaning": "KANEIL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kanéil",
+      "Zimt",
+      "cannelle"
+    ]
+  },
+  {
+    "id": "lod:KARDAMOM1UNI1",
+    "name": "Kardamom",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KARDAMOM1",
+        "meaning": "KARDAMOM1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kardamom",
+      "cardamome"
+    ]
+  },
+  {
+    "id": "lod:KRAIZKUMMEL1UNI1",
+    "name": "Kräizkümmel",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KRAIZKUMMEL1",
+        "meaning": "KRAIZKUMMEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kreuzkümmel",
+      "Kräizkümmel",
+      "Kumin",
+      "cumin"
+    ]
+  },
+  {
+    "id": "lod:KUMMEL1UNI1",
+    "name": "Kümmel",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KUMMEL1",
+        "meaning": "KUMMEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kümmel",
+      "Wiesenkümmel",
+      "carvi",
+      "cumin des prés"
+    ]
+  },
+  {
+    "id": "lod:MUSKOT1UNI1",
+    "name": "Muskot",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MUSKOT1",
+        "meaning": "MUSKOT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Muskat",
+      "Muskot",
+      "muscade"
+    ]
+  },
+  {
+    "id": "lod:NEELCHESKAPP1UNI1",
+    "name": "Neelcheskapp",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "NEELCHESKAPP1",
+        "meaning": "NEELCHESKAPP1UNI1"
+      }
+    ],
+    "aliases": [
+      "Gewürznelke",
+      "Neelcheskapp",
+      "Neelcheskäpp",
+      "clou de girofle"
+    ]
+  },
+  {
+    "id": "lod:SAFRAN1UNI1",
+    "name": "Safran",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "SAFRAN1",
+        "meaning": "SAFRAN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Safran",
+      "safran"
+    ]
+  },
+  {
+    "id": "lod:KURKUMA1UNI1",
+    "name": "Kurkuma",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KURKUMA1",
+        "meaning": "KURKUMA1UNI1"
+      },
+      {
+        "entry": "GIELWUERZEL1",
+        "meaning": "GIELWUERZEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Gelbwurzel",
+      "Gielwuerzel",
+      "Kurkuma",
+      "curcuma"
+    ]
+  },
+  {
+    "id": "lod:CURRY1UNI2",
+    "name": "Curry",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "CURRY1",
+        "meaning": "CURRY1UNI2"
+      }
+    ],
+    "aliases": [
+      "Curry",
+      "Currye",
+      "Curryen",
+      "curry"
+    ]
+  },
+  {
+    "id": "lod:PAPRIKA1UNI2",
+    "name": "Paprika",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "PAPRIKA1",
+        "meaning": "PAPRIKA1UNI2"
+      }
+    ],
+    "aliases": [
+      "Paprika",
+      "paprika"
+    ]
+  },
+  {
+    "id": "lod:OREGANO1UNI1",
+    "name": "Oregano",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "OREGANO1",
+        "meaning": "OREGANO1UNI1"
+      }
+    ],
+    "aliases": [
+      "Oregano",
+      "Wilder Majoran",
+      "marjolaine sauvage",
+      "origan"
+    ]
+  },
+  {
+    "id": "lod:LORBERBLAT1UNI1",
+    "name": "Lorberblat",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "LORBERBLAT1",
+        "meaning": "LORBERBLAT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Lorbeerblatt",
+      "Lorberblat",
+      "Lorberblieder",
+      "feuille de laurier"
+    ]
+  },
+  {
+    "id": "lod:VANILL1UNI1",
+    "name": "Vanill",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "VANILL1",
+        "meaning": "VANILL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Vanill",
+      "Vanille",
+      "vanille"
+    ]
+  },
+  {
+    "id": "lod:VANILLSSTAANG1UNI1",
+    "name": "Vanillsstaang",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "VANILLSSTAANG1",
+        "meaning": "VANILLSSTAANG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Vanilleschote",
+      "Vanillsstaang",
+      "Vanillsstaange",
+      "Vanillsstaangen",
+      "gousse de vanille"
+    ]
+  },
+  {
+    "id": "lod:STARENANAIS1UNI1",
+    "name": "Stärenanäis",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "STARENANAIS1",
+        "meaning": "STARENANAIS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Sternanis",
+      "Stärenanäis",
+      "anis étoilé"
+    ]
+  },
+  {
+    "id": "lod:OLIVENUELEG1UNI1",
+    "name": "Olivenueleg",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "OLIVENUELEG1",
+        "meaning": "OLIVENUELEG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Olivenueleg",
+      "Olivenueleger",
+      "Olivenöl",
+      "huile d'olive"
+    ]
+  },
+  {
+    "id": "lod:RAPSUELEG1UNI1",
+    "name": "Rapsueleg",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "RAPSUELEG1",
+        "meaning": "RAPSUELEG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Rapsueleg",
+      "Rapsueleger",
+      "Rapsöl",
+      "huile de colza"
+    ]
+  },
+  {
+    "id": "lod:KOKOSUELEG1UNI1",
+    "name": "Kokosueleg",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KOKOSUELEG1",
+        "meaning": "KOKOSUELEG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kokosueleg",
+      "Kokosueleger",
+      "Kokosöl",
+      "huile de coco"
+    ]
+  },
+  {
+    "id": "lod:SOJAUELEG1UNI1",
+    "name": "Sojaueleg",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "SOJAUELEG1",
+        "meaning": "SOJAUELEG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Sojaueleg",
+      "Sojaueleger",
+      "Sojaöl",
+      "huile de soja"
+    ]
+  },
+  {
+    "id": "lod:MAISUELEG1UNI1",
+    "name": "Maisueleg",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MAISUELEG1",
+        "meaning": "MAISUELEG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Maiskeimöl",
+      "Maisueleg",
+      "Maisueleger",
+      "huile de maïs"
+    ]
+  },
+  {
+    "id": "lod:ESSEG1UNI1",
+    "name": "Esseg",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "ESSEG1",
+        "meaning": "ESSEG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Esseg",
+      "Esseger",
+      "Essig",
+      "vinaigre"
+    ]
+  },
+  {
+    "id": "lod:BALSAMICOESSEG1UNI1",
+    "name": "Balsamicoesseg",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "BALSAMICOESSEG1",
+        "meaning": "BALSAMICOESSEG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Balsamicoesseg",
+      "Balsamicoesseger",
+      "vinaigre balsamique"
+    ]
+  },
+  {
+    "id": "lod:MOSCHTER1UNI1",
+    "name": "Moschter",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MOSCHTER1",
+        "meaning": "MOSCHTER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Moschter",
+      "Senf",
+      "moutarde"
+    ]
+  },
+  {
+    "id": "lod:KETCHUP1UNI1",
+    "name": "Ketchup",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KETCHUP1",
+        "meaning": "KETCHUP1UNI1"
+      }
+    ],
+    "aliases": [
+      "Ketchup",
+      "ketchup"
+    ]
+  },
+  {
+    "id": "lod:MAYONNAISE1UNI1",
+    "name": "Mayonnaise",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MAYONNAISE1",
+        "meaning": "MAYONNAISE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mayonnaise",
+      "mayonnaise"
+    ]
+  },
+  {
+    "id": "lod:VINAIGRETTE1UNI1",
+    "name": "Vinaigrette",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "VINAIGRETTE1",
+        "meaning": "VINAIGRETTE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Vinaigrette",
+      "Vinaigretten",
+      "Vinaigrettë",
+      "vinaigrette"
+    ]
+  },
+  {
+    "id": "lod:TOMATENZOOSS1UNI1",
+    "name": "Tomatenzooss",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "TOMATENZOOSS1",
+        "meaning": "TOMATENZOOSS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Tomatensoße",
+      "Tomatenzooss",
+      "Tomatenzoosse",
+      "Tomatenzoossen",
+      "Tomatenzose",
+      "Tomatenzosen",
+      "sauce tomate"
+    ]
+  },
+  {
+    "id": "lod:TOMATEPUREE1UNI1",
+    "name": "Tomatepüree",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "TOMATEPUREE1",
+        "meaning": "TOMATEPUREE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Tomatenmark",
+      "Tomatepüree",
+      "Tomatepüreeë",
+      "Tomatepüreeën",
+      "concentré de tomates"
+    ]
+  },
+  {
+    "id": "lod:TOMATEKONZENTRAT1UNI1",
+    "name": "Tomatekonzentrat",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "TOMATEKONZENTRAT1",
+        "meaning": "TOMATEKONZENTRAT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Tomatekonzentrat",
+      "Tomatekonzentrater",
+      "Tomatenmark",
+      "concentré de tomates"
+    ]
+  },
+  {
+    "id": "lod:BOLOGNESEZOOSS1UNI1",
+    "name": "Bolognesezooss",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "BOLOGNESEZOOSS1",
+        "meaning": "BOLOGNESEZOOSS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Bolognesesoße",
+      "Bolognesezooss",
+      "Bolognesezoosse",
+      "Bolognesezoossen",
+      "Bolognesezose",
+      "Bolognesezosen",
+      "sauce bolognaise"
+    ]
+  },
+  {
+    "id": "lod:SPAGHETTISZOOSS1UNI1",
+    "name": "Spaghettiszooss",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "SPAGHETTISZOOSS1",
+        "meaning": "SPAGHETTISZOOSS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Spaghettisoße",
+      "Spaghettiszooss",
+      "Spaghettiszoosse",
+      "Spaghettiszoossen",
+      "Spaghettiszose",
+      "Spaghettiszosen",
+      "sauce spaghetti"
+    ]
+  },
+  {
+    "id": "lod:GEBEESS1UNI1",
+    "name": "Gebeess",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "GEBEESS1",
+        "meaning": "GEBEESS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Gebeess",
+      "Gebeesser",
+      "Marmelade",
+      "confiture"
+    ]
+  },
+  {
+    "id": "lod:AERDBIERSGEBEESS1UNI1",
+    "name": "Äerdbiersgebeess",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "AERDBIERSGEBEESS1",
+        "meaning": "AERDBIERSGEBEESS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Erdbeermarmelade",
+      "confiture de fraises",
+      "Äerdbiersgebeess",
+      "Äerdbiersgebeesser"
+    ]
+  },
+  {
+    "id": "lod:APRIKOSEGEBEESS1UNI1",
+    "name": "Aprikosegebeess",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "APRIKOSEGEBEESS1",
+        "meaning": "APRIKOSEGEBEESS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Aprikosegebeess",
+      "Aprikosegebeesser",
+      "Aprikosenmarmelade",
+      "confiture d'abricots"
+    ]
+  },
+  {
+    "id": "lod:HAMMBIERSGEBEESS1UNI1",
+    "name": "Hammbiersgebeess",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "HAMMBIERSGEBEESS1",
+        "meaning": "HAMMBIERSGEBEESS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Hammbiersgebeess",
+      "Hammbiersgebeesser",
+      "Himbeermarmelade",
+      "confiture de framboises"
+    ]
+  },
+  {
+    "id": "lod:KIISCHTEGEBEESS1UNI1",
+    "name": "Kiischtegebeess",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KIISCHTEGEBEESS1",
+        "meaning": "KIISCHTEGEBEESS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kiischtegebeess",
+      "Kiischtegebeesser",
+      "Kirschmarmelade",
+      "confiture de cerises"
+    ]
+  },
+  {
+    "id": "lod:QUETSCHEKRAUT1UNI1",
+    "name": "Quetschekraut",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "QUETSCHEKRAUT1",
+        "meaning": "QUETSCHEKRAUT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Quetschekraut",
+      "Zwetschgenkraut",
+      "confiture de quetsches"
+    ]
+  },
+  {
+    "id": "lod:ORANGEGEBEESS1UNI1",
+    "name": "Orangëgebeess",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "ORANGEGEBEESS1",
+        "meaning": "ORANGEGEBEESS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Orangenmarmelade",
+      "Orangëgebeess",
+      "Orangëgebeesser",
+      "confiture d'oranges"
+    ]
+  },
+  {
+    "id": "lod:HUNNEG1UNI1",
+    "name": "Hunneg",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "HUNNEG1",
+        "meaning": "HUNNEG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Honig",
+      "Hunneg",
+      "Hunneger",
+      "miel"
+    ]
+  },
+  {
+    "id": "lod:SCHOCKELASBOTTER1UNI1",
+    "name": "Schockelasbotter",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "SCHOCKELASBOTTER1",
+        "meaning": "SCHOCKELASBOTTER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Nuss-Nugat-Creme",
+      "Schockelasbotter",
+      "Schokoladenaufstrich"
+    ]
+  },
+  {
+    "id": "lod:APPELKOMPOTT1UNI1",
+    "name": "Äppelkompott",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "APPELKOMPOTT1",
+        "meaning": "APPELKOMPOTT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Apfelmus",
+      "compote de pommes",
+      "Äppelkompott",
+      "Äppelkompotte",
+      "Äppelkompotten",
+      "Äppelkompotter"
+    ]
+  },
+  {
+    "id": "lod:APPELMOUS1UNI1",
+    "name": "Äppelmous",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "APPELMOUS1",
+        "meaning": "APPELMOUS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Apfelmus",
+      "compote de pommes",
+      "Äppelmous"
+    ]
+  },
+  {
+    "id": "lod:KICHERIERBES1UNI1",
+    "name": "Kicherierbes",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KICHERIERBES1",
+        "meaning": "KICHERIERBES1UNI1"
+      },
+      {
+        "entry": "KAICHER1",
+        "meaning": "KAICHER1UNI1"
+      },
+      {
+        "entry": "POISCHICHE1",
+        "meaning": "POISCHICHE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kichererbse",
+      "Kicherierbes",
+      "Kicherierbesse",
+      "Kicherierbessen",
+      "Käicher",
+      "Pois chiche",
+      "Pois-chichen",
+      "Pois-chichë",
+      "pois chiche"
+    ]
+  },
+  {
+    "id": "lod:OLIV1UNI1",
+    "name": "Oliv",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "OLIV1",
+        "meaning": "OLIV1UNI1"
+      }
+    ],
+    "aliases": [
+      "Oliv",
+      "Olive",
+      "Oliven",
+      "olive"
+    ]
+  },
+  {
+    "id": "lod:KAPER1UNI1",
+    "name": "Kaper",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KAPER1",
+        "meaning": "KAPER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kaper",
+      "Kapere",
+      "Kaperen",
+      "câpre"
+    ]
+  },
+  {
+    "id": "lod:SAUERKRAUT1UNI1",
+    "name": "Sauerkraut",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "SAUERKRAUT1",
+        "meaning": "SAUERKRAUT1UNI1"
+      },
+      {
+        "entry": "SAUERMOUS1",
+        "meaning": "SAUERMOUS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Sauerkraut",
+      "Sauermous",
+      "choucroute"
+    ]
+  },
+  {
+    "id": "lod:BRITT1UNI1",
+    "name": "Britt",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "BRITT1",
+        "meaning": "BRITT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Bouillon",
+      "Britt",
+      "Britte",
+      "Britten",
+      "Brühe",
+      "bouillon"
+    ]
+  },
+  {
+    "id": "lod:GEMEISKUB1UNI1",
+    "name": "Geméisküb",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "GEMEISKUB1",
+        "meaning": "GEMEISKUB1UNI1"
+      }
+    ],
+    "aliases": [
+      "Geméisküb",
+      "Geméiskübe",
+      "Geméisküben",
+      "Suppenwürfel",
+      "cube de bouillon de légumes"
+    ]
+  },
+  {
+    "id": "lod:POULETSKUB1UNI1",
+    "name": "Pouletsküb",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "POULETSKUB1",
+        "meaning": "POULETSKUB1UNI1"
+      }
+    ],
+    "aliases": [
+      "Hühnerbrühwürfel",
+      "Pouletsküb",
+      "Pouletskübe",
+      "Pouletsküben",
+      "Suppenwürfel",
+      "cube de bouillon de poule",
+      "cube de bouillon de volaille"
+    ]
+  },
+  {
+    "id": "lod:ZOPP1UNI1",
+    "name": "Zopp",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "ZOPP1",
+        "meaning": "ZOPP1UNI1"
+      }
+    ],
+    "aliases": [
+      "Suppe",
+      "Zopp",
+      "Zoppe",
+      "Zoppen",
+      "potage",
+      "soupe"
+    ]
+  },
+  {
+    "id": "lod:GEMEISZOPP1UNI1",
+    "name": "Geméiszopp",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "GEMEISZOPP1",
+        "meaning": "GEMEISZOPP1UNI1"
+      }
+    ],
+    "aliases": [
+      "Geméiszopp",
+      "Geméiszoppe",
+      "Geméiszoppen",
+      "Gemüsesuppe",
+      "potage",
+      "soupe de légumes"
+    ]
+  },
+  {
+    "id": "lod:TOMATENZOPP1UNI1",
+    "name": "Tomatenzopp",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "TOMATENZOPP1",
+        "meaning": "TOMATENZOPP1UNI1"
+      }
+    ],
+    "aliases": [
+      "Tomatensuppe",
+      "Tomatenzopp",
+      "Tomatenzoppe",
+      "Tomatenzoppen",
+      "velouté à la tomate"
+    ]
+  },
+  {
+    "id": "lod:CORNFLAKES1UNI1",
+    "name": "Cornflakes",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "CORNFLAKES1",
+        "meaning": "CORNFLAKES1UNI1"
+      }
+    ],
+    "aliases": [
+      "Cornflakes",
+      "cornflakes"
+    ]
+  },
+  {
+    "id": "lod:MUUSLI1UNI1",
+    "name": "Müüsli",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MUUSLI1",
+        "meaning": "MUUSLI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Müsli",
+      "Müüsli",
+      "Müüslie",
+      "Müüslien",
+      "muesli"
+    ]
+  },
+  {
+    "id": "lod:SEESAM1UNI1",
+    "name": "Seesam",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "SEESAM1",
+        "meaning": "SEESAM1UNI1"
+      }
+    ],
+    "aliases": [
+      "Seesam",
+      "Sesam",
+      "sésame"
+    ]
+  },
+  {
+    "id": "lod:ROSENG1UNI1",
+    "name": "Roséng",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "ROSENG1",
+        "meaning": "ROSENG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Rosine",
+      "Roséng",
+      "Rosénge",
+      "Roséngen",
+      "raisin sec"
+    ]
+  },
+  {
+    "id": "lod:MANDEL1UNI1",
+    "name": "Mandel",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MANDEL1",
+        "meaning": "MANDEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mandel",
+      "Mandele",
+      "Mandelen",
+      "amande"
+    ]
+  },
+  {
+    "id": "lod:MANDELBLIETCHEN1UNI1",
+    "name": "Mandelblietchen",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MANDELBLIETCHEN1",
+        "meaning": "MANDELBLIETCHEN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mandelbliedercher",
+      "Mandelblietchen",
+      "Mandelblättchen",
+      "amande effilée"
+    ]
+  },
+  {
+    "id": "lod:HIESELNOSS1UNI1",
+    "name": "Hieselnoss",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "HIESELNOSS1",
+        "meaning": "HIESELNOSS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Haselnuss",
+      "Hieselnoss",
+      "Hieselnëss",
+      "noisette"
+    ]
+  },
+  {
+    "id": "lod:HACKERNOSS1UNI1",
+    "name": "Hackernoss",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "HACKERNOSS1",
+        "meaning": "HACKERNOSS1UNI1"
+      },
+      {
+        "entry": "NOSS1",
+        "meaning": "NOSS1UNI2"
+      }
+    ],
+    "aliases": [
+      "Déck Noss",
+      "Hackernoss",
+      "Hackernëss",
+      "Walnuss",
+      "noix"
+    ]
+  },
+  {
+    "id": "lod:CASHEWNOSS1UNI1",
+    "name": "Cashewnoss",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "CASHEWNOSS1",
+        "meaning": "CASHEWNOSS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Cashewnoss",
+      "Cashewnuss",
+      "Cashewnëss",
+      "noix de cajou"
+    ]
+  },
+  {
+    "id": "lod:KAKUETT1UNI1",
+    "name": "Kakuett",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KAKUETT1",
+        "meaning": "KAKUETT1UNI1"
+      },
+      {
+        "entry": "AFENNOSS1",
+        "meaning": "AFENNOSS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Afennoss",
+      "Afennëss",
+      "Erdnuss",
+      "Kakuett",
+      "Kakuette",
+      "Kakuetten",
+      "cacahouète"
+    ]
+  },
+  {
+    "id": "lod:PISTASCH1UNI1",
+    "name": "Pistasch",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "PISTASCH1",
+        "meaning": "PISTASCH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Pistasch",
+      "Pistasche",
+      "Pistaschen",
+      "Pistazie",
+      "pistache"
+    ]
+  },
+  {
+    "id": "lod:KOKOSNOSS1UNI1",
+    "name": "Kokosnoss",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "KOKOSNOSS1",
+        "meaning": "KOKOSNOSS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kokosnoss",
+      "Kokosnuss",
+      "Kokosnëss"
+    ]
+  },
+  {
+    "id": "lod:MACADAMIANOSS1UNI1",
+    "name": "Macadamianoss",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MACADAMIANOSS1",
+        "meaning": "MACADAMIANOSS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Macadamianoss",
+      "Macadamianuss",
+      "Macadamianëss",
+      "noix de macadamia"
+    ]
+  },
+  {
+    "id": "lod:MAROUN1UNI1",
+    "name": "Maroun",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "MAROUN1",
+        "meaning": "MAROUN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Esskastanie",
+      "Marone",
+      "Maroun",
+      "Maroune",
+      "Marounen",
+      "marron"
+    ]
+  },
+  {
+    "id": "lod:GNOCCHI1UNI1",
+    "name": "Gnocchi",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "GNOCCHI1",
+        "meaning": "GNOCCHI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Gnocchi",
+      "Gnocchie",
+      "Gnocchien",
+      "gnocchi"
+    ]
+  },
+  {
+    "id": "lod:RAVIOLI1UNI1",
+    "name": "Ravioli",
+    "category": "Pantry",
+    "sources": [
+      {
+        "entry": "RAVIOLI1",
+        "meaning": "RAVIOLI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Ravioli",
+      "Raviolie",
+      "Raviolien",
+      "ravioli"
+    ]
+  },
+  {
+    "id": "lod:SCHOCKELA2UNI1",
+    "name": "Schockela",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "SCHOCKELA2",
+        "meaning": "SCHOCKELA2UNI1"
+      }
+    ],
+    "aliases": [
+      "Schockela",
+      "Schokolade",
+      "chocolat"
+    ]
+  },
+  {
+    "id": "lod:SCHOCKELA2UNI2",
+    "name": "schwaarze Schockela",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "SCHOCKELA2",
+        "meaning": "SCHOCKELA2UNI2"
+      }
+    ],
+    "aliases": [
+      "chocolat noir",
+      "schwaarze Schockela",
+      "schwarze Schokolade"
+    ]
+  },
+  {
+    "id": "lod:SCHOCKELA2UNI3",
+    "name": "wäisse Schockela",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "SCHOCKELA2",
+        "meaning": "SCHOCKELA2UNI3"
+      }
+    ],
+    "aliases": [
+      "chocolat blanc",
+      "weiße Schokolade",
+      "wäisse Schockela"
+    ]
+  },
+  {
+    "id": "lod:MELLECHSCHOCKELA1UNI1",
+    "name": "Mëllechschockela",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "MELLECHSCHOCKELA1",
+        "meaning": "MELLECHSCHOCKELA1UNI1"
+      }
+    ],
+    "aliases": [
+      "Milchschokolade",
+      "Mëllechschockela",
+      "chocolat au lait"
+    ]
+  },
+  {
+    "id": "lod:CHIPS1UNI1",
+    "name": "Chips",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "CHIPS1",
+        "meaning": "CHIPS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Chip",
+      "Chips",
+      "Chipse",
+      "Chipsen",
+      "chips"
+    ]
+  },
+  {
+    "id": "lod:POPCORN1UNI1",
+    "name": "Popcorn",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "POPCORN1",
+        "meaning": "POPCORN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Popcorn",
+      "popcorn"
+    ]
+  },
+  {
+    "id": "lod:SALZSTAANG1UNI1",
+    "name": "Salzstaang",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "SALZSTAANG1",
+        "meaning": "SALZSTAANG1UNI1"
+      }
+    ],
+    "aliases": [
+      "Salzstaang",
+      "Salzstaange",
+      "Salzstaangen",
+      "Salzstange"
+    ]
+  },
+  {
+    "id": "lod:KICHELCHEN1UNI1",
+    "name": "Kichelchen",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "KICHELCHEN1",
+        "meaning": "KICHELCHEN1UNI1"
+      },
+      {
+        "entry": "BISCUIT1",
+        "meaning": "BISCUIT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Biscuit",
+      "Biscuite",
+      "Biscuiten",
+      "Keks",
+      "Kichelchen",
+      "Kichelcher",
+      "biscuit"
+    ]
+  },
+  {
+    "id": "lod:PETITBEURRE1UNI1",
+    "name": "Petit-beurre",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "PETITBEURRE1",
+        "meaning": "PETITBEURRE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Butterkeks",
+      "Petit-beurre",
+      "Petit-beurren",
+      "Petit-beurrë",
+      "petit-beurre"
+    ]
+  },
+  {
+    "id": "lod:SPEKULATIUS1UNI1",
+    "name": "Spekulatius",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "SPEKULATIUS1",
+        "meaning": "SPEKULATIUS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Spekulatius",
+      "Spekulatiusse",
+      "Spekulatiussen",
+      "spéculos"
+    ]
+  },
+  {
+    "id": "lod:KAMELL1UNI1",
+    "name": "Kamell",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "KAMELL1",
+        "meaning": "KAMELL1UNI1"
+      },
+      {
+        "entry": "BONBON1",
+        "meaning": "BONBON1UNI1"
+      }
+    ],
+    "aliases": [
+      "Bonbon",
+      "Bonbone",
+      "Bonbonen",
+      "Kamell",
+      "Kamelle",
+      "Kamellen",
+      "bonbon"
+    ]
+  },
+  {
+    "id": "lod:SUCETTE1UNI1",
+    "name": "Sucette",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "SUCETTE1",
+        "meaning": "SUCETTE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Lutscher",
+      "Sucette",
+      "Sucetten",
+      "Sucettë",
+      "sucette"
+    ]
+  },
+  {
+    "id": "lod:NOUGAT1UNI1",
+    "name": "Nougat",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "NOUGAT1",
+        "meaning": "NOUGAT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Nougat",
+      "nougat",
+      "türkischer Honig"
+    ]
+  },
+  {
+    "id": "lod:MARZIPAN1UNI1",
+    "name": "Marzipan",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "MARZIPAN1",
+        "meaning": "MARZIPAN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Marzipan",
+      "massepain",
+      "pâte d'amandes"
+    ]
+  },
+  {
+    "id": "lod:KNATSCH1UNI1",
+    "name": "Knätsch",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "KNATSCH1",
+        "meaning": "KNATSCH1UNI1"
+      },
+      {
+        "entry": "KNATSCHGUMMI1",
+        "meaning": "KNATSCHGUMMI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kaugummi",
+      "Knätsch",
+      "Knätsche",
+      "Knätschen",
+      "Knätschgummi",
+      "Knätschgummie",
+      "Knätschgummien",
+      "chewing-gum"
+    ]
+  },
+  {
+    "id": "lod:LAKRITZ1UNI2",
+    "name": "Lakritz",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "LAKRITZ1",
+        "meaning": "LAKRITZ1UNI2"
+      }
+    ],
+    "aliases": [
+      "Lakritz",
+      "Lakritzbonbon",
+      "Lakritze",
+      "Lakritzen",
+      "bonbon de réglisse"
+    ]
+  },
+  {
+    "id": "lod:MUUSLIRIGEL1UNI1",
+    "name": "Müüslirigel",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "MUUSLIRIGEL1",
+        "meaning": "MUUSLIRIGEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Müsliriegel",
+      "Müüslirigel",
+      "Müüslirigele",
+      "Müüslirigelen",
+      "barre de céréales"
+    ]
+  },
+  {
+    "id": "lod:AERDBIERSKAMELL1UNI1",
+    "name": "Äerdbierskamell",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "AERDBIERSKAMELL1",
+        "meaning": "AERDBIERSKAMELL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Erdbeerbonbon",
+      "bonbon à la fraise",
+      "Äerdbierskamell",
+      "Äerdbierskamelle",
+      "Äerdbierskamellen"
+    ]
+  },
+  {
+    "id": "lod:ZWIBACK1UNI1",
+    "name": "Zwiback",
+    "category": "Snacks",
+    "sources": [
+      {
+        "entry": "ZWIBACK1",
+        "meaning": "ZWIBACK1UNI1"
+      }
+    ],
+    "aliases": [
+      "Zwiback",
+      "Zwibacke",
+      "Zwibacken",
+      "Zwieback",
+      "biscotte"
+    ]
+  },
+  {
+    "id": "lod:WAASSER2UNI1",
+    "name": "Waasser",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "WAASSER2",
+        "meaning": "WAASSER2UNI1"
+      }
+    ],
+    "aliases": [
+      "Waasser",
+      "Wasser",
+      "eau"
+    ]
+  },
+  {
+    "id": "lod:MINERALWAASSER1UNI1",
+    "name": "Mineralwaasser",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "MINERALWAASSER1",
+        "meaning": "MINERALWAASSER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Mineralwaasser",
+      "Mineralwasser",
+      "eau minérale"
+    ]
+  },
+  {
+    "id": "lod:SPRUDDELWAASSER1UNI1",
+    "name": "Spruddelwaasser",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "SPRUDDELWAASSER1",
+        "meaning": "SPRUDDELWAASSER1UNI1"
+      },
+      {
+        "entry": "SPRUDDEL2",
+        "meaning": "SPRUDDEL2UNI2"
+      }
+    ],
+    "aliases": [
+      "Spruddel",
+      "Spruddelwaasser",
+      "Sprudel",
+      "Sprudelwasser",
+      "eau gazeuse",
+      "eau pétillante"
+    ]
+  },
+  {
+    "id": "lod:KAFFI1UNI2",
+    "name": "Kaffi",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "KAFFI1",
+        "meaning": "KAFFI1UNI2"
+      }
+    ],
+    "aliases": [
+      "Kaffee",
+      "Kaffi",
+      "Kaffie",
+      "Kaffien",
+      "café"
+    ]
+  },
+  {
+    "id": "lod:KAFFISBOUN1UNI1",
+    "name": "Kaffisboun",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "KAFFISBOUN1",
+        "meaning": "KAFFISBOUN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kaffeebohne",
+      "Kaffisboun",
+      "Kaffisboune",
+      "Kaffisbounen",
+      "grain de café"
+    ]
+  },
+  {
+    "id": "lod:FILTERKAFFI1UNI1",
+    "name": "Filterkaffi",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "FILTERKAFFI1",
+        "meaning": "FILTERKAFFI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Filterkaffee",
+      "Filterkaffi",
+      "Filterkaffie",
+      "Filterkaffien",
+      "café-filtre"
+    ]
+  },
+  {
+    "id": "lod:TEI1UNI2",
+    "name": "Téi",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "TEI1",
+        "meaning": "TEI1UNI2"
+      }
+    ],
+    "aliases": [
+      "Kräutertee",
+      "Tee",
+      "Téi",
+      "Téie",
+      "Téien",
+      "thé",
+      "tisane"
+    ]
+  },
+  {
+    "id": "lod:KRAIDERTEI1UNI1",
+    "name": "Kraidertéi",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "KRAIDERTEI1",
+        "meaning": "KRAIDERTEI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kraidertéi",
+      "Kraidertéie",
+      "Kraidertéien",
+      "Kräutertee",
+      "tisane"
+    ]
+  },
+  {
+    "id": "lod:KAMILLENTEI1UNI1",
+    "name": "Kamillentéi",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "KAMILLENTEI1",
+        "meaning": "KAMILLENTEI1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kamillentee",
+      "Kamillentéi",
+      "Kamillentéie",
+      "Kamillentéien"
+    ]
+  },
+  {
+    "id": "lod:KAKAO1UNI2",
+    "name": "Kakao",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "KAKAO1",
+        "meaning": "KAKAO1UNI2"
+      }
+    ],
+    "aliases": [
+      "Kakao",
+      "Kakaoe",
+      "Kakaoen",
+      "cacao"
+    ]
+  },
+  {
+    "id": "lod:SOJAMELLECH1UNI1",
+    "name": "Sojamëllech",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "SOJAMELLECH1",
+        "meaning": "SOJAMELLECH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Sojamilch",
+      "Sojamëllech",
+      "lait de soja"
+    ]
+  },
+  {
+    "id": "lod:SCHOCKELASMELLECH1UNI1",
+    "name": "Schockelasmëllech",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "SCHOCKELASMELLECH1",
+        "meaning": "SCHOCKELASMELLECH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Schockelasmëllech",
+      "Schokomilch",
+      "lait au chocolat",
+      "lait chocolaté"
+    ]
+  },
+  {
+    "id": "lod:JUS1UNI1",
+    "name": "Jus",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "JUS1",
+        "meaning": "JUS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Jus",
+      "Juse",
+      "Jusen",
+      "Saft",
+      "jus"
+    ]
+  },
+  {
+    "id": "lod:ORANGEJUS1UNI1",
+    "name": "Orangëjus",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "ORANGEJUS1",
+        "meaning": "ORANGEJUS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Orangensaft",
+      "Orangëjus",
+      "Orangëjuse",
+      "Orangëjusen",
+      "jus d'orange"
+    ]
+  },
+  {
+    "id": "lod:APPELJUS1UNI1",
+    "name": "Äppeljus",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "APPELJUS1",
+        "meaning": "APPELJUS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Apfelsaft",
+      "jus de pomme",
+      "Äppeljus",
+      "Äppeljuse",
+      "Äppeljusen"
+    ]
+  },
+  {
+    "id": "lod:APRIKOSEJUS1UNI1",
+    "name": "Aprikosejus",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "APRIKOSEJUS1",
+        "meaning": "APRIKOSEJUS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Aprikosejus",
+      "Aprikosejuse",
+      "Aprikosejusen",
+      "Aprikosensaft",
+      "jus d'abricots"
+    ]
+  },
+  {
+    "id": "lod:PIJEJUS1UNI1",
+    "name": "Pijejus",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "PIJEJUS1",
+        "meaning": "PIJEJUS1UNI1"
+      }
+    ],
+    "aliases": [
+      "Pfirsichsaft",
+      "Pijejus",
+      "Pijejuse",
+      "Pijejusen",
+      "jus de pêche"
+    ]
+  },
+  {
+    "id": "lod:COLA1UNI1",
+    "name": "Cola",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "COLA1",
+        "meaning": "COLA1UNI1"
+      }
+    ],
+    "aliases": [
+      "Cola",
+      "Colae",
+      "Colaen",
+      "coca"
+    ]
+  },
+  {
+    "id": "lod:LIMONAD1UNI1",
+    "name": "Limonad",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "LIMONAD1",
+        "meaning": "LIMONAD1UNI1"
+      }
+    ],
+    "aliases": [
+      "Limonad",
+      "Limonade",
+      "Limonaden",
+      "limonade",
+      "soda"
+    ]
+  },
+  {
+    "id": "lod:ICETEA1UNI1",
+    "name": "Icetea",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "ICETEA1",
+        "meaning": "ICETEA1UNI1"
+      }
+    ],
+    "aliases": [
+      "Eistee",
+      "Icetea",
+      "Iceteae",
+      "Iceteaen",
+      "thé glacé"
+    ]
+  },
+  {
+    "id": "lod:SMOOTHIE1UNI1",
+    "name": "Smoothie",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "SMOOTHIE1",
+        "meaning": "SMOOTHIE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Smoothie",
+      "Smoothien",
+      "Smoothië",
+      "smoothie"
+    ]
+  },
+  {
+    "id": "lod:BEIER1UNI1",
+    "name": "Béier",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "BEIER1",
+        "meaning": "BEIER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Bier",
+      "Béier",
+      "bière"
+    ]
+  },
+  {
+    "id": "lod:WAIN1UNI1",
+    "name": "Wäin",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "WAIN1",
+        "meaning": "WAIN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Wein",
+      "Wäin",
+      "Wäiner",
+      "vin"
+    ]
+  },
+  {
+    "id": "lod:ROUDEWAIN1UNI1",
+    "name": "Roude Wäin",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "ROUDEWAIN1",
+        "meaning": "ROUDEWAIN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Rotwein",
+      "Roude Wäin",
+      "vin rouge"
+    ]
+  },
+  {
+    "id": "lod:ROSE1UNI1",
+    "name": "Rosé",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "ROSE1",
+        "meaning": "ROSE1UNI1"
+      }
+    ],
+    "aliases": [
+      "Rosé",
+      "Roséen",
+      "Roséë",
+      "rosé"
+    ]
+  },
+  {
+    "id": "lod:CREMANT1UNI1",
+    "name": "Cremant",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "CREMANT1",
+        "meaning": "CREMANT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Cremant",
+      "Cremante",
+      "Cremanten",
+      "Crémant",
+      "crémant"
+    ]
+  },
+  {
+    "id": "lod:RIESLING1UNI2",
+    "name": "Riesling",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "RIESLING1",
+        "meaning": "RIESLING1UNI2"
+      }
+    ],
+    "aliases": [
+      "Riesling",
+      "Rieslinge",
+      "Rieslingen",
+      "riesling"
+    ]
+  },
+  {
+    "id": "lod:PINOTGRIS1UNI2",
+    "name": "Pinot gris",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "PINOTGRIS1",
+        "meaning": "PINOTGRIS1UNI2"
+      }
+    ],
+    "aliases": [
+      "Grauburgunder",
+      "Pinot gris",
+      "Pinot-grise",
+      "Pinot-grisen",
+      "pinot gris"
+    ]
+  },
+  {
+    "id": "lod:PINOTBLANC1UNI2",
+    "name": "Pinot blanc",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "PINOTBLANC1",
+        "meaning": "PINOTBLANC1UNI2"
+      }
+    ],
+    "aliases": [
+      "Pinot blanc",
+      "Pinot-blanc",
+      "Pinot-blance",
+      "Pinot-blancen",
+      "Weißburgunder",
+      "pinot blanc"
+    ]
+  },
+  {
+    "id": "lod:PINOTNOIR1UNI2",
+    "name": "Pinot noir",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "PINOTNOIR1",
+        "meaning": "PINOTNOIR1UNI2"
+      }
+    ],
+    "aliases": [
+      "Pinot noir",
+      "Pinot-noire",
+      "Pinot-noiren",
+      "Spätburgunder",
+      "pinot noir"
+    ]
+  },
+  {
+    "id": "lod:CHARDONNAY1UNI2",
+    "name": "Chardonnay",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "CHARDONNAY1",
+        "meaning": "CHARDONNAY1UNI2"
+      }
+    ],
+    "aliases": [
+      "Chardonnay",
+      "Chardonnaye",
+      "Chardonnayen",
+      "chardonnay"
+    ]
+  },
+  {
+    "id": "lod:RIVANER1UNI2",
+    "name": "Rivaner",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "RIVANER1",
+        "meaning": "RIVANER1UNI2"
+      }
+    ],
+    "aliases": [
+      "Müller-Thurgau",
+      "Rivaner",
+      "Rivanere",
+      "Rivaneren",
+      "rivaner"
+    ]
+  },
+  {
+    "id": "lod:AUXERROIS1UNI2",
+    "name": "Auxerrois",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "AUXERROIS1",
+        "meaning": "AUXERROIS1UNI2"
+      }
+    ],
+    "aliases": [
+      "Auxerrois",
+      "Auxerroise",
+      "Auxerroisen",
+      "auxerrois"
+    ]
+  },
+  {
+    "id": "lod:GIN1UNI1",
+    "name": "Gin",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "GIN1",
+        "meaning": "GIN1UNI1"
+      }
+    ],
+    "aliases": [
+      "Gin",
+      "Ginne",
+      "Ginnen",
+      "gin"
+    ]
+  },
+  {
+    "id": "lod:VODKA1UNI1",
+    "name": "Vodka",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "VODKA1",
+        "meaning": "VODKA1UNI1"
+      }
+    ],
+    "aliases": [
+      "Vodka",
+      "Vodkae",
+      "Vodkaen",
+      "Wodka",
+      "vodka"
+    ]
+  },
+  {
+    "id": "lod:WHISKY1UNI1",
+    "name": "Whisky",
+    "category": "Beverages",
+    "sources": [
+      {
+        "entry": "WHISKY1",
+        "meaning": "WHISKY1UNI1"
+      }
+    ],
+    "aliases": [
+      "Whisky",
+      "Whiskye",
+      "Whiskyen",
+      "whisky"
+    ]
+  },
+  {
+    "id": "lod:TOILETTEPABEIER1UNI1",
+    "name": "Toilettëpabeier",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "TOILETTEPABEIER1",
+        "meaning": "TOILETTEPABEIER1UNI1"
+      },
+      {
+        "entry": "CABINETSPABEIER1",
+        "meaning": "CABINETSPABEIER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Cabinetspabeier",
+      "Toilettenpapier",
+      "Toilettëpabeier",
+      "papier hygiénique",
+      "papier-toilette"
+    ]
+  },
+  {
+    "id": "lod:WASCHPOLVER1UNI1",
+    "name": "Wäschpolver",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "WASCHPOLVER1",
+        "meaning": "WASCHPOLVER1UNI1"
+      },
+      {
+        "entry": "SEEFEPOLVER1",
+        "meaning": "SEEFEPOLVER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Seefepolver",
+      "Waschpulver",
+      "Wäschpolver",
+      "lessive en poudre",
+      "poudre à laver"
+    ]
+  },
+  {
+    "id": "lod:SPULLMETTEL1UNI1",
+    "name": "Spullmëttel",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "SPULLMETTEL1",
+        "meaning": "SPULLMETTEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Spullmëttel",
+      "Spullmëttele",
+      "Spullmëttelen",
+      "Spülmittel",
+      "produit vaisselle"
+    ]
+  },
+  {
+    "id": "lod:BOTZMETTEL1UNI1",
+    "name": "Botzmëttel",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "BOTZMETTEL1",
+        "meaning": "BOTZMETTEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Botzmëttel",
+      "Botzmëttele",
+      "Botzmëttelen",
+      "Putzmittel",
+      "Reinigungsmittel",
+      "produit de nettoyage"
+    ]
+  },
+  {
+    "id": "lod:BAKPABEIER1UNI1",
+    "name": "Bakpabeier",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "BAKPABEIER1",
+        "meaning": "BAKPABEIER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Backpapier",
+      "Bakpabeier"
+    ]
+  },
+  {
+    "id": "lod:DRECKSTUT1UNI1",
+    "name": "Dreckstut",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "DRECKSTUT1",
+        "meaning": "DRECKSTUT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Dreckstut",
+      "Dreckstute",
+      "Dreckstuten",
+      "Müllbeutel",
+      "sac-poubelle"
+    ]
+  },
+  {
+    "id": "lod:KICHEPABEIER1UNI1",
+    "name": "Kichepabeier",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "KICHEPABEIER1",
+        "meaning": "KICHEPABEIER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Kichepabeier",
+      "Küchenpapier",
+      "Küchenrolle",
+      "essuie-tout"
+    ]
+  },
+  {
+    "id": "lod:SELWERPABEIER1UNI1",
+    "name": "Sëlwerpabeier",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "SELWERPABEIER1",
+        "meaning": "SELWERPABEIER1UNI1"
+      }
+    ],
+    "aliases": [
+      "Alufolie",
+      "Stanniolpapier",
+      "Sëlwerpabeier",
+      "papier d'aluminium"
+    ]
+  },
+  {
+    "id": "lod:WASCHMETTEL1UNI1",
+    "name": "Wäschmëttel",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "WASCHMETTEL1",
+        "meaning": "WASCHMETTEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Waschmittel",
+      "Wäschmëttel",
+      "Wäschmëttele",
+      "Wäschmëttelen",
+      "lessive"
+    ]
+  },
+  {
+    "id": "lod:SCHWAMP1UNI1",
+    "name": "Schwamp",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "SCHWAMP1",
+        "meaning": "SCHWAMP1UNI1"
+      }
+    ],
+    "aliases": [
+      "Schwamm",
+      "Schwamp",
+      "Schwämm",
+      "éponge"
+    ]
+  },
+  {
+    "id": "lod:NUESSCHNAPPECH1UNI1",
+    "name": "Nuesschnappech",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "NUESSCHNAPPECH1",
+        "meaning": "NUESSCHNAPPECH1UNI1"
+      }
+    ],
+    "aliases": [
+      "Nuesschnappech",
+      "Nuesschnappecher",
+      "Taschentuch",
+      "mouchoir"
+    ]
+  },
+  {
+    "id": "lod:ZERWEIT1UNI1",
+    "name": "Zerwéit",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "ZERWEIT1",
+        "meaning": "ZERWEIT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Serviette",
+      "Zerwéit",
+      "Zerwéite",
+      "Zerwéiten"
+    ]
+  },
+  {
+    "id": "lod:SEEF1UNI3",
+    "name": "schwaarz Seef",
+    "category": "Household",
+    "sources": [
+      {
+        "entry": "SEEF1",
+        "meaning": "SEEF1UNI3"
+      }
+    ],
+    "aliases": [
+      "Schmierseife",
+      "savon noir",
+      "schwaarz Seef"
+    ]
+  },
+  {
+    "id": "lod:SEEF1UNI1",
+    "name": "Seef",
+    "category": "Personal care",
+    "sources": [
+      {
+        "entry": "SEEF1",
+        "meaning": "SEEF1UNI1"
+      }
+    ],
+    "aliases": [
+      "Seef",
+      "Seefe",
+      "Seefen",
+      "Seife",
+      "savon"
+    ]
+  },
+  {
+    "id": "lod:SHAMPOING1UNI1",
+    "name": "Shampoing",
+    "category": "Personal care",
+    "sources": [
+      {
+        "entry": "SHAMPOING1",
+        "meaning": "SHAMPOING1UNI1"
+      }
+    ],
+    "aliases": [
+      "Shampoing",
+      "Shampoinge",
+      "Shampoingen",
+      "Shampoo",
+      "shampoing"
+    ]
+  },
+  {
+    "id": "lod:ZANNSEEF1UNI1",
+    "name": "Zännseef",
+    "category": "Personal care",
+    "sources": [
+      {
+        "entry": "ZANNSEEF1",
+        "meaning": "ZANNSEEF1UNI1"
+      },
+      {
+        "entry": "ZANPASTA1",
+        "meaning": "ZANPASTA1UNI1"
+      }
+    ],
+    "aliases": [
+      "Zahnpasta",
+      "Zanpasta",
+      "Zanpastae",
+      "Zanpastaen",
+      "Zännseef",
+      "Zännseefe",
+      "Zännseefen",
+      "dentifrice"
+    ]
+  },
+  {
+    "id": "lod:ZANNBIISCHT1UNI1",
+    "name": "Zännbiischt",
+    "category": "Personal care",
+    "sources": [
+      {
+        "entry": "ZANNBIISCHT1",
+        "meaning": "ZANNBIISCHT1UNI1"
+      }
+    ],
+    "aliases": [
+      "Zahnbürste",
+      "Zännbiischt",
+      "Zännbiischte",
+      "Zännbiischten",
+      "brosse à dents"
+    ]
+  },
+  {
+    "id": "lod:DUSCHGEL1UNI1",
+    "name": "Duschgel",
+    "category": "Personal care",
+    "sources": [
+      {
+        "entry": "DUSCHGEL1",
+        "meaning": "DUSCHGEL1UNI1"
+      }
+    ],
+    "aliases": [
+      "Duschgel",
+      "Duschgelle",
+      "Duschgellen",
+      "gel douche"
+    ]
+  },
+  {
+    "id": "lod:SONNECREME1UNI1",
+    "name": "Sonnecrème",
+    "category": "Personal care",
+    "sources": [
+      {
+        "entry": "SONNECREME1",
+        "meaning": "SONNECREME1UNI1"
+      }
+    ],
+    "aliases": [
+      "Sonnecrème",
+      "Sonnecrèmen",
+      "Sonnecrèmë",
+      "Sonnencreme",
+      "Sonnenschutzcreme",
+      "crème solaire"
+    ]
+  },
+  {
+    "id": "lod:WENDEL1UNI2",
+    "name": "Wëndel",
+    "category": "Personal care",
+    "sources": [
+      {
+        "entry": "WENDEL1",
+        "meaning": "WENDEL1UNI2"
+      }
+    ],
+    "aliases": [
+      "Windel",
+      "Wëndel",
+      "Wëndele",
+      "Wëndelen",
+      "couche"
+    ]
+  },
+  {
+    "id": "lod:BIND1UNI1",
+    "name": "Bind",
+    "category": "Personal care",
+    "sources": [
+      {
+        "entry": "BIND1",
+        "meaning": "BIND1UNI1"
+      }
+    ],
+    "aliases": [
+      "Bind",
+      "Binde",
+      "Binden",
+      "Damenbinde",
+      "serviette hygiénique"
+    ]
+  },
+  {
+    "id": "lod:TAMPON1UNI1",
+    "name": "Tampon",
+    "category": "Personal care",
+    "sources": [
+      {
+        "entry": "TAMPON1",
+        "meaning": "TAMPON1UNI1"
+      }
+    ],
+    "aliases": [
+      "Tampon",
+      "Tampone",
+      "Tamponen"
+    ]
+  },
+  {
+    "id": "lod:WATT2UNI1",
+    "name": "Watt",
+    "category": "Personal care",
+    "sources": [
+      {
+        "entry": "WATT2",
+        "meaning": "WATT2UNI1"
+      }
+    ],
+    "aliases": [
+      "Watt",
+      "Watte",
+      "coton",
+      "ouate"
+    ]
+  }
+]

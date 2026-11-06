@@ -1,21 +1,17 @@
-/**
- * Reorder aisles — drag-free, up/down controls.
- *
- * Deliberately NOT a drag-reorder library: arrow controls are fully
- * cross-platform (canon § Cross-platform functional parity — same on iOS and
- * Android), accessible (each move is a labelled button), and avoid the
- * reanimated/worklets native-pin landmine. The order is per-list so a user
- * can match their own store's layout.
- */
+/** Manage aisles with drag handles and accessible move actions. */
 
-import React, { useState, useCallback } from 'react';
-import { View, Text, Pressable, FlatList, StyleSheet } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChevronUp, ChevronDown, X, Trash2 } from 'lucide-react-native';
+import { Menu, X, Trash2, Pencil } from 'lucide-react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
 import { useListsStore } from '../store/lists';
-import { useConfirm } from '../components/Dialogs';
+import { useConfirm, usePrompt } from '../components/Dialogs';
+import DraggableFlatList from 'react-native-draggable-flatlist';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { AddAction } from '../components/AddAction';
+import { applyAisleDrop } from '../data/aisleOrder';
 import { EmptyState } from '../components/EmptyState';
 import {
   categoryLabel,
@@ -46,18 +42,42 @@ export default function ReorderAislesScreen({ route, navigation }: Props) {
   const reorderAisles = useListsStore((st) => st.reorderAisles);
   const removeCategory = useListsStore((st) => st.removeCategory);
   const confirm = useConfirm();
-  const [order, setOrder] = useState<Category[]>(list?.categoryOrder ?? []);
+  const prompt = usePrompt();
+  const addCategory = useListsStore(st => st.addCategory);
+  const renameCategory = useListsStore(st => st.renameCategory);
+  const [renameFailed, setRenameFailed] = useState(false);
+  const order = list?.categoryOrder ?? [];
+  const [dragOrder, setDragOrder] = useState<Category[] | null>(null);
+  const finishDrag = ({ data, from, to }: {data: Category[]; from: number; to: number}) => {
+    setDragOrder(null);
+    const latest = useListsStore.getState().getList(listId)?.categoryOrder;
+    if (!latest || from === to || !data[to]) return;
+    const next = applyAisleDrop(latest, data[to], data);
+    if (next !== latest) reorderAisles(listId, next);
+  };
+  const rename = (category: Category) => {
+    setRenameFailed(false);
+    prompt.open({
+      title: t('reorder.renameTitle'), initialValue: category, selectAll: true,
+      placeholder: t('detail.newAislePlaceholder'), confirmLabel: t('common.save'),
+      onSubmit: name => { setRenameFailed(!renameCategory(listId, category, name)); },
+    });
+  };
+  const add = () => prompt.open({
+    title: t('reorder.add'), placeholder: t('detail.newAislePlaceholder'),
+    confirmLabel: t('common.add'), onSubmit: name => { addCategory(listId, name); },
+  });
 
   const move = useCallback(
-    (index: number, dir: -1 | 1) => {
-      setOrder((prev) => {
-        const next = [...prev];
-        const target = index + dir;
-        if (target < 0 || target >= next.length) return prev;
-        [next[index], next[target]] = [next[target], next[index]];
-        reorderAisles(listId, next);
-        return next;
-      });
+    (category: Category, dir: -1 | 1) => {
+      const latest = useListsStore.getState().getList(listId)?.categoryOrder;
+      if (!latest) return;
+      const index = latest.indexOf(category);
+      const target = index + dir;
+      if (index < 0 || target < 0 || target >= latest.length) return;
+      const next = [...latest];
+      [next[index], next[target]] = [next[target], next[index]];
+      reorderAisles(listId, next);
     },
     [listId, reorderAisles]
   );
@@ -66,12 +86,11 @@ export default function ReorderAislesScreen({ route, navigation }: Props) {
     (cat: Category) => {
       confirm.open({
         title: t('reorder.removeConfirmTitle'),
-        message: t('reorder.removeConfirmBody', { name: categoryLabel(cat) }),
+        message: t('reorder.removeConfirmBody', { name: categoryLabel(cat), other: categoryLabel('Other') }),
         confirmLabel: t('reorder.removeConfirmLabel'),
         destructive: true,
         onConfirm: () => {
           removeCategory(listId, cat);
-          setOrder((prev) => prev.filter((c) => c !== cat));
         },
       });
     },
@@ -79,6 +98,7 @@ export default function ReorderAislesScreen({ route, navigation }: Props) {
   );
 
   return (
+    <GestureHandlerRootView style={s.flex}>
     <SafeAreaView style={s.safe} edges={['top', 'left', 'right', 'bottom']}>
       <View style={s.header}>
         <Text style={s.title}>{t('reorder.title')}</Text>
@@ -93,61 +113,39 @@ export default function ReorderAislesScreen({ route, navigation }: Props) {
         </Pressable>
       </View>
       <Text style={s.hint}>{t('reorder.hint')}</Text>
-      <FlatList
-        data={order}
+      {renameFailed ? <Text style={[s.hint, { color: c.danger }]} accessibilityRole="alert">
+        {t('reorder.renameFailed')}
+      </Text> : null}
+      <AddAction label={t('reorder.add')} onPress={add} disabled={dragOrder != null} />
+      <DraggableFlatList
+        data={dragOrder ?? order}
+        containerStyle={s.flex}
+        onDragBegin={() => setDragOrder([...order])}
+        onDragEnd={finishDrag}
+        autoscrollThreshold={70}
+        autoscrollSpeed={180}
         keyExtractor={(cat) => cat}
         contentContainerStyle={s.listContent}
         ItemSeparatorComponent={() => <View style={s.sep} />}
         ListEmptyComponent={<EmptyState message={t('reorder.empty')} />}
-        renderItem={({ item, index }) => (
-          <View style={s.row}>
+        renderItem={({ item, drag, isActive, getIndex }) => (
+          <View style={[s.row, isActive && s.dragging]}>
             <Text style={s.rowText}>{categoryLabel(item)}</Text>
-            <Pressable
-              onPress={() => move(index, -1)}
-              disabled={index === 0}
-              hitSlop={6}
-              accessibilityRole="button"
-              // Greyed out is a colour-only cue on its own; the state makes
-              // "unavailable" reach VoiceOver too.
-              accessibilityState={{ disabled: index === 0 }}
-              accessibilityLabel={t('reorder.moveUp', {
-                name: categoryLabel(item),
-              })}
-              style={({ pressed }) => [
-                s.moveBtn,
-                index === 0 && s.moveDisabled,
-                pressed && s.pressed,
-              ]}
-            >
-              <ChevronUp
-                size={20}
-                color={index === 0 ? c.fgSubtle : c.fg}
-                strokeWidth={1.5}
-              />
-            </Pressable>
-            <Pressable
-              onPress={() => move(index, 1)}
-              disabled={index === order.length - 1}
-              hitSlop={6}
-              accessibilityRole="button"
-              accessibilityState={{ disabled: index === order.length - 1 }}
-              accessibilityLabel={t('reorder.moveDown', {
-                name: categoryLabel(item),
-              })}
-              style={({ pressed }) => [
-                s.moveBtn,
-                index === order.length - 1 && s.moveDisabled,
-                pressed && s.pressed,
-              ]}
-            >
-              <ChevronDown
-                size={20}
-                color={index === order.length - 1 ? c.fgSubtle : c.fg}
-                strokeWidth={1.5}
-              />
-            </Pressable>
             {!isBuiltinCategory(item) ? (
               <Pressable
+                disabled={dragOrder != null}
+                onPress={() => rename(item)}
+                hitSlop={6}
+                accessibilityRole="button"
+                accessibilityLabel={t('reorder.rename', { name: item })}
+                style={({ pressed }) => [s.moveBtn, pressed && s.pressed]}
+              >
+                <Pencil size={18} color={c.fgMuted} strokeWidth={1.5} />
+              </Pressable>
+            ) : null}
+            {!isBuiltinCategory(item) ? (
+              <Pressable
+                disabled={dragOrder != null}
                 onPress={() => remove(item)}
                 hitSlop={6}
                 accessibilityRole="button"
@@ -159,16 +157,35 @@ export default function ReorderAislesScreen({ route, navigation }: Props) {
                 <Trash2 size={18} color={c.danger} strokeWidth={1.5} />
               </Pressable>
             ) : null}
+            <Pressable onPressIn={drag} disabled={isActive}
+              accessibilityRole="adjustable"
+              accessibilityLabel={t('reorder.drag', { name: categoryLabel(item) })}
+              accessibilityHint={t('reorder.dragHint')}
+              accessibilityActions={[
+                ...((getIndex() ?? 0) > 0 ? [{ name: 'decrement', label: t('reorder.moveUp', { name: categoryLabel(item) }) }] : []),
+                ...((getIndex() ?? 0) < order.length - 1 ? [{ name: 'increment', label: t('reorder.moveDown', { name: categoryLabel(item) }) }] : []),
+              ]}
+              onAccessibilityAction={({ nativeEvent }) => {
+                if (nativeEvent.actionName === 'decrement') move(item, -1);
+                if (nativeEvent.actionName === 'increment') move(item, 1);
+              }}
+              style={({ pressed }) => [s.moveBtn, pressed && s.pressed]}>
+              <Menu size={20} color={isActive ? c.accent : c.fgMuted} strokeWidth={1.5} />
+            </Pressable>
           </View>
         )}
       />
       {confirm.element}
+      {prompt.element}
     </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 
 function makeStyles(c: Colors) {
   return StyleSheet.create({
+    flex: { flex: 1 },
+    dragging: { borderColor: c.accent, elevation: 4 },
     safe: { flex: 1, backgroundColor: c.bg },
     pressed: { opacity: 0.6 },
     header: {
@@ -223,6 +240,5 @@ function makeStyles(c: Colors) {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    moveDisabled: { opacity: 0.5 },
   });
 }

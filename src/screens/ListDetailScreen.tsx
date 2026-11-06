@@ -35,7 +35,6 @@ import * as Haptics from 'expo-haptics';
 import {
   ChevronLeft,
   MoreHorizontal,
-  Plus,
   Pencil,
   ChevronDown,
   ChevronRight,
@@ -55,6 +54,7 @@ import {
   type GroceryItem,
 } from '../data/list';
 import { categoryLabel, type Category } from '../data/categories';
+import { AddAction } from '../components/AddAction';
 import { Snackbar } from '../components/Snackbar';
 import { SwipeRow } from '../components/SwipeRow';
 import { SyncStatusBar } from '../components/SyncStatusBar';
@@ -490,17 +490,7 @@ export default function ListDetailScreen({ route, navigation }: Props) {
         <SyncStatusBar secret={list.shareIdentity.secret} />
       )}
 
-      <View style={s.addBar}>
-        <Pressable
-          onPress={() => setAddSheetOpen(true)}
-          accessibilityRole="button"
-          accessibilityLabel={t('detail.addItem')}
-          style={({ pressed }) => [s.addTrigger, pressed && s.pressed]}
-        >
-          <Text style={s.addTriggerText}>{t('detail.addItem')}</Text>
-          <Plus size={20} color={c.accent} strokeWidth={2} />
-        </Pressable>
-      </View>
+      <AddAction label={t('detail.addItem')} onPress={() => setAddSheetOpen(true)} />
 
       {showStalePrompt ? (
         <View style={s.staleBar} accessibilityLiveRegion="polite">
@@ -608,31 +598,6 @@ function makeStyles(c: Colors) {
       height: target.min,
       alignItems: 'center',
       justifyContent: 'center',
-    },
-
-    addBar: {
-      ...boundedContent,
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: space.s6,
-      paddingBottom: space.s4,
-    },
-    addTrigger: {
-      flex: 1,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      backgroundColor: c.bgElevated,
-      borderWidth: hairline,
-      borderColor: c.hairlineStrong,
-      borderRadius: radius.md,
-      paddingHorizontal: space.s5,
-      minHeight: target.min,
-    },
-    addTriggerText: {
-      ...ty.base,
-      fontFamily: fontFamily.sans,
-      color: c.fgMuted,
     },
 
     listContent: {

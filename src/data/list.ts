@@ -9,6 +9,7 @@
  * code still works: the UI just filters tombstoned items out.
  */
 
+import { sanitizePreferences, type AislePreference } from './aislePreferences';
 import { makeId } from '../lib/id';
 import { now as clockNow } from '../sync/clock';
 import {
@@ -72,6 +73,7 @@ export interface GroceryList {
   createdAt: number;
   updatedAt: number;
   shareIdentity?: ShareIdentity;
+  aislePreferences?: AislePreference[];
 }
 
 // ---------------------------------------------------------------------------
@@ -101,8 +103,8 @@ export function makeItem(
     id: makeId('i'),
     name: name.trim(),
     quantity: 1,
-    // A known category (e.g. from the seed catalog) wins; otherwise guess from
-    // the name in the active language.
+    // The list store resolves learned preferences before construction.
+    // Otherwise use the supplied aisle or recognize a catalog product.
     category: category ?? inferCategory(name, locale),
     checked: false,
     checkedUpdatedAt: now,
@@ -301,9 +303,15 @@ export function healFutureStamps(list: GroceryList, cap: number): GroceryList {
       deletedAt: it.deletedAt != null ? clampTs(it.deletedAt) : undefined,
     };
   });
+  const aislePreferences = sanitizePreferences(list.aislePreferences).map(p => ({
+    ...p, updatedAt: clampTs(p.updatedAt),
+    ...(p.deletedAt != null ? { deletedAt: clampTs(p.deletedAt) } : {}),
+  }));
+  if (list.aislePreferences != null && JSON.stringify(aislePreferences) !== JSON.stringify(list.aislePreferences)) changed = true;
   if (!changed) return list;
   return {
     ...list,
+    ...(list.aislePreferences != null ? { aislePreferences } : {}),
     updatedAt: clampTs(list.updatedAt),
     nameUpdatedAt: clampTs(list.nameUpdatedAt),
     createdAt: clampTs(list.createdAt),

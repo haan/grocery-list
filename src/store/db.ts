@@ -18,6 +18,7 @@ import * as SQLite from 'expo-sqlite';
 import { getDb as getSharedDb } from '../storage/kv';
 import type { Category } from '../data/categories';
 import type { GroceryItem, GroceryList, ShareIdentity } from '../data/list';
+import { sanitizePreferences } from '../data/aislePreferences';
 import type { Kit, KitItem } from '../data/kit';
 
 let _dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
@@ -56,6 +57,7 @@ async function openDb(): Promise<SQLite.SQLiteDatabase> {
       nameUpdatedAt INTEGER,
       items         TEXT NOT NULL,
       categoryOrder TEXT NOT NULL,
+      aislePreferences TEXT,
       shareIdentity TEXT,
       createdAt     INTEGER NOT NULL,
       updatedAt     INTEGER NOT NULL
@@ -104,6 +106,10 @@ async function openDb(): Promise<SQLite.SQLiteDatabase> {
       // is a real error and still propagates.
       if (!/duplicate column name/i.test(String(err))) throw err;
     }
+  }
+  if (!cols.some(c => c.name === 'aislePreferences')) {
+    try { await _db.execAsync('ALTER TABLE lists ADD COLUMN aislePreferences TEXT'); }
+    catch (err) { if (!/duplicate column name/i.test(String(err))) throw err; }
   }
   return _db;
 }
@@ -158,6 +164,7 @@ interface ListRow {
   nameUpdatedAt: number | null;
   items: string;
   categoryOrder: string;
+  aislePreferences?: string | null;
   shareIdentity: string | null;
   createdAt: number;
   updatedAt: number;
@@ -184,6 +191,7 @@ function rowToList(row: ListRow): GroceryList {
     nameUpdatedAt,
     items: JSON.parse(row.items) as GroceryItem[],
     categoryOrder: JSON.parse(row.categoryOrder) as Category[],
+    aislePreferences: sanitizePreferences(row.aislePreferences ? JSON.parse(row.aislePreferences) : []),
     shareIdentity: row.shareIdentity
       ? (JSON.parse(row.shareIdentity) as ShareIdentity)
       : undefined,
@@ -204,8 +212,8 @@ export async function saveList(list: GroceryList): Promise<void> {
   const db = await getDb();
   await db.runAsync(
     `INSERT OR REPLACE INTO lists
-       (id, name, nameUpdatedAt, items, categoryOrder, shareIdentity, createdAt, updatedAt)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+       (id, name, nameUpdatedAt, items, categoryOrder, shareIdentity, createdAt, updatedAt, aislePreferences)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       list.id,
       list.name,
@@ -215,6 +223,7 @@ export async function saveList(list: GroceryList): Promise<void> {
       list.shareIdentity ? JSON.stringify(list.shareIdentity) : null,
       list.createdAt,
       list.updatedAt,
+      JSON.stringify(list.aislePreferences ?? []),
     ]
   );
 }

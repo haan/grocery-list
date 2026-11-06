@@ -1,40 +1,39 @@
-# Grocery List
+# Grocery List Dev
 
-A grocery list a household can share, so two people shop off one list that updates on both phones.
+An independent Android version of [Josh Williams's Grocery List](https://github.com/Josh-Approved/grocery-list), maintained in [haan/grocery-list](https://github.com/haan/grocery-list).
 
-## What it is
+Phase one provides a development APK for a physical Android phone, with Fast Refresh from a local PC. It retains SQLite storage and encrypted synchronization through public Nostr relays.
 
-Make a list, and it sorts itself into aisles as you type. Share it with a link or a QR code, the other person taps it once, and you're connected. From then on, whatever either of you adds or checks off shows up on the other phone. No account, no sign-up, ever. Clear what you crossed off whenever you like, with undo, and the list keeps its shape for next time.
+## Development
 
-## Who it's for
+Use Node **26.12.1** and npm **11.20.0**:
 
-Anyone who runs a household off a shared list and is tired of the texts, the duplicate milk, and the apps that make you make an account first.
-
-## How to get it
-
-Free on the [App Store](https://apps.apple.com/us/app/id6779417031) and [Google Play](https://play.google.com/store/apps/details?id=com.joshapproved.grocerylist), no account, nothing to sign up for. One link picks the right store for your phone: [joshapproved.com/apps/grocery-list](https://joshapproved.com/apps/grocery-list).
-
-Or run it locally, see below.
-
-## Run it locally
-
-```
-git clone https://github.com/josh-approved/grocery-list.git
-cd grocery-list
-npm install
-npm run ios        # or: npm run android, or: npx expo start
+```sh
+npm ci
+npm run dev
 ```
 
-Requires Node and the Expo tooling (plus Xcode for the iOS simulator, or Android Studio for the Android emulator).
+Install our custom development APK first; Expo Go does not contain all native dependencies. Open the development app on the same Wi-Fi network as your PC and scan Metro's QR code with your phone's camera. No emulator is required. The development server must remain running.
 
-## Privacy
+```sh
+npm run typecheck
+npm test -- --runInBand
+npm run build:dev
+```
 
-Your data stays with you. When you share a list, changes pass between your phones end-to-end encrypted, through free public infrastructure we don't run and can't read. No accounts, no tracking, no analytics. See [PRIVACY.md](PRIVACY.md).
+The cloud build uses Expo project `80882728-1f01-40c5-b4aa-56fcfa53f928`, owned by `lean-mean-coding-team`. Building requires an authorized Expo account. It does not submit to an app store.
 
-## License
+See [the development guide](docs/development.md) for installation, debugging, credentials, networking, and the device acceptance checklist.
 
-MIT, see [LICENSE](LICENSE).
+## Sharing and feedback
 
-## Feedback
+The development app has its own Android identity and share-link scheme and can coexist with the original app. Use disposable test lists; importing or joining household lists is outside initial setup.
 
-Email [feedback@joshapproved.com](mailto:feedback@joshapproved.com). No ads, no subscriptions, no data harvest. If it's worth a few dollars to you, there's an optional tip jar in the app.
+Feedback opens this repository's issue form without automatically including diagnostic logs. Upstream donations and store-review prompts are disabled. Public relay availability is best-effort.
+
+## License and attribution
+
+Luxembourgish suggestions, shared aisle learning, and Manage aisles are documented
+in the [catalog guide](scripts/lod/README.md), including regeneration and device checks.
+
+Derived from Grocery List by Josh Williams. Original copyright and MIT license are retained in [LICENSE](LICENSE); third-party acknowledgements are in [CREDITS.md](CREDITS.md).

@@ -102,16 +102,25 @@ export function useItemEditor(): {
     setTarget(cfg);
   }, []);
 
+  const assignAisle = useCallback((category: string) => {
+    if (!target_) return;
+    // Learn against the name currently visible in the editor, including an
+    // unfinished rename, instead of teaching a rule for its previous name.
+    const live = useListsStore.getState().getList(target_.listId)?.items.find(i => i.id === target_.itemId);
+    if (name.trim() && name.trim() !== live?.name) setItemName(target_.listId, target_.itemId, name);
+    recategorize(target_.listId, target_.itemId, category);
+  }, [target_, name, setItemName, recategorize]);
+
   const commitAisle = useCallback(() => {
     const cur = target_;
     const draft = aisleDraft.trim();
     if (cur && draft) {
       const key = addCategory(cur.listId, draft);
-      if (key) recategorize(cur.listId, cur.itemId, key);
+      if (key) assignAisle(key);
     }
     setAddingAisle(false);
     setAisleDraft('');
-  }, [target_, aisleDraft, addCategory, recategorize]);
+  }, [target_, aisleDraft, addCategory, assignAisle]);
 
   const commitAndClose = useCallback(() => {
     const cur = target_;
@@ -239,10 +248,7 @@ export function useItemEditor(): {
                     return (
                       <Pressable
                         key={cat}
-                        onPress={() =>
-                          target_ &&
-                          recategorize(target_.listId, target_.itemId, cat)
-                        }
+                        onPress={() => assignAisle(cat)}
                         hitSlop={6}
                         accessibilityRole="button"
                         accessibilityState={{ selected: on }}

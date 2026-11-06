@@ -1,15 +1,16 @@
 {
   "expo": {
-    "name": "Grocery List",
+    "name": "Grocery List Dev",
     "slug": "grocery-list",
     "version": "1.0.12",
-    "scheme": "grocerylist",
+    "scheme": "haan-grocerylist-dev",
+    "platforms": ["android"],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.joshapproved.grocerylist",
+      "bundleIdentifier": "io.github.haan.grocerylist.dev",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "CFBundleName": "Grocery List",
@@ -30,7 +31,7 @@
         "backgroundColor": "#FAFAF7"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.joshapproved.grocerylist",
+      "package": "io.github.haan.grocerylist.dev",
       "permissions": [
         "android.permission.CAMERA"
       ]
@@ -38,7 +39,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "owner": "josh-approved",
+    "owner": "lean-mean-coding-team",
     "plugins": [
       "expo-sqlite",
       "expo-font",
@@ -67,14 +68,14 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "8950346f-e35b-434a-92a5-a808461f2a2b"
+        "projectId": "80882728-1f01-40c5-b4aa-56fcfa53f928"
       }
     },
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "fingerprint"
     },
     "updates": {
-      "url": "https://u.expo.dev/8950346f-e35b-434a-92a5-a808461f2a2b"
+      "url": "https://u.expo.dev/80882728-1f01-40c5-b4aa-56fcfa53f928"
     }
   }
 }

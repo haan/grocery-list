@@ -1,4 +1,4 @@
-name: QA e2e
+name: Manual device QA (legacy)
 
 # Three QA tiers (canon § QA & testing):
 #   • Tier 1 — `unit` job: fast headless logic tests (jest-expo). Runs ONCE,
@@ -48,8 +48,8 @@ name: QA e2e
 # Required repo secret: EXPO_TOKEN. Used by `expo/expo-github-action@v8` for
 # `eas build --local` project-identity validation.
 
+# Legacy device QA is opt-in while the independent Android app is established.
 on:
-  pull_request:
   workflow_dispatch:
 
 jobs:

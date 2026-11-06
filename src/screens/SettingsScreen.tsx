@@ -40,6 +40,7 @@ import { t } from '../i18n';
 import {
   APP_NAME,
   TIP_JAR_ENABLED,
+  STORE_REVIEWS_ENABLED,
   PRIVACY_URL,
   REPO_URL,
   STUDIO_URL,
@@ -132,7 +133,7 @@ export default function SettingsScreen({ navigation }: Props) {
         <Text style={s.sectionLabel}>{t('settings.about')}</Text>
         {TIP_JAR_ENABLED && <AboutRow label={t('about.support')} icon={HandHeart} onPress={() => setTipVisible(true)} />}
         <AboutRow label={t('about.feedback')} icon={Mail} onPress={() => openFeedback()} />
-        <AboutRow label={t('about.review')} icon={Star} onPress={openReview} />
+        {STORE_REVIEWS_ENABLED && <AboutRow label={t('about.review')} icon={Star} onPress={openReview} />}
         <AboutRow label={t('about.privacy')} icon={Shield} onPress={() => openUrl(PRIVACY_URL)} />
         <AboutRow label={t('about.source')} icon={Code2} onPress={() => openUrl(REPO_URL)} />
         <AboutRow label={t('about.acknowledgements')} icon={Library} onPress={() => navigation.navigate('Acknowledgements')} />

@@ -76,7 +76,7 @@ jest.mock('../../components/TipJarSheet', () => {
 import SettingsScreen from '../SettingsScreen';
 import { useListsStore } from '../../store/lists';
 import { pickAndParseLists } from '../../lib/transfer';
-import { openReview, openUrl } from '../../lib/links';
+import { openReview, openUrl, REPO_URL } from '../../lib/links';
 import { makeList } from '../../data/list';
 
 function resetStore() {
@@ -145,12 +145,10 @@ describe('SettingsScreen', () => {
     expect(screen.getByText('Added 1 list.')).toBeTruthy();
   });
 
-  it('opens the tip jar from the Support row', async () => {
-    const user = userEvent.setup();
+  it('does not offer the upstream tip jar', async () => {
     await renderScreen();
-
-    await user.press(screen.getByRole('button', { name: 'Support this app' }));
-    expect(screen.getByText('TIP_JAR_OPEN')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Support this app' })).toBeNull();
+    expect(screen.queryByText('TIP_JAR_OPEN')).toBeNull();
   });
 
   it('opens the feedback flow from the Send feedback row', async () => {
@@ -161,12 +159,10 @@ describe('SettingsScreen', () => {
     expect(mockOpenFeedback).toHaveBeenCalledTimes(1);
   });
 
-  it('opens the store review from the Leave a review row', async () => {
-    const user = userEvent.setup();
+  it('does not offer store reviews in the independent app', async () => {
     await renderScreen();
-
-    await user.press(screen.getByRole('button', { name: 'Leave a review' }));
-    expect(openReview).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole('button', { name: 'Leave a review' })).toBeNull();
+    expect(openReview).not.toHaveBeenCalled();
   });
 
   it('opens the privacy page from the Privacy row', async () => {
@@ -200,6 +196,6 @@ describe('SettingsScreen', () => {
     await user.press(
       screen.getByRole('button', { name: 'Learn more' })
     );
-    expect(openUrl).toHaveBeenCalledWith('https://joshapproved.com');
+    expect(openUrl).toHaveBeenCalledWith(REPO_URL);
   });
 });

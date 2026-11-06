@@ -49,3 +49,12 @@ build-*.log
 submit-*.log
 /build/
 google-play-key.json
+credentials.json
+*.keystore
+/qa/test-run.json
+/qa/defect-intake.jsonl
+/qa/fuzz-log.jsonl
+/coverage/
+
+# Local dictionary source and inspection artifacts; only the reviewed catalog ships.
+/tmp/

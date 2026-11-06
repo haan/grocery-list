@@ -1,3 +1,4 @@
+jest.mock('react-native-draggable-flatlist', () => require('../../../qa/draggableFlatListMock.cjs'));
 /**
  * Edge-inset audit over this app's own screens — APP-OWNED: seeded once by
  * `sync.mjs qa`, never overwritten.

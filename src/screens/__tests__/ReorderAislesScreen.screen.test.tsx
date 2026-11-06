@@ -1,3 +1,5 @@
+jest.mock('react-native-gesture-handler', () => ({ GestureHandlerRootView: require('react-native').View }));
+jest.mock('react-native-draggable-flatlist', () => require('../../../qa/draggableFlatListMock.cjs'));
 /**
  * Screen test — ReorderAislesScreen action coverage (Uplevel-3 T3).
  *
@@ -12,7 +14,7 @@
  */
 
 import React from 'react';
-import { render, screen, userEvent } from '@testing-library/react-native';
+import { render, screen, userEvent, fireEvent, act } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const METRICS = {
@@ -91,7 +93,84 @@ async function renderScreen(navigation = nav()) {
 beforeEach(() => seedList());
 afterEach(() => resetStore());
 
+test('adds an aisle without an item, deduplicates names, and shows live updates', async () => {
+  const user = userEvent.setup();
+  await renderScreen();
+  await user.press(screen.getByRole('button', {name:'Add aisle'}));
+  expect(screen.getByRole('button', {name:'Add'})).toBeDisabled();
+  await fireEvent.changeText(screen.getByDisplayValue(''), 'Freezer extras');
+  await user.press(screen.getByRole('button', {name:'Add'}));
+  expect(screen.getByText('Freezer extras')).toBeTruthy();
+  expect(useListsStore.getState().getList(LIST_ID)!.items).toEqual([]);
+  expect(useListsStore.getState().getList(LIST_ID)!.aislePreferences).toBeUndefined();
+  await user.press(screen.getByRole('button', {name:'Add aisle'}));
+  await fireEvent.changeText(screen.getByDisplayValue(''), 'freezer extras');
+  await user.press(screen.getByRole('button', {name:'Add'}));
+  expect(useListsStore.getState().getList(LIST_ID)!.categoryOrder.filter(c => c === 'Freezer extras')).toHaveLength(1);
+  // A store update models receipt of the new aisle order from another phone.
+  await act(() => { useListsStore.getState().reorderAisles(LIST_ID, ['Deli', 'New remote aisle', 'Produce', 'Bakery']); });
+  expect(screen.getByText('New remote aisle')).toBeTruthy();
+  expect(screen.queryByText('Freezer extras')).toBeNull();
+  await fireEvent(screen.getByRole('adjustable', {name:'Reorder New remote aisle'}), 'accessibilityAction', {nativeEvent:{actionName:'decrement'}});
+  expect(useListsStore.getState().getList(LIST_ID)!.categoryOrder).toEqual(['New remote aisle','Deli','Produce','Bakery']);
+});
+
 describe('ReorderAislesScreen', () => {
+  it('drops an aisle in its new position without changing items or learned assignments', async () => {
+    await renderScreen();
+    const before = useListsStore.getState().getList(LIST_ID)!;
+    await fireEvent(screen.getByRole('adjustable', { name: 'Reorder Uebst a Geméis' }), 'pressIn');
+    expect(screen.getByRole('button', { name: 'Add aisle' })).toBeDisabled();
+    await act(() => require('../../../qa/draggableFlatListMock.cjs').getProps().onDragEnd({
+      data: ['Bakery', 'Deli', 'Produce'], from: 0, to: 2,
+    }));
+    const after = useListsStore.getState().getList(LIST_ID)!;
+    expect(after.categoryOrder).toEqual(['Bakery', 'Deli', 'Produce']);
+    expect(after.items).toEqual(before.items);
+    expect(after.aislePreferences).toEqual(before.aislePreferences);
+    expect(screen.getByRole('button', { name: 'Add aisle' })).toBeEnabled();
+  });
+
+  it('preserves aisles arriving during a drag and displays them after the drop', async () => {
+    await renderScreen();
+    await fireEvent(screen.getByRole('adjustable', { name: 'Reorder Uebst a Geméis' }), 'pressIn');
+    await act(() => useListsStore.getState().reorderAisles(LIST_ID, ['Produce', 'Remote aisle', 'Bakery', 'Deli']));
+    await act(() => require('../../../qa/draggableFlatListMock.cjs').getProps().onDragEnd({
+      data: ['Bakery', 'Deli', 'Produce'], from: 0, to: 2,
+    }));
+    expect(useListsStore.getState().getList(LIST_ID)!.categoryOrder).toEqual(['Remote aisle', 'Bakery', 'Deli', 'Produce']);
+    expect(screen.getByText('Remote aisle')).toBeTruthy();
+  });
+
+  it('renames custom aisles with a prefilled dialog and keeps their position', async () => {
+    const user = userEvent.setup();
+    await renderScreen();
+    expect(screen.queryByRole('button',{name:'Rename Uebst a Geméis'})).toBeNull();
+    await user.press(screen.getByRole('button',{name:'Rename Deli'}));
+    await fireEvent.changeText(screen.getByDisplayValue('Deli'),'Chilled');
+    await user.press(screen.getByRole('button',{name:'Save'}));
+    expect(screen.getByRole('button',{name:'Rename Chilled'})).toBeTruthy();
+    expect(screen.queryByText('Deli')).toBeNull();
+    expect(useListsStore.getState().getList(LIST_ID)!.categoryOrder).toEqual(['Produce','Bakery','Chilled']);
+  });
+
+  it('rejects duplicate names visibly and lets the user cancel a rename', async () => {
+    const user = userEvent.setup();
+    await renderScreen();
+    await user.press(screen.getByRole('button',{name:'Rename Deli'}));
+    await fireEvent.changeText(screen.getByDisplayValue('Deli'),'');
+    expect(screen.getByRole('button',{name:'Save'})).toBeDisabled();
+    await fireEvent.changeText(screen.getByDisplayValue(''),'Bakery');
+    await user.press(screen.getByRole('button',{name:'Save'}));
+    expect(screen.getByRole('alert')).toHaveTextContent(/already in use/);
+    expect(useListsStore.getState().getList(LIST_ID)!.categoryOrder).toContain('Deli');
+    await user.press(screen.getByRole('button',{name:'Rename Deli'}));
+    await fireEvent.changeText(screen.getByDisplayValue('Deli'),'Cancelled name');
+    await user.press(screen.getAllByRole('button',{name:'Cancel'})[0]);
+    expect(useListsStore.getState().getList(LIST_ID)!.categoryOrder).toContain('Deli');
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
   it('closes the screen when Done is pressed', async () => {
     const user = userEvent.setup();
     const { navigation } = await renderScreen();
@@ -105,7 +184,7 @@ describe('ReorderAislesScreen', () => {
     await renderScreen();
 
     // Produce is first; moving it down swaps it with Bakery.
-    await user.press(screen.getByRole('button', { name: 'Move Produce down' }));
+    await fireEvent(screen.getByRole('adjustable', {name:'Reorder Uebst a Geméis'}), 'accessibilityAction', {nativeEvent:{actionName:'increment'}});
 
     expect(
       useListsStore.getState().lists[0].categoryOrder
@@ -117,7 +196,7 @@ describe('ReorderAislesScreen', () => {
     await renderScreen();
 
     // Bakery is second; moving it up swaps it with Produce.
-    await user.press(screen.getByRole('button', { name: 'Move Bakery up' }));
+    await fireEvent(screen.getByRole('adjustable', {name:'Reorder Brout a Gebäck'}), 'accessibilityAction', {nativeEvent:{actionName:'decrement'}});
 
     expect(
       useListsStore.getState().lists[0].categoryOrder

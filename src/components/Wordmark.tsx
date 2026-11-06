@@ -1,26 +1,22 @@
 /**
- * The canonical "josh approved" wordmark — Lucide Check in approval green
- * (strokeWidth 3) + lowercase "josh approved" in IBM Plex Sans SemiBold.
- *
- * Brand-asset integrity (canon § Brand assets): never recolored, redrawn, or
- * restyled per app. The same mark sits at the foot of every Settings screen
- * and on the cold-start splash. Approval green is the only place green is used
- * here. Canonical, app-agnostic — synced by `sync.mjs app-shell`; do not fork.
+ * Development app identity, used in Settings, the footer, and the splash.
+ * Original authorship is retained in LICENSE and the repository credits.
  */
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Check } from 'lucide-react-native';
+import { APP_NAME } from '../lib/links';
 import { useTheme, fontFamily, space, tracking, scaledLineHeight, type Colors } from '../theme';
 
 export function Wordmark() {
   const { c } = useTheme();
   const s = makeStyles(c);
   return (
-    <View style={s.row} accessibilityRole="image" accessibilityLabel="josh approved">
+    <View style={s.row} accessibilityRole="image" accessibilityLabel={APP_NAME}>
       <Check size={18} color={c.accent} strokeWidth={3} />
       <Text style={s.text} importantForAccessibility="no">
-        josh approved
+        {APP_NAME}
       </Text>
     </View>
   );

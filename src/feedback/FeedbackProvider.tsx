@@ -1,41 +1,33 @@
 /**
- * Feedback context — exposes `useFeedback().open()` to the whole app and hosts the
- * single FeedbackSheet, mounted once by AppShell. The main-screen footer and the
- * Settings/About row both call `open()` so there is one canonical flow, not two.
+ * Feedback context — exposes `useFeedback().open()` to the whole app. The footer
+ * and Settings row open the independent repository's issue form in the browser.
  *
  * Also the one place that installs on-device diagnostics capture (console + crash
  * breadcrumbs into the bounded, scrubbed buffer) — once, at app root.
  *
- * Canonical, app-agnostic — synced by `sync.mjs app-shell`; do not fork.
+ * Diagnostic capture remains on-device; issue forms are opened without logs.
  */
 
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { FeedbackSheet } from './FeedbackSheet';
-import { installDiagnostics, logEvent } from './log';
+import React, { createContext, useContext, useEffect } from 'react';
+import { installDiagnostics } from './log';
 import { collectDiagnostics } from './diagnostics';
-import { sendFeedback, type FeedbackType } from './compose';
+import type { FeedbackType } from './compose';
+import { openFeedbackMail } from '../lib/links';
 
 type FeedbackApi = {
-  /** Open the feedback sheet. Pass a type to skip the picker and land on its form. */
+  /** Open the issue form. The optional type preserves existing callers. */
   open: (type?: FeedbackType) => void;
 };
 
-// Default (no provider mounted): degrade to a direct general-feedback compose so a
-// stray call never crashes. The real value is supplied by FeedbackProvider.
-const FeedbackContext = createContext<FeedbackApi>({
-  open: (type) => {
-    void sendFeedback({ type: type ?? 'general', fields: {}, includeLogs: type === 'bug' });
-  },
-});
+// Feedback opens the fork's issue form. No diagnostics are uploaded automatically.
+const feedbackApi: FeedbackApi = { open: () => openFeedbackMail() };
+const FeedbackContext = createContext<FeedbackApi>(feedbackApi);
 
 export function useFeedback(): FeedbackApi {
   return useContext(FeedbackContext);
 }
 
 export function FeedbackProvider({ children }: { children: React.ReactNode }) {
-  const [visible, setVisible] = useState(false);
-  const [initialType, setInitialType] = useState<FeedbackType | undefined>(undefined);
-
   // Start capturing diagnostics as early as the tree mounts (covers everything
   // after app launch; a crash is flushed to disk for the next session). The
   // version/device facts ride the session-start line as well as the report
@@ -46,25 +38,9 @@ export function FeedbackProvider({ children }: { children: React.ReactNode }) {
     installDiagnostics({ version: d.version, device: d.device, locale: d.locale });
   }, []);
 
-  const api = useMemo<FeedbackApi>(
-    () => ({
-      open: (type) => {
-        logEvent('feedback', 'sheet opened', { type: type ?? 'picker' });
-        setInitialType(type);
-        setVisible(true);
-      },
-    }),
-    []
-  );
-
   return (
-    <FeedbackContext.Provider value={api}>
+    <FeedbackContext.Provider value={feedbackApi}>
       {children}
-      <FeedbackSheet
-        visible={visible}
-        initialType={initialType}
-        onClose={() => setVisible(false)}
-      />
     </FeedbackContext.Provider>
   );
 }

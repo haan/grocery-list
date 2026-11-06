@@ -35,6 +35,7 @@
  */
 
 import { normalizeItemName, type GroceryItem, type GroceryList } from '../data/list';
+import { sanitizePreferences } from '../data/aislePreferences';
 import { mergeRecordSet } from './mergeRecordSet';
 
 /** The clock the *name* merges by. Legacy lists persisted before `nameUpdatedAt`
@@ -210,6 +211,11 @@ export function mergeList(
     name: nameHead.name,
     nameUpdatedAt: Math.max(nameClock(local), nameClock(remote)),
     categoryOrder: head.categoryOrder,
+    ...((local.aislePreferences || remote.aislePreferences) ? {
+      aislePreferences: sanitizePreferences(mergeRecordSet(
+        sanitizePreferences(local.aislePreferences), sanitizePreferences(remote.aislePreferences)
+      )),
+    } : {}),
     shareIdentity:
       head.shareIdentity ?? local.shareIdentity ?? remote.shareIdentity,
     items: collapseDuplicateNames(

@@ -8,6 +8,7 @@ Grocery List is built on the work of these open-source projects.
 - **Zustand** `5.0.15` (MIT): https://github.com/pmndrs/zustand
 - **Expo SQLite** `57.0.1` (MIT): https://docs.expo.dev/versions/latest/sdk/sqlite/
 - **Reanimated** `4.5.1` (MIT): https://docs.swmansion.com/react-native-reanimated
+- **React Native Draggable FlatList** `4.0.3` (MIT): https://github.com/computerjazz/react-native-draggable-flatlist
 - **react-native-svg** `15.15.4` (MIT): https://github.com/react-native-community/react-native-svg
 - **react-native-qrcode-svg** `6.3.21` (MIT): https://github.com/Expensify/react-native-qrcode-svg#readme
 - **Expo Camera** `57.0.3` (MIT): https://docs.expo.dev/versions/latest/sdk/camera/
@@ -18,3 +19,12 @@ Grocery List is built on the work of these open-source projects.
 - **IBM Plex** (OFL 1.1): https://www.ibm.com/plex/
 
 Full license texts live in each project's repository.
+
+## Luxembourgish shopping catalog
+
+The suggestion catalog derives from the **Lëtzebuerger Online Dictionnaire (LOD)**
+linguistic data, published by the Zentrum fir d'Lëtzebuerger Sprooch under
+**CC0-1.0**. [Source dataset](https://data.public.lu/fr/datasets/letzebuerger-online-dictionnaire-lod-linguistesch-daten/).
+The app uses a reviewed selection of shopping meanings and aliases, rather than
+the complete dictionary. Source references, checksum, and generation instructions
+are in [scripts/lod](scripts/lod/README.md).

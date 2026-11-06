@@ -70,21 +70,21 @@ test('tapping a suggestion adds the item and clears the search box', () => {
   const tree = render(onAdd);
 
   // Type a partial term that surfaces a built-in seed suggestion.
-  act(() => input(tree).props.onChangeText('app'));
-  expect(input(tree).props.value).toBe('app');
+  act(() => input(tree).props.onChangeText('ape'));
+  expect(input(tree).props.value).toBe('ape');
 
   // Find the "apple" suggestion row (its add button carries a11y "Add apple").
   const addApple = tree.root.findAll(
     (el) =>
       el.props.accessibilityRole === 'button' &&
-      el.props.accessibilityLabel === 'apple'
+      el.props.accessibilityLabel === 'Apel'
   );
   expect(addApple.length).toBeGreaterThan(0);
 
   act(() => addApple[0].props.onPress());
 
   // The item was added...
-  expect(onAdd).toHaveBeenCalledWith('apple', expect.anything());
+  expect(onAdd).toHaveBeenCalledWith('Apel', expect.anything());
   // ...and the box is now empty, ready for the next add or a clean exit.
   expect(input(tree).props.value).toBe('');
 

@@ -34,6 +34,7 @@ jest.mock('../../lib/links', () => ({
   PRIVACY_URL: 'https://example.test/privacy',
   REPO_URL: 'https://github.com/josh-approved/grocery-list',
   STUDIO_URL: 'https://joshapproved.com',
+  STORE_REVIEWS_ENABLED: true,
   openReview: jest.fn(),
   openUrl: jest.fn(),
   versionLabel: () => '1.0.0 (1)',

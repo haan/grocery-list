@@ -7,4 +7,4 @@
  * `expo.scheme`).
  */
 
-export const SHARE_SCHEME = 'grocerylist';
+export const SHARE_SCHEME = 'haan-grocerylist-dev';

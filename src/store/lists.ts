@@ -10,6 +10,7 @@
  * it. `applySync` is the reserved entry point step 4 fills in.
  */
 
+import { assignedCategory, learnedCategory, preferenceKey, sanitizePreferences } from '../data/aislePreferences';
 import { create } from 'zustand';
 import {
   type GroceryItem,
@@ -22,7 +23,7 @@ import {
   pruneTombstones,
   visibleItems,
 } from '../data/list';
-import { isBuiltinCategory, type Category } from '../data/categories';
+import { DEFAULT_CATEGORY_ORDER, isBuiltinCategory, type Category } from '../data/categories';
 import { makeId } from '../lib/id';
 import { makeShareIdentity } from '../sync/share';
 import { mergeList } from '../sync/merge';
@@ -100,12 +101,9 @@ interface ListsState {
    *  number added. */
   importLists: (incoming: GroceryList[]) => number;
 
-  /** Add an item. If an active item with the same name exists, bump its
-   *  quantity instead of stacking a duplicate row. `locale` is the active
-   *  in-app language so a non-English item categorizes into the right aisle
-   *  (defaults to English for non-UI callers). `category`, when given (e.g. an
-   *  item picked from the seed catalog), sets the aisle exactly and skips the
-   *  keyword guess. */
+  /** Add an item or re-add its existing row. Learned list preferences override
+   * supplied catalog/kit aisles. The locale argument remains for callers;
+   * classification itself is independent of the interface language. */
   addItem: (
     listId: string,
     name: string,
@@ -116,7 +114,7 @@ interface ListsState {
    *  on the list; a crossed-off match is revived (unchecked, qty 1 — the kit
    *  says you need it again). Items arrive with their remembered quantity +
    *  pre-assigned aisle, so they land sorted instantly. Returns the new items
-   *  (`added`) and pre-change snapshots of revived ones (`revived`) so the
+   *  (`added`) and pre-change snapshots of revived or reclassified ones (`revived`) so the
    *  caller's Undo can remove the former and restore the latter. */
   addKitItems: (
     listId: string,
@@ -137,8 +135,11 @@ interface ListsState {
    *  existing aisles). Returns the resolved aisle key, or null if the name was
    *  empty or the list is gone. */
   addCategory: (listId: string, name: string) => string | null;
-  /** Remove a custom aisle: drop it from the order and reassign its items to
-   *  'Other'. Built-in aisles can't be removed. */
+  /** Rename a custom aisle in place, including its items and live preferences.
+   *  Returns false for missing aisles, empty names, or name collisions. */
+  renameCategory: (listId: string, category: string, name: string) => boolean;
+  /** Remove a custom aisle and its learned rules, then classify its remaining
+   *  items again. Built-in aisles can't be removed. */
   removeCategory: (listId: string, category: string) => void;
   /** Soft-delete (tombstone) an item. */
   deleteItem: (listId: string, itemId: string) => void;
@@ -250,6 +251,7 @@ export const useListsStore = create<ListsState>()((set, get) => {
         let maxTs = persistedClock ? Number(persistedClock) || 0 : 0;
         for (const l of healed) {
           maxTs = Math.max(maxTs, l.updatedAt, l.nameUpdatedAt);
+          for (const p of l.aislePreferences ?? []) maxTs = Math.max(maxTs, p.updatedAt, p.deletedAt ?? 0);
           for (const it of l.items) {
             maxTs = Math.max(
               maxTs,
@@ -329,6 +331,7 @@ export const useListsStore = create<ListsState>()((set, get) => {
             addedAt: now,
             updatedAt: now,
           })),
+        aislePreferences: original.aislePreferences?.map(p => ({ ...p })),
         shareIdentity: undefined,
         createdAt: now,
         updatedAt: now,
@@ -361,6 +364,7 @@ export const useListsStore = create<ListsState>()((set, get) => {
       if (!trimmed) return;
       const list = get().lists.find((l) => l.id === listId);
       if (!list) return;
+      const learned = learnedCategory(list, trimmed);
       const existing = findActiveByName(list, trimmed);
       if (existing) {
         if (existing.checked) {
@@ -369,6 +373,7 @@ export const useListsStore = create<ListsState>()((set, get) => {
           // resets to 1 (bumping it was the reported "shows two" defect).
           mutateItem(listId, existing.id, (it) => ({
             ...it,
+            category: learned ?? it.category,
             quantity: 1,
             checked: false,
             checkedAt: undefined,
@@ -378,6 +383,7 @@ export const useListsStore = create<ListsState>()((set, get) => {
           // Already on the list and still wanted: you're asking for another.
           mutateItem(listId, existing.id, (it) => ({
             ...it,
+            category: learned ?? it.category,
             quantity: clampQty(it.quantity + 1),
           }));
         }
@@ -385,7 +391,7 @@ export const useListsStore = create<ListsState>()((set, get) => {
       }
       mutate(listId, (l) => ({
         ...l,
-        items: [...l.items, makeItem(trimmed, locale, category)],
+        items: [...l.items, makeItem(trimmed, locale, assignedCategory(l, trimmed, category))],
       }));
     },
 
@@ -398,33 +404,40 @@ export const useListsStore = create<ListsState>()((set, get) => {
       // items are not in the returned array (the caller's Undo tombstones
       // those ids, which must never delete a pre-existing item).
       const wanted = new Set<string>();
+      const activeByName = new Map<string, GroceryItem>();
       const checkedByName = new Map<string, GroceryItem>();
       for (const it of visibleItems(list)) {
         const lower = it.name.toLowerCase();
         if (it.checked) checkedByName.set(lower, it);
-        else wanted.add(lower);
+        else { wanted.add(lower); activeByName.set(lower, it); }
       }
       const added: GroceryItem[] = [];
       const reviveIds = new Set<string>();
+      const recategorizeIds = new Set<string>();
       for (const ki of kitItems) {
         const name = ki.name.trim();
         if (!name) continue;
         const lower = name.toLowerCase();
-        if (wanted.has(lower)) continue;
+        if (wanted.has(lower)) {
+          const active = activeByName.get(lower);
+          const learned = learnedCategory(list, name);
+          if (active && learned && learned !== active.category) recategorizeIds.add(active.id);
+          continue;
+        }
         wanted.add(lower);
         const crossed = checkedByName.get(lower);
         if (crossed) {
           reviveIds.add(crossed.id);
           continue;
         }
-        const item = makeItem(name, 'en', ki.category);
+        const item = makeItem(name, 'en', assignedCategory(list, name, ki.category));
         item.quantity = clampQty(ki.quantity);
         added.push(item);
       }
-      if (added.length === 0 && reviveIds.size === 0)
+      if (added.length === 0 && reviveIds.size === 0 && recategorizeIds.size === 0)
         return { added: [], revived: [] };
       const revived = visibleItems(list)
-        .filter((it) => reviveIds.has(it.id))
+        .filter((it) => reviveIds.has(it.id) || recategorizeIds.has(it.id))
         .map((it) => ({ ...it })); // pre-change snapshots for the caller's Undo
       const at = clockNow();
       mutate(listId, (l) => ({
@@ -434,6 +447,7 @@ export const useListsStore = create<ListsState>()((set, get) => {
             reviveIds.has(it.id)
               ? {
                   ...it,
+                  category: learnedCategory(l, it.name) ?? it.category,
                   quantity: 1,
                   checked: false,
                   checkedAt: undefined,
@@ -443,7 +457,9 @@ export const useListsStore = create<ListsState>()((set, get) => {
                   // can lose the merge (reverting to the old quantity).
                   updatedAt: at,
                 }
-              : it
+              : recategorizeIds.has(it.id)
+                ? { ...it, category: learnedCategory(l, it.name) ?? it.category, updatedAt: at }
+                : it
           ),
           ...added,
         ],
@@ -504,7 +520,18 @@ export const useListsStore = create<ListsState>()((set, get) => {
     },
 
     recategorize: (listId, itemId, category) => {
-      mutateItem(listId, itemId, (it) => ({ ...it, category }));
+      const list = get().getList(listId);
+      const item = list?.items.find(it => it.id === itemId && it.deletedAt == null);
+      if (!list || !item || !list.categoryOrder.includes(category)) return;
+      const at = clockNow();
+      const id = preferenceKey(item.name);
+      mutate(listId, l => ({ ...l,
+        items: l.items.map(it => it.id === itemId ? { ...it, category, updatedAt: at } : it),
+        aislePreferences: sanitizePreferences([
+          ...(l.aislePreferences ?? []).filter(p => p.id !== id),
+          { id, category, updatedAt: at },
+        ]),
+      }));
     },
 
     reorderAisles: (listId, order) => {
@@ -530,19 +557,46 @@ export const useListsStore = create<ListsState>()((set, get) => {
       return trimmed;
     },
 
+    renameCategory: (listId, category, name) => {
+      const trimmed = name.trim().slice(0, 40);
+      const list = get().getList(listId);
+      if (!trimmed || !list || isBuiltinCategory(category) || !list.categoryOrder.includes(category)) return false;
+      const key = trimmed.toLowerCase();
+      if (DEFAULT_CATEGORY_ORDER.some(c => c.toLowerCase() === key) ||
+          list.categoryOrder.some(c => c !== category && c.toLowerCase() === key)) return false;
+      if (trimmed === category) return true;
+      const at = clockNow();
+      mutate(listId, l => ({
+        ...l,
+        categoryOrder: l.categoryOrder.map(c => c === category ? trimmed : c),
+        items: l.items.map(it => it.deletedAt == null && it.category === category
+          ? { ...it, category: trimmed, updatedAt: at } : it),
+        aislePreferences: l.aislePreferences?.map(p => p.deletedAt == null && p.category === category
+          ? { ...p, category: trimmed, updatedAt: at } : p),
+      }));
+      return true;
+    },
+
     removeCategory: (listId, category) => {
       // Built-ins are permanent — only user-created aisles can be removed.
       if (isBuiltinCategory(category)) return;
       const at = clockNow();
-      mutate(listId, (l) => ({
-        ...l,
-        categoryOrder: l.categoryOrder.filter((cat) => cat !== category),
-        items: l.items.map((it) =>
-          it.category === category
-            ? { ...it, category: 'Other', updatedAt: at }
-            : it
-        ),
-      }));
+      mutate(listId, (l) => {
+        const remaining = {
+          ...l,
+          categoryOrder: l.categoryOrder.filter((cat) => cat !== category),
+          aislePreferences: l.aislePreferences?.map(p => p.category === category
+            ? { ...p, updatedAt: at, deletedAt: at } : p),
+        };
+        // Resolve against the remaining rules: the deleted aisle must never
+        // win inference, and these automatic moves must not teach new rules.
+        return {
+          ...remaining,
+          items: l.items.map(it => it.deletedAt == null && it.category === category
+            ? { ...it, category: assignedCategory(remaining, it.name), updatedAt: at }
+            : it),
+        };
+      });
     },
 
     deleteItem: (listId, itemId) => {
@@ -664,6 +718,7 @@ export const useListsStore = create<ListsState>()((set, get) => {
       // relying on the list-level stamp to transitively cover it would be an
       // unwritten invariant.
       let remoteMax = Math.max(healed.updatedAt, healed.nameUpdatedAt);
+      for (const p of healed.aislePreferences ?? []) remoteMax = Math.max(remoteMax, p.updatedAt, p.deletedAt ?? 0);
       for (const it of healed.items) {
         remoteMax = Math.max(
           remoteMax,

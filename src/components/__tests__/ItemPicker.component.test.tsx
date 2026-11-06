@@ -71,9 +71,9 @@ async function renderPicker(props: Partial<React.ComponentProps<typeof ItemPicke
 test('tapping an item row adds that item', async () => {
   const { onAdd, searchBox, getByLabelText } = await renderPicker();
   // Type a partial term that surfaces the built-in "apple" seed row.
-  await fireEvent.changeText(searchBox(), 'app');
-  await fireEvent.press(getByLabelText('apple'));
-  expect(onAdd).toHaveBeenCalledWith('apple', expect.anything());
+  await fireEvent.changeText(searchBox(), 'ape');
+  await fireEvent.press(getByLabelText('Apel'));
+  expect(onAdd).toHaveBeenCalledWith('Apel', expect.anything());
 });
 
 test('typing a term and submitting (return key) adds the typed item', async () => {
@@ -101,22 +101,22 @@ test('tapping the clear button empties the search box', async () => {
 
 test('tapping the star toggle saves an item as a usual', async () => {
   const { searchBox, getAllByLabelText } = await renderPicker();
-  await fireEvent.changeText(searchBox(), 'app');
+  await fireEvent.changeText(searchBox(), 'ape');
   // Several seed rows match "app", each with a star; the top-ranked row is
   // "apple" — press its star (the assertion below pins that it was apple).
   await fireEvent.press(getAllByLabelText('Save as a usual')[0]);
   expect(useAccountStore.getState().staples.map((n) => n.toLowerCase())).toContain(
-    'apple'
+    'apel'
   );
 });
 
 test('tapping the star on an existing usual removes it', async () => {
   // The store keeps staples lowercase (addStaple normalizes) — seed the same shape.
-  useAccountStore.setState({ staples: ['apple'] });
+  useAccountStore.setState({ staples: ['apel'] });
   const { getByLabelText } = await renderPicker();
   // Browsing (no query) shows the usuals section; "apple" is a usual.
   await fireEvent.press(getByLabelText('Remove from usuals'));
-  expect(useAccountStore.getState().staples).not.toContain('apple');
+  expect(useAccountStore.getState().staples).not.toContain('apel');
 });
 
 test('the edit (pencil) on a recent row opens the edit menu', async () => {

@@ -21,6 +21,7 @@ import {
   PRIVACY_URL,
   REPO_URL,
   STUDIO_URL,
+  STORE_REVIEWS_ENABLED,
   openReview,
   openUrl,
   versionLabel,
@@ -55,7 +56,7 @@ export function SettingsAbout({ onAcknowledgements, onSupport }: Props) {
       <Text style={s.sectionLabel}>{t('settings.about')}</Text>
       {onSupport ? <AboutRow label={t('about.support')} icon={HandHeart} onPress={onSupport} /> : null}
       <AboutRow label={t('about.feedback')} icon={Mail} onPress={() => openFeedback()} />
-      <AboutRow label={t('about.review')} icon={Star} onPress={openReview} />
+      {STORE_REVIEWS_ENABLED && <AboutRow label={t('about.review')} icon={Star} onPress={openReview} />}
       <AboutRow label={t('about.privacy')} icon={Shield} onPress={() => openUrl(PRIVACY_URL)} />
       <AboutRow label={t('about.source')} icon={Code2} onPress={() => openUrl(REPO_URL)} />
       <AboutRow label={t('about.acknowledgements')} icon={Library} onPress={onAcknowledgements} />

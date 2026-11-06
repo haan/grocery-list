@@ -1,4 +1,4 @@
-name: Nightly deep suites
+name: Manual deep suites (legacy)
 
 # THE NIGHTLY ENGINE (Uplevel 3 / T5 — uplevel3/05-nightly-engine.md).
 #
@@ -46,10 +46,8 @@ name: Nightly deep suites
 #
 # Required repo secret: EXPO_TOKEN.
 
+# Retained as a manual deep-suite workflow; never runs on a schedule.
 on:
-  # ~07:00 UTC — after the US-evening dev window, before the morning digest tick.
-  schedule:
-    - cron: '0 7 * * *'
   workflow_dispatch:
 
 # Never run two nightlies for the same ref at once; a new dispatch supersedes.
