@@ -4,8 +4,9 @@
  * Queries by role/label per the ScreenHeader exemplar; no snapshots, no testID.
  */
 
-import React from 'react';
-import { render, screen, userEvent } from '@testing-library/react-native';
+import React, { useState } from 'react';
+import { TextInput } from 'react-native';
+import { render, screen, userEvent, fireEvent } from '@testing-library/react-native';
 
 jest.mock('expo-haptics', () => ({
   selectionAsync: () => Promise.resolve(),
@@ -24,6 +25,26 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 import { Stepper } from '../Stepper';
 
 describe('Stepper', () => {
+  it('selects quantity on focus without reselecting replacement characters', async () => {
+    function EditableQuantity() {
+      const [quantity, setQuantity] = useState('1');
+      return <Stepper value={Number(quantity)} onChange={q => setQuantity(String(q))}
+        inputValue={quantity} onChangeText={setQuantity} />;
+    }
+    const selection = jest.spyOn(TextInput.prototype, 'setSelection');
+    selection.mockClear();
+    await render(<EditableQuantity />);
+    const input = screen.getByLabelText('Quantity');
+    expect(input.props.selectTextOnFocus).toBeFalsy();
+    await fireEvent(input, 'focus');
+    expect(selection).toHaveBeenCalledWith(0, 1);
+    await fireEvent.changeText(input, '6');
+    await fireEvent.changeText(input, '65');
+    expect(screen.getByLabelText('Quantity').props.value).toBe('65');
+    expect(selection).toHaveBeenCalledTimes(1);
+    selection.mockRestore();
+  });
+
   it('steps the value up when + is pressed', async () => {
     const onChange = jest.fn();
     const user = userEvent.setup();

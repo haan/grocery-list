@@ -1,17 +1,5 @@
-/**
- * Regression: adding an item from a suggestion row must CLEAR the search box.
- *
- * Josh-reported defect grocery-list-20260705-1: after typing a partial term
- * ("app") and tapping a suggestion ("apple"), the item was added but the typed
- * fragment stayed in the box — so a later checkmark/submit re-added the stray
- * fragment. This test drives the real ItemPicker: type a partial term, tap the
- * matching seed suggestion, and assert the input is empty afterward.
- *
- * Fails on the pre-fix code (add() didn't reset the query; only submitTyped did).
- */
-
 import React from 'react';
-import { TextInput } from 'react-native';
+import { TextInput, FlatList, StyleSheet, Animated } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import TestRenderer, { act } from 'react-test-renderer';
 import ItemPicker from '../ItemPicker';
@@ -38,15 +26,14 @@ jest.mock('../../store/db', () => ({
   setAppSetting: jest.fn(async () => {}),
 }));
 
-function render(onAdd: (name: string) => void) {
+function render(onAdd: React.ComponentProps<typeof ItemPicker>['onSelect']) {
   let tree!: TestRenderer.ReactTestRenderer;
   act(() => {
     tree = TestRenderer.create(
       <SafeAreaProvider initialMetrics={METRICS}>
         <ItemPicker
           activeNames={new Set()}
-          onAdd={onAdd}
-          onClose={() => {}}
+          onSelect={onAdd}
           presentLabel="On list"
           presentA11y={(name) => `${name} on list`}
           addHint="Adds it to your list."
@@ -64,7 +51,7 @@ const input = (tree: TestRenderer.ReactTestRenderer) => tree.root.findByType(Tex
 beforeEach(() => jest.useFakeTimers());
 afterEach(() => jest.useRealTimers());
 
-test('tapping a suggestion adds the item and clears the search box', () => {
+test('selecting keeps the query until a successful save clears it', () => {
   const onAdd = jest.fn();
   const tree = render(onAdd);
 
@@ -83,9 +70,38 @@ test('tapping a suggestion adds the item and clears the search box', () => {
   act(() => addApple[0].props.onPress());
 
   // The item was added...
-  expect(onAdd).toHaveBeenCalledWith('Apel', expect.anything());
+  expect(onAdd).toHaveBeenCalledWith('Apel', expect.anything(), expect.any(Function));
+  expect(input(tree).props.value).toBe('ape');
+  act(() => onAdd.mock.calls[0][2](true));
   // ...and the box is now empty, ready for the next add or a clean exit.
   expect(input(tree).props.value).toBe('');
 
   act(() => tree.unmount());
+});
+
+
+test('scroll hint follows the visible letter and scroll position, then fades after stopping', () => {
+  // Observe the native animation boundary; Jest does not run the native driver.
+  const animation = jest.spyOn(Animated, 'timing');
+  const tree = render(jest.fn());
+  const list = () => tree.root.findByType(FlatList);
+  const renderItem = list().props.renderItem;
+  act(() => list().props.onViewableItemsChanged({ viewableItems: [{ isViewable: true, item: { t: 'item', letter: 'M' } }] }));
+  const hint = () => tree.root.findByProps({ testID: 'alphabetScrollHint' });
+  expect(hint().findByType(require('react-native').Text).props.children).toBe('M');
+  expect(animation).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({ toValue: 0 }));
+  act(() => { list().props.onScrollBeginDrag(); jest.advanceTimersByTime(150); });
+  act(() => jest.advanceTimersByTime(150));
+  expect(animation).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({ toValue: 1 }));
+  act(() => list().props.onScroll({ nativeEvent: { contentOffset: { y: 500 }, contentSize: { height: 1500 }, layoutMeasurement: { height: 500 } } }));
+  const position = StyleSheet.flatten(hint().props.style).transform[0].translateY.__getValue();
+  expect(position).toBeGreaterThan(12); expect(position).toBeLessThan(448);
+  expect(list().props.renderItem).toBe(renderItem);
+  act(() => list().props.onViewableItemsChanged({ viewableItems: [{ isViewable: true, item: { t: 'header', label: 'S' } }] }));
+  expect(hint().findByType(require('react-native').Text).props.children).toBe('S');
+  act(() => { list().props.onMomentumScrollEnd(); jest.advanceTimersByTime(500); });
+  act(() => jest.advanceTimersByTime(150));
+  expect(animation).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({ toValue: 0 }));
+  act(() => tree.unmount());
+  animation.mockRestore();
 });

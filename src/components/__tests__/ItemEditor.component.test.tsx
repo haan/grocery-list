@@ -1,14 +1,4 @@
-/**
- * Component test — the item editor sheet (Uplevel-3 T3 action coverage).
- *
- * ItemEditor is a prop-less `useItemEditor()` hook driven by the lists + account
- * Zustand stores; `open({ listId, itemId, onRemove })` reveals the Modal. We seed
- * the stores directly, drive the editor through a small harness, press each real
- * control, and assert the observable outcome — the store mutated (qty / aisle /
- * name / note / usual) or the `onRemove` callback fired. Queries go by
- * role/label/text only — no testID, no snapshots. `db.ts` (SQLite) is mocked so
- * the fire-and-forget persistence is a no-op under jest.
- */
+/** Shared editor: edits stay local until Save; closing discards the draft. */
 
 import React from 'react';
 import { render, screen, userEvent } from '@testing-library/react-native';
@@ -103,13 +93,16 @@ async function openEditor(user: ReturnType<typeof userEvent.setup>) {
 describe('useItemEditor', () => {
   beforeEach(() => seed());
 
-  it('recategorizes the item to another aisle when a chip is pressed', async () => {
+  it('recategorizes the item to another aisle after choosing an aisle', async () => {
     const user = userEvent.setup({ delay: 0 });
     await render(wrap(<Harness />));
     await openEditor(user);
 
     expect(curItem().category).toBe('Dairy & eggs');
+    await user.press(screen.getByRole('button', { name: 'Aisle' }));
     await user.press(screen.getByRole('button', { name: 'Uebst a Geméis' }));
+    expect(curItem().category).toBe('Dairy & eggs');
+    await user.press(screen.getByRole('button', { name: 'Save' }));
     expect(curItem().category).toBe('Produce');
   });
 
@@ -120,6 +113,8 @@ describe('useItemEditor', () => {
 
     expect(curItem().quantity).toBe(2);
     await user.press(screen.getByRole('button', { name: 'Increase' }));
+    expect(curItem().quantity).toBe(2);
+    await user.press(screen.getByRole('button', { name: 'Save' }));
     expect(curItem().quantity).toBe(3);
   });
 
@@ -130,29 +125,33 @@ describe('useItemEditor', () => {
     const input = screen.getByLabelText('Item', {includeHiddenElements:true});
     await user.clear(input);
     await user.type(input, 'Bio Mëllech 1L');
+    await user.press(screen.getByRole('button', { name: 'Aisle' }));
     await user.press(screen.getByRole('button', {name:'Uebst a Geméis'}));
+    expect(curItem().name).toBe('Milk');
+    await user.press(screen.getByRole('button', { name: 'Save' }));
     expect(curItem().name).toBe('Bio Mëllech 1L');
     expect(curList().aislePreferences).toEqual([expect.objectContaining({
       id:'name:bio mellech 1l', category:'Produce',
     })]);
   });
 
-  it('creates a new aisle and moves the item into it (New aisle → type → Add)', async () => {
+  it('offers existing custom aisles without an aisle creation shortcut', async () => {
+    useListsStore.getState().addCategory(curList().id, 'Deli');
     const user = userEvent.setup({ delay: 0 });
     await render(wrap(<Harness />));
     await openEditor(user);
 
-    await user.press(screen.getByRole('button', { name: 'New aisle' }));
-    const input = screen.getByLabelText('Name this aisle', { includeHiddenElements: true });
-    await user.type(input, 'Deli');
-    await user.press(screen.getByRole('button', { name: 'Add' }));
-
+    expect(screen.queryByRole('button', { name: 'New aisle' })).toBeNull();
+    expect(screen.queryByLabelText('Name this aisle')).toBeNull();
+    await user.press(screen.getByRole('button', { name: 'Aisle' }));
+    await user.press(screen.getByRole('button', { name: 'Deli' }));
+    await user.press(screen.getByRole('button', { name: 'Save' }));
     expect(curList().categoryOrder).toContain('Deli');
     expect(curItem().category).toBe('Deli');
     expect(curList().aislePreferences).toEqual([expect.objectContaining({ id: 'name:milk', category: 'Deli' })]);
   });
 
-  it('commits an edited name on Done and closes', async () => {
+  it('commits an edited name on Save and closes', async () => {
     const user = userEvent.setup({ delay: 0 });
     await render(wrap(<Harness />));
     await openEditor(user);
@@ -160,26 +159,26 @@ describe('useItemEditor', () => {
     const nameInput = screen.getByLabelText('Item', { includeHiddenElements: true });
     await user.clear(nameInput);
     await user.type(nameInput, 'Oat milk');
-    await user.press(screen.getByRole('button', { name: 'Done' }));
+    await user.press(screen.getByRole('button', { name: 'Save' }));
 
     expect(curItem().name).toBe('Oat milk');
     // Sheet closed — the editor header is gone.
     expect(screen.queryByRole('header', { name: 'Edit item' })).toBeNull();
   });
 
-  it('commits an edited note on close', async () => {
+  it('commits an edited note on Save', async () => {
     const user = userEvent.setup({ delay: 0 });
     await render(wrap(<Harness />));
     await openEditor(user);
 
     const noteInput = screen.getByLabelText('Note', { includeHiddenElements: true });
     await user.type(noteInput, 'the big one');
-    await user.press(screen.getByRole('button', { name: 'Done' }));
+    await user.press(screen.getByRole('button', { name: 'Save' }));
 
     expect(curItem().note).toBe('the big one');
   });
 
-  it('closes via the scrim (Close) committing pending edits', async () => {
+  it('discards pending edits via the scrim (Close)', async () => {
     const user = userEvent.setup({ delay: 0 });
     await render(wrap(<Harness />));
     await openEditor(user);
@@ -189,7 +188,7 @@ describe('useItemEditor', () => {
     await user.type(nameInput, 'Whole milk');
     await user.press(screen.getByRole('button', { name: 'Close' }));
 
-    expect(curItem().name).toBe('Whole milk');
+    expect(curItem().name).toBe('Milk');
     expect(screen.queryByRole('header', { name: 'Edit item' })).toBeNull();
   });
 

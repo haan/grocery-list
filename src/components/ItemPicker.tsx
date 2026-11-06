@@ -7,20 +7,19 @@ import {
   FlatList,
   StyleSheet,
   Keyboard,
+  Animated,
+  type ViewToken,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Search, Pencil, Check, X } from 'lucide-react-native';
-import { useReducedMotion, useActionMenu, usePrompt } from './Dialogs';
+import { usePrompt, useReducedMotion } from './Dialogs';
+import { AddAction } from './AddAction';
+import { useQueuedRows } from './useQueuedRows';
 import { Snackbar } from './Snackbar';
-import { useAccountStore, rankedHistoryNames } from '../store/account';
+import { useAccountStore } from '../store/account';
 import type { Category } from '../data/categories';
-import {
-  suggestSeed,
-  starterItemsForLocale,
-  type SeedItem,
-} from '../data/seedCatalog';
-import { t, pickLocale, getLocale, CANONICAL_LOCALES } from '../i18n';
-import { useLocalePreference } from '../i18n/localePreference';
+import { browseSuggestions, hasExactSuggestion } from '../data/suggestionBrowser';
+import { t } from '../i18n';
 import {
   useTheme,
   fontFamily,
@@ -33,12 +32,11 @@ import {
 } from '../theme';
 
 interface Props {
+  active?: boolean;
   /** Lowercased names already present on the shopping list. */
   activeNames: Set<string>;
-  /** Add a picked or typed item to the target. */
-  onAdd: (name: string, category?: Category) => void;
-  /** Close the whole sheet (the empty-submit "I'm done" path). */
-  onClose: () => void;
+  /** Open a draft; acknowledge only a successful save. */
+  onSelect: (name: string, category: Category | undefined, saved: (added: boolean) => void) => void;
   /** The "already added" pill text ("On list"). */
   presentLabel: string;
   /** A11y label for an already-present row. */
@@ -54,7 +52,6 @@ type SheetRow =
       label: string;
       dim?: boolean;
     }
-  | { t: 'hint'; key: string; text: string }
   | {
       t: 'item';
       key: string;
@@ -62,49 +59,64 @@ type SheetRow =
       category?: Category;
       onList: boolean;
       recent: boolean;
+      letter: string;
     };
 
-const RECENT_BROWSE_CAP = 30;
-const RECENT_QUERY_CAP = 12;
-const SEED_CAP = 20;
-
-/** Prefix-first, then substring; case-insensitive; deduped; capped. */
-function rankNames(names: string[], query: string, cap: number): string[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return names.slice(0, cap);
-  const prefix: string[] = [];
-  const contains: string[] = [];
-  const seen = new Set<string>();
-  for (const n of names) {
-    const l = n.toLowerCase();
-    if (seen.has(l)) continue;
-    if (l.startsWith(q)) {
-      prefix.push(n);
-      seen.add(l);
-    } else if (l.includes(q)) {
-      contains.push(n);
-      seen.add(l);
-    }
-  }
-  return [...prefix, ...contains].slice(0, cap);
-}
-
-export default function ItemPicker({
+function ItemPicker({
+  active = true,
   activeNames,
-  onAdd,
-  onClose,
+  onSelect,
   presentLabel,
   presentA11y,
   addHint,
 }: Props) {
   const { c } = useTheme();
-  const s = makeStyles(c);
-  const menu = useActionMenu();
+  const s = useMemo(() => makeStyles(c), [c]);
   const prompt = usePrompt();
+  const openPrompt = prompt.open;
   const inputRef = useRef<TextInput>(null);
+  const browseRef = useRef<FlatList<SheetRow>>(null);
+  const filteredRef = useRef<FlatList<SheetRow>>(null);
+  const focusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (focusTimer.current) clearTimeout(focusTimer.current); }, []);
   const [query, setQuery] = useState('');
+  const filtering = query.trim().length > 0;
+  const listRef = filtering ? filteredRef : browseRef;
+  const activeRef = useRef(active);
+  activeRef.current = active;
+  const [scrollLetter, setScrollLetter] = useState('');
+  const [scrolling, setScrolling] = useState(false);
+  const hintTop = useRef(new Animated.Value(space.s4)).current;
+  const hintOpacity = useRef(new Animated.Value(0)).current;
+  const hideHintTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const reducedMotion = useReducedMotion();
+  const viewability = useRef({ itemVisiblePercentThreshold: 1 }).current;
+  const onViewableItemsChanged = useCallback(({ viewableItems }: { viewableItems: ViewToken<SheetRow>[] }) => {
+    const row = viewableItems.find(token => token.isViewable)?.item;
+    if (row) setScrollLetter(row.t === 'header' ? row.label : row.letter);
+  }, []);
+  const showScrollHint = useCallback(() => {
+    if (hideHintTimer.current) clearTimeout(hideHintTimer.current);
+    setScrolling(true);
+  }, []);
+  const hideScrollHint = useCallback(() => {
+    if (hideHintTimer.current) clearTimeout(hideHintTimer.current);
+    hideHintTimer.current = setTimeout(() => setScrolling(false), 500);
+  }, []);
+  useEffect(() => () => { if (hideHintTimer.current) clearTimeout(hideHintTimer.current); }, []);
+  useEffect(() => {
+    const animation = Animated.timing(hintOpacity, {
+      toValue: scrolling ? 1 : 0, duration: reducedMotion ? 0 : 120, useNativeDriver: true,
+    });
+    animation.start();
+    return () => animation.stop();
+  }, [scrolling, reducedMotion, hintOpacity]);
+  useEffect(() => {
+    listRef.current?.scrollToOffset({ offset: 0, animated: false });
+    setScrolling(false);
+    hintTop.setValue(space.s4);
+  }, [query, hintTop, listRef]);
 
-  const recordUse = useAccountStore((st) => st.recordUse);
   const forgetUse = useAccountStore((st) => st.forgetUse);
   const restoreUse = useAccountStore((st) => st.restoreUse);
   const renameUse = useAccountStore((st) => st.renameUse);
@@ -116,24 +128,22 @@ export default function ItemPicker({
     undo?: () => void;
   } | null>(null);
   const [kbHeight, setKbHeight] = useState(0);
-
-  const { pref } = useLocalePreference();
-  const activeLocale =
-    pref === 'system'
-      ? pickLocale(getLocale(), [...CANONICAL_LOCALES]) ?? 'en'
-      : pref;
-
-  // Focus the search when this picker mounts (sheet open / tab switch).
   useEffect(() => {
-    const id = setTimeout(() => inputRef.current?.focus(), 60);
-    return () => clearTimeout(id);
-  }, []);
-
+    if (active) return;
+    if (focusTimer.current) clearTimeout(focusTimer.current);
+    if (hideHintTimer.current) clearTimeout(hideHintTimer.current);
+    listRef.current?.scrollToOffset({ offset: 0, animated: false });
+    setScrolling(false);
+    hintTop.setValue(space.s4);
+    setQuery('');
+    setSnack(null);
+    setKbHeight(0);
+  }, [active, hintTop, listRef]);
 
   useEffect(() => {
-    const show = Keyboard.addListener('keyboardDidShow', (e) =>
-      setKbHeight(e.endCoordinates?.height ?? 0)
-    );
+    const show = Keyboard.addListener('keyboardDidShow', (e) => {
+      if (activeRef.current) setKbHeight(e.endCoordinates?.height ?? 0);
+    });
     const hide = Keyboard.addListener('keyboardDidHide', () => setKbHeight(0));
     return () => {
       show.remove();
@@ -142,86 +152,43 @@ export default function ItemPicker({
   }, []);
 
 
-  const rows = useMemo<SheetRow[]>(() => {
-    const q = query.trim();
-    const browsing = !q;
-    const historyNames = rankedHistoryNames(history, Date.now());
-    const recentSource = historyNames;
-
-    const dropOnList = (names: string[]) =>
-      browsing ? names.filter((n) => !activeNames.has(n.toLowerCase())) : names;
-
-    const recent = rankNames(
-      dropOnList(recentSource),
-      q,
-      q ? RECENT_QUERY_CAP : RECENT_BROWSE_CAP
-    );
-
-    const exclude = new Set<string>([
-      ...historyNames.map((n) => n.toLowerCase()),
-    ]);
-    const brandNew = history.length === 0;
-    let common: SeedItem[] = [];
-    if (q) {
-      common = suggestSeed(q, activeLocale, exclude, SEED_CAP);
-    } else if (brandNew) {
-      common = starterItemsForLocale(activeLocale).filter(
-        (it) => !exclude.has(it.name.toLowerCase())
-      );
-    }
-
+  const allSuggestions = useMemo(() => browseSuggestions('', history.map(entry => entry.name)), [history]);
+  const suggestions = useMemo(() => filtering ? browseSuggestions(query, history.map(entry => entry.name)) : allSuggestions,
+    [query, filtering, history, allSuggestions]);
+  const canCreate = filtering && !hasExactSuggestion(query, history.map(entry => entry.name));
+  const groupRows = useCallback((entries: typeof suggestions): SheetRow[] => {
     const out: SheetRow[] = [];
-    const mk = (name: string, category?: Category, tier = 'i') => {
-      const lower = name.toLowerCase();
-      out.push({
-        t: 'item',
-        key: `${tier}:${lower}`,
-        name,
-        category,
-        onList: activeNames.has(lower),
-        recent: tier === 'r',
-      });
-    };
-
-    if (recent.length) {
-      out.push({ t: 'header', key: 'h-recent', label: t('detail.recent') });
-      for (const n of recent) mk(n, undefined, 'r');
-    }
-    if (browsing && brandNew) {
-      out.push({ t: 'hint', key: 'hint-starter', text: t('detail.starterHint') });
-    } else if (browsing && recent.length === 0) {
-      out.push({ t: 'hint', key: 'hint-all-on-list', text: t('detail.allOnList') });
-    }
-    if (common.length) {
-      out.push({
-        t: 'header',
-        key: 'h-common',
-        label: t('detail.commonItems'),
-        dim: true,
-      });
-      for (const it of common) mk(it.name, it.category, 'c');
+    let letter = '';
+    for (const suggestion of entries) {
+      if (suggestion.letter !== letter) {
+        letter = suggestion.letter;
+        out.push({ t: 'header', key: 'letter:' + letter, label: letter });
+      }
+      out.push({ t: 'item', ...suggestion, onList: activeNames.has(suggestion.name.toLowerCase()) });
     }
     return out;
-  }, [query, history, activeNames, activeLocale]);
+  }, [activeNames]);
+  const allRows = useMemo(() => groupRows(allSuggestions), [allSuggestions, groupRows]);
+  const filteredRows = useMemo(() => filtering ? groupRows(suggestions) : [], [filtering, suggestions, groupRows]);
+  const browseCount = useQueuedRows(allRows.length);
+  const filteredCount = useQueuedRows(filteredRows.length);
+  const browseRows = useMemo(() => allRows.slice(0, browseCount), [allRows, browseCount]);
+  const searchRows = useMemo(() => filteredRows.slice(0, filteredCount), [filteredRows, filteredCount]);
 
-  const add = useCallback(
-    (name: string, category?: Category) => {
-      const n = name.trim();
-      if (!n) return;
-      onAdd(n, category);
-      recordUse(n);
-      // Clear the search box on every add (typed OR tapped) so the next add
-      // starts clean and a stray partial term ("sal") can't be re-added by a
-      // later checkmark/submit. See submitTyped, which relies on this.
+  const add = useCallback((name: string, category?: Category) => {
+    if (focusTimer.current) clearTimeout(focusTimer.current);
+    Keyboard.dismiss();
+    const trimmed = name.trim();
+    const [first = ''] = trimmed;
+    onSelect(first.toUpperCase() + trimmed.slice(first.length), category, (added) => {
       setQuery('');
       Haptics.selectionAsync().catch(() => {});
-      setSnack({
-        message: t('detail.addedToList'),
-        durationMs: 1500,
-      });
-    },
-    [onAdd, recordUse]
-  );
+      setSnack({ message: added ? t('detail.addedToList') : t('detail.itemSaved'), durationMs: 1500 });
+      // Wait for the details modal to finish dismissing before restoring focus.
+      if (focusTimer.current) clearTimeout(focusTimer.current);
+      focusTimer.current = setTimeout(() => { if (activeRef.current) inputRef.current?.focus(); }, 350);
+    });
+  }, [onSelect]);
 
   const forget = useCallback(
     (name: string) => {
@@ -240,41 +207,25 @@ export default function ItemPicker({
   const editRecent = useCallback(
     (name: string) => {
       Keyboard.dismiss();
-      menu.open({
-        title: name,
-        options: [
-          {
-            label: t('common.edit'),
-            onPress: () =>
-              prompt.open({
-                title: t('detail.editItem'),
-                initialValue: name,
-                selectAll: true,
-                confirmLabel: t('common.save'),
-                onSubmit: (next) => renameUse(name, next),
-              }),
-          },
-          {
-            label: t('common.delete'),
-            destructive: true,
-            onPress: () => forget(name),
-          },
-        ],
+      openPrompt({
+        presentation: 'sheet', title: t('detail.editSuggestion'),
+        fieldLabel: t('detail.suggestionName'), message: t('detail.editSuggestionHelp'),
+        initialValue: name, selectAll: true, confirmLabel: t('common.save'),
+        onSubmit: next => renameUse(name, next),
+        destructiveAction: { label: t('detail.forgetSuggestion'), onPress: () => forget(name) },
       });
     },
-    [menu, prompt, renameUse, forget]
+    [openPrompt, renameUse, forget]
   );
 
   const submitTyped = useCallback(() => {
     const n = query.trim();
-    if (!n) {
+    if (!canCreate) {
       Keyboard.dismiss();
-      onClose();
       return;
     }
-    add(n); // clears the query itself
-    requestAnimationFrame(() => inputRef.current?.focus());
-  }, [query, add, onClose]);
+    add(n);
+  }, [query, canCreate, add]);
 
   const renderRow = useCallback(
     ({ item: row }: { item: SheetRow }) => {
@@ -286,9 +237,6 @@ export default function ItemPicker({
             </Text>
           </View>
         );
-      }
-      if (row.t === 'hint') {
-        return <Text style={s.hint}>{row.text}</Text>;
       }
       const { name, category, onList, recent } = row;
       return (
@@ -315,7 +263,7 @@ export default function ItemPicker({
               onPress={() => editRecent(name)}
               hitSlop={6}
               accessibilityRole="button"
-              accessibilityLabel={t('detail.editItemA11y', { name })}
+              accessibilityLabel={t('detail.editSuggestionA11y', { name })}
               style={({ pressed }) => [s.editBox, pressed && s.pressed]}
             >
               <Pencil size={18} color={c.fgMuted} strokeWidth={1.5} />
@@ -335,6 +283,44 @@ export default function ItemPicker({
     [s, c, add, editRecent, presentLabel, presentA11y]
   );
 
+  const renderList = (data: SheetRow[], ref: React.RefObject<FlatList<SheetRow> | null>, visible: boolean, loading: boolean) => (
+    <FlatList
+        ref={ref}
+        testID={visible ? 'suggestionBrowser' : 'preparedSuggestionBrowser'}
+        data={data}
+        // Every queued row is retained; scrolling never requests another batch.
+        initialNumToRender={data.length}
+        maxToRenderPerBatch={Math.max(1, data.length)}
+        removeClippedSubviews={false}
+        ListFooterComponent={loading ? <Text style={s.loadingFooter}>{t('detail.preparingSuggestions')}</Text> : null}
+        ListEmptyComponent={<View style={s.emptyState}>
+          <View style={s.emptyIcon} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+            <Search size={28} color={c.fgMuted} strokeWidth={1.5} />
+          </View>
+          <Text style={s.hint}>{t('detail.noMatchingSuggestions')}</Text>
+        </View>}
+        keyExtractor={(r) => r.key}
+        renderItem={renderRow}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="none"
+        contentContainerStyle={s.listContent}
+        onViewableItemsChanged={(info) => { if (visible) onViewableItemsChanged(info); }}
+        viewabilityConfig={viewability}
+        onScrollBeginDrag={visible ? showScrollHint : undefined}
+        onMomentumScrollBegin={visible ? showScrollHint : undefined}
+        onScrollEndDrag={visible ? hideScrollHint : undefined}
+        onMomentumScrollEnd={visible ? hideScrollHint : undefined}
+        scrollEventThrottle={48}
+        onScroll={({ nativeEvent: { contentOffset, contentSize, layoutMeasurement } }) => {
+          if (!visible) return;
+          const distance = contentSize.height - layoutMeasurement.height;
+          const progress = distance > 0 ? Math.max(0, Math.min(1, contentOffset.y / distance)) : 0;
+          // Move only the overlay; scrolling must not rerender every suggestion.
+          hintTop.setValue(space.s4 + progress * Math.max(0, layoutMeasurement.height - 52 - space.s4 * 2));
+        }}
+      />
+  );
+
   return (
     <View style={s.flex}>
       <View style={s.searchWrap}>
@@ -344,24 +330,24 @@ export default function ItemPicker({
           style={s.searchInput}
           value={query}
           onChangeText={setQuery}
-          placeholder={t('detail.searchOrAdd')}
+          placeholder={t('detail.searchItems')}
           placeholderTextColor={c.fgMuted}
-          returnKeyType="done"
+          returnKeyType="search"
           blurOnSubmit={false}
           autoCapitalize="none"
           autoCorrect={false}
           onSubmitEditing={submitTyped}
-          accessibilityLabel={t('detail.searchOrAdd')}
+          accessibilityLabel={t('detail.searchItems')}
         />
         {query.length > 0 ? (
           <Pressable
             onPress={() => {
               setQuery('');
-              requestAnimationFrame(() => inputRef.current?.focus());
+              requestAnimationFrame(() => { if (activeRef.current) inputRef.current?.focus(); });
             }}
             hitSlop={8}
             accessibilityRole="button"
-            accessibilityLabel={t('common.close')}
+            accessibilityLabel={t('detail.clearSearch')}
             style={({ pressed }) => [s.clearBtn, pressed && s.pressed]}
           >
             <X size={18} color={c.fgMuted} strokeWidth={1.5} />
@@ -369,14 +355,22 @@ export default function ItemPicker({
         ) : null}
       </View>
 
-      <FlatList
-        data={rows}
-        keyExtractor={(r) => r.key}
-        renderItem={renderRow}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="none"
-        contentContainerStyle={s.listContent}
-      />
+      {canCreate ? <AddAction label={t('detail.addNamedItem', { name: query.trim() })}
+        variant="primary" onPress={() => add(query)} /> : null}
+
+      <View style={s.flex}>
+        <View style={[s.browserLayer, filtering && s.hiddenLayer]} pointerEvents={filtering ? 'none' : 'auto'}
+          accessibilityElementsHidden={filtering} importantForAccessibility={filtering ? 'no-hide-descendants' : 'auto'}>
+          {renderList(browseRows, browseRef, !filtering, browseCount < allRows.length)}
+        </View>
+        {filtering ? <View style={s.browserLayer}>
+          {renderList(searchRows, filteredRef, true, filteredCount < filteredRows.length)}
+        </View> : null}
+      {scrollLetter ? <Animated.View testID="alphabetScrollHint" pointerEvents="none" accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants" style={[s.scrollHint, { transform: [{ translateY: hintTop }], opacity: hintOpacity }]}>
+        <Text style={s.scrollHintText}>{scrollLetter}</Text>
+      </Animated.View> : null}
+      </View>
 
       <Snackbar
         visible={!!snack}
@@ -388,7 +382,6 @@ export default function ItemPicker({
         bottomOffset={kbHeight}
       />
 
-      {menu.element}
       {prompt.element}
     </View>
   );
@@ -397,6 +390,10 @@ export default function ItemPicker({
 function makeStyles(c: Colors) {
   return StyleSheet.create({
     flex: { flex: 1 },
+    browserLayer: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
+    hiddenLayer: { opacity: 0 },
+    loadingFooter: { ...ty.sm, fontFamily: fontFamily.sans, color: c.fgMuted,
+      paddingVertical: space.s5, textAlign: 'center' },
     pressed: { opacity: 0.6 },
 
     searchWrap: {
@@ -404,7 +401,7 @@ function makeStyles(c: Colors) {
       alignItems: 'center',
       gap: space.s3,
       marginHorizontal: space.s6,
-      marginBottom: space.s2,
+      marginBottom: space.s4,
       paddingHorizontal: space.s4,
       backgroundColor: c.bgSubtle,
       borderWidth: hairline,
@@ -430,6 +427,12 @@ function makeStyles(c: Colors) {
       paddingHorizontal: space.s6,
       paddingBottom: space.s9,
     },
+    scrollHint: {
+      position: 'absolute', top: 0, right: space.s4, width: 52, height: 52,
+      borderRadius: radius.md, backgroundColor: c.inkButton,
+      alignItems: 'center', justifyContent: 'center',
+    },
+    scrollHintText: { ...ty.md, fontFamily: fontFamily.sansSemibold, color: c.inkButtonText },
 
     headerRow: {
       flexDirection: 'row',
@@ -439,7 +442,7 @@ function makeStyles(c: Colors) {
       marginBottom: space.s2,
     },
     sectionHeader: {
-      ...ty.xs,
+      ...ty.base,
       fontFamily: fontFamily.sansSemibold,
       color: c.fgMuted,
       textTransform: 'uppercase',
@@ -457,12 +460,26 @@ function makeStyles(c: Colors) {
       color: c.accent,
       letterSpacing: 0.3,
     },
+    emptyState: {
+      alignItems: 'center',
+      paddingTop: space.s9,
+      paddingBottom: space.s7,
+      gap: space.s5,
+    },
+    emptyIcon: {
+      width: 64,
+      height: 64,
+      borderRadius: 32,
+      backgroundColor: c.bgSubtle,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
     hint: {
-      ...ty.sm,
+      ...ty.base,
       fontFamily: fontFamily.sans,
       color: c.fgMuted,
-      marginTop: space.s4,
-      marginBottom: space.s2,
+      textAlign: 'center',
+      maxWidth: 260,
     },
 
     itemRow: {
@@ -515,3 +532,5 @@ function makeStyles(c: Colors) {
     },
   });
 }
+
+export default React.memo(ItemPicker);

@@ -156,11 +156,13 @@ function PromptHarness({
   initialValue,
   confirmLabel,
   selectAll,
+  presentation,
 }: {
   onSubmit: (t: string) => void;
   initialValue?: string;
   confirmLabel?: string;
   selectAll?: boolean;
+  presentation?: 'dialog' | 'sheet';
 }) {
   const { open, element } = usePrompt();
   return (
@@ -175,6 +177,7 @@ function PromptHarness({
             initialValue,
             confirmLabel,
             selectAll,
+            presentation,
             onSubmit,
           })
         }
@@ -187,14 +190,14 @@ function PromptHarness({
 }
 
 describe('usePrompt', () => {
-  it('selects once on opening and never reselects replacement text or a user-positioned cursor', async () => {
+  it.each(['dialog', 'sheet'] as const)('%s selects once on opening and never reselects replacement text or a user-positioned cursor', async (presentation) => {
     const user = userEvent.setup({ delay: 0 });
     const onSubmit = jest.fn();
     // Observe selection commands at the native boundary; Jest cannot reproduce
     // Android's deferred selectTextOnFocus layout behavior.
     const selectionCommand = jest.spyOn(TextInput.prototype, 'setSelection');
     selectionCommand.mockClear();
-    await render(wrap(<PromptHarness onSubmit={onSubmit} initialValue="Deli" selectAll />));
+    await render(wrap(<PromptHarness onSubmit={onSubmit} initialValue="Deli" selectAll presentation={presentation} />));
     await user.press(screen.getByRole('button', { name: 'trigger' }));
     const input = screen.getByLabelText('Rename list');
     expect(input.props.selectTextOnFocus).toBeFalsy();

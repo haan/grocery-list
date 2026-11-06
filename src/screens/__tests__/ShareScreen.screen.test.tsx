@@ -84,6 +84,7 @@ import ShareScreen from '../ShareScreen';
 import { useListsStore } from '../../store/lists';
 import { makeList } from '../../data/list';
 import { buildShareLink } from '../../sync/share';
+import { resyncNow } from '../../sync';
 
 function seedList() {
   const list = makeList('Weekly shop');
@@ -141,6 +142,9 @@ describe('ShareScreen', () => {
 
     expect(useListsStore.getState().lists[0].shareIdentity).toBeUndefined();
     await user.press(screen.getByRole('button', { name: 'Start sharing' }));
+    expect(screen.getByRole('header', { name: 'Invite another phone' })).toBeTruthy();
+    expect(screen.getByRole('header', { name: 'Join another list' })).toBeTruthy();
+    expect(screen.getByText('Anyone with this code or link can access your list.')).toBeTruthy();
     await user.press(screen.getByRole('button', { name: 'Send link' }));
 
     // Sharing minted the list's secret, and the OS sheet got its link.
@@ -274,4 +278,23 @@ test('a cancelled share link can be opened again on the same Sharing screen', as
   await result.rerender(view(secret));
   expect(screen.getByText('Replace this list?')).toBeTruthy();
   expect(useListsStore.getState().lists[0].shareIdentity).toBeUndefined();
+});
+
+test('pending shared list retains one working refresh action without exposing an invitation', async () => {
+  const list = seedList();
+  await useListsStore.getState().shareList(list.id);
+  const secret = useListsStore.getState().lists[0].shareIdentity!.secret;
+  useListsStore.setState({ pendingJoin: true });
+  const user = userEvent.setup();
+  await renderScreen(list.id);
+  expect(screen.queryByLabelText('qr')).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Send link' })).toBeNull();
+  expect(screen.getByText(/Waiting for the shared list/)).toBeTruthy();
+  expect(screen.getAllByRole('button', { name: 'Sync now' })).toHaveLength(1);
+  jest.mocked(resyncNow).mockClear();
+  await user.press(screen.getByRole('button', { name: 'Sync now' }));
+  expect(resyncNow).toHaveBeenCalledTimes(1);
+  expect(resyncNow).toHaveBeenCalledWith(secret);
+  expect(screen.getByText('Syncing…')).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Stop sharing' })).toBeTruthy();
 });

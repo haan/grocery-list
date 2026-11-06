@@ -35,6 +35,8 @@ const TEXT_PAIRS: Pair[] = [
   { bg: 'bgSubtle', fg: 'fg', min: 7 }, // body text on a subtle fill
   { bg: 'bg', fg: 'fgMuted', min: 4.5 }, // secondary text (AA)
   { bg: 'bgElevated', fg: 'fgMuted', min: 4.5 },
+  { bg: 'danger', fg: 'fgOnInk', min: 4.5 }, // destructive confirmation button
+  { bg: 'bg', fg: 'dangerText', min: 4.5 }, // standalone destructive action
 ];
 
 // Graphical/icon pair — the white check on the green "done" box. Held to the

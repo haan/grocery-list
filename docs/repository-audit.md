@@ -3,7 +3,275 @@
 Baseline: main commit 5edb48bd2bff1fd78e0700898604846c2b39aa8d. Work branch:
 cleanup/android-only. Audit date: 2026-11-06. No history rewrite or main merge.
 
-## Single-list simplification (current phase)
+## Add-item details form (current phase)
+
+Branch: `ui/add-item-flow`, based on clean main `f7adbdf0` after PR #1 merged
+the Android-only/single-list work. This phase does not commit, push, or merge
+without a subsequent request. Earlier no-merge statements below describe their
+original delivery state.
+
+| Files/group | Disposition |
+| --- | --- |
+| `src/data/itemDraft.ts` | New ephemeral create/edit/re-add model, strict quantity validation, latest-snapshot field updates, duplicate/deletion/aisle conflict checks, and atomic construction of item + aisle + learning changes. |
+| `src/store/lists.ts` | New `saveItemDraft` action emits/persists one complete list snapshot and records Recent once for successful additions/re-additions. Retains legacy primitives used by existing sync simulations. |
+| `src/components/ItemEditor.tsx` | Shared draft editor with explicit Add item/Save and Cancel outside scrolling fields; staged aisles, inline conflicts, and unchanged Remove/Undo callbacks. |
+| `src/components/Stepper.tsx` | Optional direct numeric input alongside existing accessible +/- controls. |
+| `src/components/ItemPicker.tsx`, `AddItemsSheet.tsx` | All selection paths open details; custom action remains below search, close icon replaces Done, success clears/refocuses search; Recent editing/forgetting/Undo retained. |
+| `src/components/AddAction.tsx` | Optional filled primary treatment for the Add-items action, with a leading plus and stronger label; existing home/aisle actions retain their styling. Picker spacing and centered empty-state presentation refined after Pixel feedback. |
+| `src/i18n/appStrings.ts` | English form actions, validation/conflict explanations, and accurate empty-state copy replace immediate-add instructions. Catalog/aisle labels/aliases unchanged. |
+| `src/store/__tests__/itemDraft.test.ts`, `src/components/__tests__/AddItemsFlow.component.test.tsx` | New atomic-store and end-to-end form coverage, including Plastiktut, remote edits/conflicts, staged aisles, re-addition, and compatible snapshot merging. |
+| Existing ItemEditor, ItemPicker, and home tests | Updated immediate-add/autosave assertions to require confirmation. Recent and removal regression coverage retained; no test files removed. |
+| `docs/development.md`, this audit | Document draft/save semantics, unchanged runtime/data compatibility, and physical-device acceptance. |
+
+No package, lockfile, SQLite, native, or Nostr wire-format changes. No APK rebuild,
+data reset, or sharing identity rotation. Automated and physical-device results
+are recorded separately; the requested Pixel walkthrough passed, while the
+second-phone check remains pending.
+
+Validation: TypeScript and Android configuration checks pass; all 16 fuzz-harness
+self-tests pass. After the visual follow-up, TypeScript and the complete retained
+suite pass: 431 tests in 46 suites (`tmp/add-flow-visual-tests.json`), up from 387
+in 44. Added coverage comprises 29 store/draft cases, 14 Add-items integration
+cases, and one Android quantity-selection regression. No tests were removed;
+existing autosave/quick-add tests were
+adapted to the agreed explicit-confirmation behavior. The Android startup manifest
+and Metro bundle return HTTP 200. On 2026-11-06 the user confirmed the Pixel
+Plastiktut flow (quantity 6, note, aisle, one complete item, cleared/focused search),
+keyboard/scrolling/button access, suggestion cancellation, existing-item Save/Cancel,
+and cancellation of a drafted new aisle. No second-phone test was performed for
+this phase; complete-details delivery and learned assignment remain pending.
+Additional device-only cases not explicitly confirmed remain unchecked in the
+development guide; earlier two-phone results do not validate this new flow.
+
+Visual follow-up: inspected the updated Pixel screen through a read-only ADB
+screenshot with a search query and keyboard open. The filled action, search spacing,
+and centered no-results message render without overlap. This visual inspection does
+not substitute for the pending second-phone synchronization check.
+
+Alphabetical-browser follow-up supersedes the always-visible Add action and
+frequency-ranked suggestion UI above. `src/data/suggestionBrowser.ts` combines the
+entire catalog and personal Recent names into letter groups; filtering recognizes
+confirmed aliases and normalized accents/whitespace without truncating results.
+The browser starts with the keyboard hidden. Only a nonempty filter with no
+matches offers custom creation; Enter obeys the same rule. Existing details,
+learning, history records, and synchronization are unchanged. A noninteractive
+letter bubble follows scroll position while dragging/coasting, then fades; reduced
+motion disables the fade. A–Z layout was inspected on the Pixel. On 2026-11-06
+the user confirmed browsing, the letter bubble updating and disappearing after
+scrolling, filtering, and Add appearing only for no matches. Added seven
+catalog-browser cases and one scroll-letter/timer regression; existing flow and
+layout tests now exercise the new browsing contract.
+Validation for this follow-up: TypeScript passes and all 439 tests in 47 suites
+pass (`tmp/browser-tests.json`). No dependency, native, storage, or protocol changes.
+
+Loading follow-up: the user reported an initially short list that grew in batches,
+then fast scrolling that outran row creation. The final browser renders the full
+371-product catalog plus personal entries/headings as its initial region and keeps
+native rows attached while open, replacing the earlier limited rendering batches.
+This uses more view memory while open in exchange for immediately available rows.
+Catalog sorting and normalized aliases are prepared once; history changes merge
+personal entries into that index. A bounded 12-query cache never limits result
+counts and is invalidated when personal names change. Stable styles/callbacks and
+animated bubble positioning avoid rerendering rows on every scroll event.
+
+Added regression coverage for complete initial rendering, cache reuse,
+rename/forget/Undo invalidation, and cache eviction without truncation. An isolated
+desktop comparison preserved all results across 36 query/history combinations;
+it is not an Android startup-time measurement. Opening speed and fast scrolling
+on the Pixel have been requested for this final version and remain unconfirmed.
+Final automated validation: TypeScript and all 443 tests in 47 suites pass
+(`tmp/browser-eager-tests.json`); the complete initial-render and scrolling-hint
+regressions pass without native-animation warnings.
+
+Retained-browser follow-up: the user confirmed that eager rendering removed the
+growing-list effect but measured roughly two seconds to open. Android's native
+Modal discards hidden content, so each opening was still mounting all rows.
+`AddItemsSheet.tsx` now prepares a full-screen layer in an idle React transition
+after home can paint and retains that layer between visits. Visibility uses
+opacity, touch gating, and accessibility exclusion rather than unmounting.
+`ListsHomeScreen.tsx` excludes underlying controls while the layer is visible;
+the layer handles Android Back only while open. `ItemPicker.tsx` is memoized and
+resets hidden query/scroll/snackbar state while cancelling pending focus.
+`ItemEditor.tsx` exposes its existing discard action so hiding the browser cannot
+leave a stale native details dialog open. No route, database, or native dependency
+change. Memory for prepared rows is retained until the current home/list unmounts;
+a first visit before background preparation finishes may still pay that cost.
+
+`qa/nativeInput.setup.cjs` adds the idle-scheduling native boundary omitted by the
+Jest preset. Added tests prove that hidden preparation and reopening preserve the
+same row instances, hidden content cannot be focused through accessibility, Back
+listeners are removed on close, and home controls become available afterward.
+On 2026-11-06 the user confirmed repeated openings, Android Back, and home controls
+work with this version, but the first opening remains noticeably slower. Record
+this as improved repeated access with a remaining cold-preparation cost, not as
+instant startup. TypeScript and all 445 tests in 47 suites pass
+(`tmp/browser-retained-tests.json`).
+
+Queued-browser follow-up: replace the single large initial mount with a screenful
+and idle batches of 24 rows in `src/components/useQueuedRows.ts`. The queue advances
+after each commit without scroll events and continues when Add items is hidden.
+All admitted rows remain mounted. `ItemPicker.tsx` keeps the alphabetical view
+behind filtered results instead of discarding it, while matching searches against
+the full catalog immediately. A preparation footer replaces blank unloaded space.
+The cache remains in memory for the current home/list instance, not across app
+restarts. No persistence, protocol, native dependency, or APK change.
+
+Updated component coverage checks partial initial rendering, eventual complete
+rendering without scrolling, immediate lookup of unprepared products, completion
+while hidden, and row identity across searching/closing/reopening. This supersedes
+the earlier assertion that every row should mount in the initial render. On
+2026-11-06 the user confirmed on the Pixel that the first screenful appears faster,
+the complete list is ready for fast scrolling after closing/waiting/reopening,
+and searching for “Zopp” immediately works during preparation. This is qualitative
+device acceptance; no numerical opening-time measurement was taken.
+TypeScript and all 446 tests in 47 suites pass (`tmp/browser-queue-tests.json`),
+including the strengthened hidden-completion test and one new filter/cache test.
+Android configuration and all 16 fuzz-harness self-checks pass. Metro serves the
+updated Android development bundle successfully (HTTP 200).
+
+Partial-match creation fix: a nonempty filter now offers Add “…” whenever no
+exact normalized name or confirmed alias exists, even if partial suggestions are
+visible. This supersedes the earlier no-results-only rule. “glace” can open its
+own details draft alongside Äerdbiersglace and Bananneglace; Enter follows the
+same rule. Exact matching also includes personal Recent names. Regression tests
+cover partial matches, button/Enter, cancellation, complete save, and subsequent
+exact Recent matching, plus case/accents/whitespace and foreign aliases.
+TypeScript and all 448 tests in 47 suites pass (`tmp/browser-partial-tests.json`).
+The user confirmed on the Pixel that searching for “glace” shows both flavour
+suggestions and Add “glace”…, and that Add opens the details form with “glace”
+as the name.
+
+Item-form polish: `ItemPicker.tsx` capitalizes the first character when passing
+a selected/typed name into the details form. Existing items still use their stored
+names; remaining characters and subsequent manual edits are unchanged. Removed
+the note example placeholder and its unused translation key. Updated the existing
+“glace” flow regression to expect “Glace” in the draft and saved item.
+TypeScript and all 448 tests in 47 suites pass (`tmp/item-prefill-tests.json`).
+
+Aisle-creation simplification supersedes the draft-only New aisle shortcut above.
+The shared Add/Edit item form now selects existing aisles only; creation remains
+in Settings → Manage aisles. Removed the inline input, related state/styles and
+unused strings, plus draft-aisle staging and commit logic in `itemDraft.ts`.
+Retained the naming placeholder consumed by Manage aisles. Updated existing tests
+to check selection/cancellation/learning with existing custom aisles and preserve
+the latest aisle order when saving. No persisted data or sharing format changes.
+TypeScript and all 448 tests in 47 suites pass, including Manage aisles coverage
+(`tmp/manage-only-aisles-tests.json`).
+
+Compact item form: reorder fields to name, quantity, aisle, note. Replace wrapped
+aisle chips with one selection row and a scrollable vertical chooser inside the
+same modal, marking the selected aisle. Cancel/scrim/Back from the chooser retains
+the item draft. Note starts at one-line height, expands to content, then scrolls
+internally at 160 logical pixels. Keep form actions outside scrolling fields and
+enable Android keyboard avoidance. Existing explicit-selection learning remains
+deferred until Save, including selecting the current aisle.
+
+TypeScript passes. Full suite: 448/449 passed; the new chooser dismissal test
+initially matched both the browser and modal Close buttons. Scoped it to the
+modal scrim; all 18 item-flow tests then pass (`tmp/compact-item-flow-tests.log`).
+All other 46 suites passed (`tmp/compact-item-tests.json`). Pixel inspection
+confirmed the compact form and visible Cancel/Save above the keyboard. The user
+also confirmed on the Pixel that aisle selection/cancellation works, the note
+expands naturally, the actions remain reachable above the keyboard, and the
+layout feels better. No item changes saved during automated layout inspection.
+
+Edit-form action polish: move Remove from the large red panel below Note to a
+trash icon at the right of the form header. Keep a full minimum-size touch target
+and the existing accessible Remove label. Cancel and Save stay at the bottom;
+the original removal callback, discarded unsaved edits, and Undo are unchanged.
+TypeScript and the complete suite pass: 449 tests in 47 suites, including removal,
+Undo, and the corrected chooser-dismissal regression (`tmp/edit-trash-tests.json`).
+
+Aisle-form consistency: `usePrompt` gains an opt-in sheet presentation and field
+label, used by Add aisle and Rename aisle in Manage aisles. Match item-form
+spacing, field styling, equal-width actions, and Android keyboard avoidance.
+Other prompts and confirmation dialogs keep their existing presentation. Preserve
+the one-time native selection implementation and all naming/store behavior.
+Extend its selection regression to both presentations; the complete suite passes
+with 450 tests in 47 suites (`tmp/aisle-sheets-tests.json`), and TypeScript passes.
+Pixel inspection confirms the Add aisle sheet and both buttons above the keyboard;
+no aisle was saved during that inspection. The user confirmed on the Pixel that
+Rename selects the original name automatically, replacement preserves the first
+typed character, tapping at the end allows appending, and buttons remain reachable
+with the keyboard open.
+
+Confirmation-dialog polish: keep centered placement but use larger, higher-contrast
+body text and the same equal-width, minimum-52-pixel actions as the form sheets.
+Cancel has an outline; destructive confirmation uses the existing danger color
+with light foreground text. Long messages scroll within a bounded card, keeping
+the action row outside the scrolling content. This applies to aisle removal and
+sharing confirmations. Callbacks and cancellation behavior are unchanged. Shared
+form-button styles now have generic names; add light/dark contrast coverage for
+the destructive button's foreground/background pair.
+The user confirmed on the Pixel that the text and buttons look balanced and
+Cancel closes the confirmation without removing the aisle.
+TypeScript and all 452 tests in 47 suites pass (`tmp/confirm-polish-tests.json`).
+
+Settings grouping: add a Shopping list section above Sharing and Manage aisles,
+separate from Language. All three section labels expose heading semantics to
+accessibility services. Navigation and settings behavior are unchanged.
+TypeScript and all 452 tests in 47 suites pass (`tmp/settings-sections-tests.json`).
+
+Sharing-screen hierarchy: show connection/rejection state and last peer contact
+in a compact panel with one accessible Sync now refresh button. Group invitation
+instructions, unchanged QR/link, Send link, and access warning together. Put the
+outlined Scan a list code action under Join another list, followed by a smaller
+red Stop sharing action. Preserve private/pending states, permission handling,
+confirmation gates, identities, and synchronization behavior. Pending lists keep
+refresh/stop controls and cannot expose invitations before receiving their data.
+Add a theme-aware destructive-text color for readability on both backgrounds.
+Tests retain relay-versus-peer status semantics and cover refresh while pending;
+contrast checks cover the new text color. Pixel inspection confirms the grouped
+layout, readable QR, visible actions, and reduced whitespace without changing any
+sharing settings.
+TypeScript and all 455 tests in 47 suites pass (`tmp/sharing-layout-tests.json`).
+The user confirmed on the Pixel that the new layout is clearer, refresh works,
+and opening then cancelling Stop sharing preserves the sharing setup.
+
+## UI coverage review — remaining work
+
+Recent-suggestion follow-up: `ItemPicker` now opens the shared prompt's sheet
+presentation directly, removing its action-menu instance. Add an optional labeled
+destructive header action to the prompt, using the theme-aware text/icon color.
+Keep the one-time native name selection and existing history rename/forget/Undo
+operations. Update regression coverage to check direct opening, scope copy,
+forgetting with an unsaved draft name, and preservation of an existing shopping
+item through rename/forget/Undo. TypeScript and all 455 tests in 47 suites pass
+(`tmp/suggestion-sheet-tests.json`). The user confirmed the flow on the Pixel,
+including direct opening, name selection, reachable buttons, rename, and
+Forget suggestion → Undo while the shopping-list item remains unchanged.
+
+Reviewed all four registered routes, every first-party modal/prompt caller, and
+startup, error, empty, scanning, and pending-sharing states. This is a source and
+component review alongside the Pixel checks recorded above; rare/error states
+were not deliberately triggered on the user's phone. No application code changed
+as part of this review.
+
+| Surface | Finding |
+|---|---|
+| Shopping list, checked section, clear-leftovers banner, empty list, sharing footer, Undo | Present and accounted for; list-row/checked-state design has not had a dedicated visual redesign in this pass. |
+| Add items browser, filtering, no matches, queued preparation | Updated; Pixel acceptance recorded above. |
+| Add/Edit item and aisle chooser | Updated; Pixel acceptance recorded above. |
+| Recent suggestion Edit/Delete menu | Resolved: removed from this flow; pencil now opens the name editor directly. |
+| Recent suggestion name editor | Resolved: Edit suggestion bottom sheet with a labeled, initially selected name, scope explanation, Cancel/Save, and a header Forget suggestion action with Undo. |
+| Settings | Section grouping updated. |
+| Language picker | Already a bottom sheet; header/row spacing, selected-row treatment, and X accessibility label (Done) differ from the new chooser patterns. Minor consistency work. |
+| Manage aisles, Add/Rename aisle | Updated; X still has the accessible name Done rather than Close. |
+| Sharing: private/shared, invitation, Stop sharing | Updated; Pixel acceptance recorded above. |
+| Join/replace confirmation, aisle removal confirmation | Use the updated shared confirmation component. |
+| Pending shared list, on home and Sharing | Waiting copy still instructs users to keep the sharing phone online, overstating the requirement with store-and-forward. It should distinguish waiting for a stored copy from recovery when none is available. |
+| QR scanner | Existing simple camera-and-instruction layout. Permission denial silently returns to Sharing; a denied-permission explanation/recovery action is missing. |
+| Startup data-load failure | Uses unstyled body text and the native Button instead of app typography/actions. |
+| Render-error fallback | Already uses theme typography and spacing; tells the user to reopen. No recovery redesign in this review. |
+| Splash | Existing launch animation; no new form/dialog inconsistency. |
+
+Cross-cutting follow-up: standalone destructive/error text and icons in the
+Recent menu, item editor, and Manage aisles still use the old dark red token.
+That color has approximately 2.87:1 contrast on the dark elevated background,
+below the normal-text target. Use the newly added theme-aware dangerText token
+for text/icons, preserving the separate solid destructive-button background.
+
+## Single-list simplification (previous phase)
 
 This phase supersedes earlier multi-list, favorites, and import/export decisions
 below. Prior phases remain recorded as history, not as the current UI contract.

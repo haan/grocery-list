@@ -95,6 +95,7 @@ test('adds an aisle without an item, deduplicates names, and shows live updates'
   const user = userEvent.setup();
   await renderScreen();
   await user.press(screen.getByRole('button', {name:'Add aisle'}));
+  expect(screen.getByLabelText('Aisle name')).toBeTruthy();
   expect(screen.getByRole('button', {name:'Add'})).toBeDisabled();
   await fireEvent.changeText(screen.getByDisplayValue(''), 'Freezer extras');
   await user.press(screen.getByRole('button', {name:'Add'}));
@@ -140,7 +141,7 @@ describe('ReorderAislesScreen', () => {
     expect(screen.getByText('Remote aisle')).toBeTruthy();
   });
 
-  it('renames custom aisles with a prefilled dialog and keeps their position', async () => {
+  it('renames custom aisles with a prefilled sheet and keeps their position', async () => {
     const user = userEvent.setup();
     await renderScreen();
     expect(screen.queryByRole('button',{name:'Rename Uebst a Geméis'})).toBeNull();

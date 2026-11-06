@@ -8,7 +8,6 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
 import { useListsStore } from '../store/lists';
 import { buildShareLink, parseShareLink } from '../sync/share';
-import { resyncNow } from '../sync';
 import { useConfirm } from '../components/Dialogs';
 import { SyncStatusBar } from '../components/SyncStatusBar';
 import { t } from '../i18n';
@@ -59,10 +58,10 @@ export default function ShareScreen({ route, navigation }: Props) {
     confirmLabel: t('share.stop'), destructive: true,
     onConfirm: () => { setError(false); void useListsStore.getState().stopSharing().catch(() => setError(true)); },
   });
-  const action = (label: string, onPress: () => void, primary = false) => <Pressable
+  const action = (label: string, onPress: () => void, variant: 'primary' | 'secondary' | 'danger' = 'secondary') => <Pressable
     accessibilityRole="button" accessibilityLabel={label} disabled={busy} accessibilityState={{ disabled: busy }}
-    onPress={onPress} style={primary ? s.primaryBtn : s.ghostBtn}>
-    <Text style={primary ? s.primaryText : s.ghostText}>{label}</Text>
+    onPress={onPress} style={({ pressed }) => [variant === 'primary' ? s.primaryBtn : variant === 'danger' ? s.dangerBtn : s.secondaryBtn, (pressed || busy) && s.pressed]}>
+    <Text style={variant === 'primary' ? s.primaryText : variant === 'danger' ? s.dangerText : s.secondaryText}>{label}</Text>
   </Pressable>;
   return <SafeAreaView style={s.safe} edges={['top', 'left', 'right', 'bottom']}>
     <View style={s.header}>
@@ -84,19 +83,27 @@ export default function ShareScreen({ route, navigation }: Props) {
       <Text style={s.hint}>{t('share.scanHint')}</Text>
     </View> : <ScrollView contentContainerStyle={s.body}>
       {error && <Text style={s.hint} accessibilityRole="alert">{t('share.failed')}</Text>}
-      <Text style={s.lead}>{pending ? t('share.waiting') : secret ? t('share.sharedHelp') : t('share.privateHelp')}</Text>
       {secret ? <>
-        <SyncStatusBar secret={secret} />
-        {action(t('share.syncNow'), () => resyncNow(secret))}
-        {!pending && <>
+        <SyncStatusBar secret={secret} disabled={busy} />
+        {pending ? <Text style={s.lead}>{t('share.waiting')}</Text> : <View style={s.inviteSection}>
+          <Text style={s.sectionTitle} accessibilityRole="header">{t('share.inviteTitle')}</Text>
+          <Text style={s.lead}>{t('share.inviteHelp')}</Text>
           <View style={s.qrCard}><QRCode value={link} size={216} backgroundColor="#FFFFFF" /></View>
-          {action(t('share.sendLink'), () => { void Share.share({ message: link }).catch(() => setError(true)); }, true)}
-        </>}
-        {action(t('share.stop'), stop)}
-      </> : action(t('share.start'), () => {
-        if (list) { setError(false); void useListsStore.getState().shareList(list.id).catch(() => setError(true)); }
-      }, true)}
-      {action(t('share.scanCode'), () => { void startScan().catch(() => setError(true)); })}
+          {action(t('share.sendLink'), () => { void Share.share({ message: link }).catch(() => setError(true)); }, 'primary')}
+          <Text style={s.accessHint}>{t('share.accessHint')}</Text>
+        </View>}
+      </> : <View style={s.inviteSection}>
+        <Text style={s.sectionTitle} accessibilityRole="header">{t('share.inviteTitle')}</Text>
+        <Text style={s.lead}>{t('share.privateHelp')}</Text>
+        {action(t('share.start'), () => {
+          if (list) { setError(false); void useListsStore.getState().shareList(list.id).catch(() => setError(true)); }
+        }, 'primary')}
+      </View>}
+      <View style={s.joinSection}>
+        <Text style={s.sectionTitle} accessibilityRole="header">{t('share.joinTitle')}</Text>
+        {action(t('share.scanCode'), () => { void startScan().catch(() => setError(true)); })}
+      </View>
+      {secret ? action(t('share.stop'), stop, 'danger') : null}
     </ScrollView>}
     {confirm.element}
   </SafeAreaView>;
@@ -121,16 +128,20 @@ function makeStyles(c: Colors) {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    body: { ...boundedContent, flexGrow: 1, paddingBottom: space.s7, alignItems: 'center', paddingHorizontal: space.s7, gap: space.s6 },
+    body: { ...boundedContent, paddingTop: space.s3, paddingBottom: space.s7, paddingHorizontal: space.s6, gap: space.s6 },
+    inviteSection: { gap: space.s3 },
+    joinSection: { borderTopWidth: hairline, borderTopColor: c.hairline, paddingTop: space.s5, gap: space.s3 },
+    sectionTitle: { ...ty.base, fontFamily: fontFamily.sansSemibold, color: c.fg },
+    accessHint: { ...ty.sm, fontFamily: fontFamily.sans, color: c.fgMuted },
     lead: {
       ...ty.base,
       fontFamily: fontFamily.sans,
       color: c.fgMuted,
-      textAlign: 'center',
-      marginTop: space.s4,
+      textAlign: 'left',
     },
-    leadStrong: { fontFamily: fontFamily.sansSemibold, color: c.fg },
     qrCard: {
+      alignSelf: 'center',
+      marginVertical: space.s2,
       padding: space.s6,
       backgroundColor: '#FFFFFF',
       borderRadius: radius.lg,
@@ -142,8 +153,9 @@ function makeStyles(c: Colors) {
       alignItems: 'center',
       justifyContent: 'center',
       gap: space.s3,
-      minHeight: target.min,
-      paddingHorizontal: space.s7,
+      minHeight: 52,
+      paddingVertical: space.s3,
+      paddingHorizontal: space.s5,
       backgroundColor: c.inkButton,
       borderRadius: radius.md,
       alignSelf: 'stretch',
@@ -152,15 +164,16 @@ function makeStyles(c: Colors) {
       ...ty.base,
       fontFamily: fontFamily.sansSemibold,
       color: c.inkButtonText,
+      textAlign: 'center',
     },
-    ghostBtn: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: space.s3,
-      minHeight: target.min,
+    secondaryBtn: {
+      minHeight: 52, alignItems: 'center', justifyContent: 'center',
+      paddingHorizontal: space.s5, paddingVertical: space.s3,
+      borderWidth: hairline, borderColor: c.hairlineStrong, borderRadius: radius.md,
     },
-    ghostText: { ...ty.base, fontFamily: fontFamily.sans, color: c.fg },
+    secondaryText: { ...ty.base, fontFamily: fontFamily.sansSemibold, color: c.fg, textAlign: 'center' },
+    dangerBtn: { minHeight: target.min, alignItems: 'center', justifyContent: 'center', paddingHorizontal: space.s4, paddingVertical: space.s3 },
+    dangerText: { ...ty.sm, fontFamily: fontFamily.sansSemibold, color: c.dangerText, textAlign: 'center' },
     scanWrap: { flex: 1, alignItems: 'center', gap: space.s5 },
     camera: {
       width: '86%',

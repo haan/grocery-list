@@ -17,6 +17,7 @@ export const SHELL_STRINGS = {
   settings: {
     title: 'Settings',
     appearance: 'Appearance',
+    shoppingList: 'Shopping list',
     themeSystem: 'System',
     themeLight: 'Light',
     themeDark: 'Dark',

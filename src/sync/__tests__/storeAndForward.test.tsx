@@ -386,7 +386,8 @@ describe('SyncStatusBar: connected ≠ partner present', () => {
       markConnected(S, true);
       markReceived(S, Date.now() - 3 * 3600 * 1000);
     });
-    expect(screen.getByText(/^Connected · Other phone seen 3 h ago/)).toBeTruthy();
+    expect(screen.getByText('Connected')).toBeTruthy();
+    expect(screen.getByText('Other phone seen 3 h ago')).toBeTruthy();
   });
 
   test('an older replayed slot never rolls "last heard" backwards', () => {
