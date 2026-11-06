@@ -16,9 +16,9 @@ for (const [name, command] of Object.entries(pkg.scripts)) {
 }
 for (const plugin of expo.plugins) {
   const name = Array.isArray(plugin) ? plugin[0] : plugin;
-  assert(!/siri|expo-iap|expo-mail-composer/i.test(name), `Removed integration: ${name}`);
+  assert(!/siri|expo-iap|expo-mail-composer|expo-sharing/i.test(name), `Removed integration: ${name}`);
 }
-for (const name of ['expo-iap', 'expo-store-review', 'expo-mail-composer', 'react-native-web', 'react-dom']) {
+for (const name of ['expo-iap', 'expo-store-review', 'expo-mail-composer', 'react-native-web', 'react-dom', 'expo-document-picker', 'expo-sharing']) {
   assert(!pkg.dependencies[name], `Unused direct dependency: ${name}`);
 }
 function files(dir) {

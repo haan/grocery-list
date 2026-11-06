@@ -42,8 +42,6 @@ jest.mock('../../store/db', () => ({
   loadAllLists: () => Promise.resolve([]),
   saveList: () => Promise.resolve(),
   deleteListFromDb: () => Promise.resolve(),
-  loadAllKits: () => Promise.resolve([]),
-  saveKit: () => Promise.resolve(),
   putTombstone: () => Promise.resolve(),
   removeTombstone: () => Promise.resolve(),
   getSyncMeta: () => Promise.resolve(null),
@@ -69,7 +67,7 @@ function seed(overrides: Partial<GroceryItem> = {}) {
     ...overrides,
   };
   useListsStore.setState({ lists: [{ ...list, id: LIST_ID, items: [item] }] });
-  useAccountStore.setState({ staples: [], hydrated: true, history: [] });
+  useAccountStore.setState({ hydrated: true, history: [] });
 }
 
 function Harness({ onRemove }: { onRemove?: (i: GroceryItem) => void }) {
@@ -152,24 +150,6 @@ describe('useItemEditor', () => {
     expect(curList().categoryOrder).toContain('Deli');
     expect(curItem().category).toBe('Deli');
     expect(curList().aislePreferences).toEqual([expect.objectContaining({ id: 'name:milk', category: 'Deli' })]);
-  });
-
-  it('marks the item as a usual and unmarks it (reversible toggle)', async () => {
-    const user = userEvent.setup({ delay: 0 });
-    await render(wrap(<Harness />));
-    await openEditor(user);
-
-    expect(useAccountStore.getState().isStaple('Milk')).toBe(false);
-    // Named by its VISIBLE word, "Usual", so Voice Access can match what is
-    // on screen; the verb lives in the hint. `toggleUsual` reads the live
-    // staple state on each press and flips it, so pressing the same control
-    // twice toggles on then back off.
-    const usualBtn = screen.getByRole('button', { name: 'Usual' });
-    expect(usualBtn.props.accessibilityHint).toBe('Save as a usual');
-    await user.press(usualBtn);
-    expect(useAccountStore.getState().isStaple('Milk')).toBe(true);
-    await user.press(usualBtn);
-    expect(useAccountStore.getState().isStaple('Milk')).toBe(false);
   });
 
   it('commits an edited name on Done and closes', async () => {

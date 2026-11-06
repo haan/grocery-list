@@ -43,8 +43,6 @@ jest.mock('../../store/db', () => ({
   removeTombstone: jest.fn(async () => {}),
   getSyncMeta: jest.fn(async () => null),
   setSyncMeta: jest.fn(async () => {}),
-  loadAllKits: jest.fn(async () => []),
-  saveKit: jest.fn(async () => {}),
 }));
 
 import ReorderAislesScreen from '../ReorderAislesScreen';

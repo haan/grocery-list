@@ -4,10 +4,11 @@ let mockSqlite: any;
 jest.mock('../../storage/kv', () => ({ getDb: async () => ({
   execAsync: async (sql: string) => mockSqlite.exec(sql),
   getAllAsync: async (sql: string, args: unknown[] = []) => mockSqlite.prepare(sql).all(...args),
+  getFirstAsync: async (sql: string, args: unknown[] = []) => mockSqlite.prepare(sql).get(...args),
   runAsync: async (sql: string, args: unknown[] = []) => mockSqlite.prepare(sql).run(...args),
 }) }));
 
-test('migrates a legacy database, retains its items, and round-trips preferences after reopening', async () => {
+test('round-trips aisle preferences and tombstones after the one-time reset', async () => {
   const { DatabaseSync } = require('node:sqlite');
   mockSqlite = new DatabaseSync(':memory:');
   try {
@@ -18,7 +19,7 @@ test('migrates a legacy database, retains its items, and round-trips preferences
     await jest.isolateModulesAsync(async () => {
       const db = require('../db');
       const [legacy] = await db.loadAllLists();
-      expect(legacy.name).toBe('Old list');
+      expect(legacy.id).not.toBe('legacy');
       expect(legacy.aislePreferences).toEqual([]);
       await db.saveList({...legacy, aislePreferences:[
         {id:'name:my food',category:'Other',updatedAt:3},

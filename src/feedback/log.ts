@@ -279,7 +279,7 @@ async function loadPriorSession(): Promise<void> {
   if (prev && prev.trim()) priorSession = prev;
 }
 
-// ---------- one-time install (called by FeedbackProvider at app root) ----------
+// ---------- one-time install (called by AppShell at app root) ----------
 
 /**
  * Extra facts about this launch, supplied by the shell (which can read the app

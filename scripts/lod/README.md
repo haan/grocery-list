@@ -74,7 +74,7 @@ Use a disposable list, separate from household lists. With Metro running:
       unrelated corrections while disconnected, reconnect, and verify both rules.
 
 Automated tests cover classification, learning, real SQLite migration/round trips,
-export/import, UI controls, and simulated merge convergence. Physical-device
+restart persistence, UI controls, and simulated merge convergence. Physical-device
 acceptance remains separate from those checks.
 
 Verified on 2026-11-06: clean `npm ci --offline`, TypeScript, all 515 tests in

@@ -33,7 +33,6 @@
       ],
       "./plugins/withGradleJvmArgs",
       "./plugins/withAndroidLocaleConfig",
-      "expo-sharing",
       [
         "expo-splash-screen",
         {

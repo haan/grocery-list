@@ -13,7 +13,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import AnimatedSplash from '../components/AnimatedSplash';
-import { FeedbackProvider } from '../feedback/FeedbackProvider';
+import { installDiagnostics } from '../feedback/log';
+import { collectDiagnostics } from '../feedback/diagnostics';
 import { buildNavTheme } from './navTheme';
 import { useApplyThemePreference } from '../theme';
 import { useApplyLocalePreference, useLocaleVersion } from '../i18n/localePreference';
@@ -46,6 +47,7 @@ type Props = {
   /** Content is ready (fonts loaded + stores hydrated). Until true, the splash
    *  holds and the navigator is not mounted. */
   ready: boolean;
+  onReady?: () => void;
   /** The navigator tree (a <Stack.Navigator> with the app's screens). */
   children: React.ReactNode;
   /** Optional navigation ref for deep-linking / share-link pairing. */
@@ -53,7 +55,12 @@ type Props = {
 
 };
 
-export function AppShell({ ready, children, navigationRef }: Props) {
+export function AppShell({ ready, children, navigationRef, onReady }: Props) {
+  useEffect(() => {
+    const d = collectDiagnostics();
+    installDiagnostics({ version: d.version, device: d.device, locale: d.locale });
+  }, []);
+
   // Restore + apply the saved appearance preference (System/Light/Dark) once,
   // before first paint. Drives useColorScheme() below and in every screen.
   useApplyThemePreference();
@@ -86,6 +93,7 @@ export function AppShell({ ready, children, navigationRef }: Props) {
             <NavigationContainer
               key={localeVersion}
               ref={navigationRef}
+              onReady={onReady}
               theme={buildNavTheme(isDark)}
               onStateChange={(state) => {
                 const name = activeRouteName(state);
@@ -96,7 +104,7 @@ export function AppShell({ ready, children, navigationRef }: Props) {
               }}
             >
               <StatusBar style={isDark ? 'light' : 'dark'} />
-              <FeedbackProvider>{children}</FeedbackProvider>
+              {children}
             </NavigationContainer>
           )}
           {!splashDone && (

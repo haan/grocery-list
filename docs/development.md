@@ -46,7 +46,7 @@ select the running development server. Save a TypeScript/UI edit and Fast Refres
 updates the phone. Reload manually if a change affects startup code.
 
 Press `j` in Metro's terminal to open React Native DevTools once the app connects.
-Use Sources to set breakpoints (for example in `src/screens/ListDetailScreen.tsx`)
+Use Sources to set breakpoints (for example in `src/screens/ListsHomeScreen.tsx`)
 and trigger the corresponding interaction on the phone. Use the Console for
 JavaScript logs; use Android logcat for native crashes when Android tools are
 available. Phone developer options/USB debugging are not needed for the Wi-Fi path.
@@ -125,7 +125,23 @@ The Checks workflow runs Android-only configuration checks, fuzz-harness self-te
 
 ## Android-only cleanup acceptance
 
-The cleanup removes unused native purchase and email integrations. Install its new development APK as an update; do not uninstall the existing app or clear storage. Keep the package and signing key. Verify startup and existing lists, settings/feedback, add/edit/check, suggestions/learning, drag ordering, rename selection/replacement/appending, kits, and export/import on a disposable list. Two-device sync is separate when another installation is available.
+The initial Android cleanup removed native purchase and email integrations and required a development APK update. Keep the package and signing key; do not uninstall or clear storage.
+
+The earlier kit-removal phase did not need a native rebuild. The current single-list phase removes native file-transfer modules and does require a new development APK. Its one-time shopping reset supersedes the earlier preservation-only migration.
+
+For this single-list upgrade, first launch deliberately resets all old shopping
+data once. Check the empty private home screen; add an item, restart, and verify
+that subsequent launches retain it. Check Settings (appearance, System/English,
+Sharing, Manage aisles, version), add/edit/check/Undo/Clear, suggestions and learned
+aliases, Recent edit/forget/Undo, drag ordering, and all three rename-selection
+behaviors. No favorites, overview, list naming, kits, or import/export remain.
+Opening Sharing must leave the list private. Start sharing, cancel Stop sharing,
+then confirm Stop sharing and start again: the QR/link must change while items
+remain. Check link/scan replacement confirmation, Android back navigation, and
+pending-join messaging. Two-device additions, quantity/check changes, shared aisle
+learning, and offline/reconnect convergence have been confirmed on physical phones.
+Install the rebuilt APK as an update, without
+uninstalling or clearing storage, to verify the native dependency removals.
 
 Build and device results are recorded in [repository audit](repository-audit.md).
 
@@ -144,12 +160,14 @@ tokens. GitHub unit-test CI needs no Expo token; EAS builds use your local Expo 
 - [x] See a saved UI edit via Fast Refresh without reinstalling.
 - [x] Inspect logs, stop at a JavaScript breakpoint, and resume in React Native DevTools.
 - [x] Create a disposable list, restart, and confirm persistence.
-- [ ] While the app is loaded, disconnect networking and verify local edits;
+- [x] While the app is loaded, disconnect networking and verify local edits;
       reconnect and confirm relay connectivity recovers.
 - [ ] Open a development share link and confirm it opens this app.
-- [ ] With a second installation, verify add/check/delete convergence and
-      delayed delivery after one device goes offline. Relay connectivity alone
-      is not proof of two-device sync.
+- [x] With a second installation, verify bidirectional additions, quantity edits,
+      check-offs, and learned aisle assignments.
+- [x] Make independent edits while one phone is offline; reconnect and verify
+      convergence without losing changes, including after reopening both apps.
+- [ ] Verify cross-device item deletion on disposable data.
 
 Installation, app loading, Fast Refresh, and persistence were confirmed on 2026-11-06.
 Metro identified the connected device as Pixel 8 / Android 17 (API 37).

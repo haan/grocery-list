@@ -1,7 +1,7 @@
 /**
  * Sync engine wiring (sync/index.ts) — the layer where the two shipped
  * shared-list defects actually lived (cold-start hello backfill, bidirectional
- * reconnect push, debounced force-publish, kits-ride-channels control message,
+ * reconnect push, debounced force-publish, unsupported control messages,
  * receive() dispatch). The merge primitives are exemplary-tested elsewhere
  * (syncSim/mergeRecordSet); this pins the ENGINE, which was untested because
  * DropBoxTransport is created inside the module and can't be reached.
@@ -14,7 +14,7 @@
 
 // Stub the SQLite-backed persistence so the stores load in node (expo-sqlite
 // can't). Persist is fire-and-forget; the in-memory state is the SUT. Mirrors
-// src/store/__tests__/kits.test.ts.
+// src/store/__tests__/aisleLearning.test.ts.
 // The real DropBoxTransport pulls in @noble/* (pure ESM jest doesn't transform)
 // and opens WebSockets. The engine never constructs it here — __setTransportFactory
 // injects a fake — so stub the module out to keep the import graph node-loadable.
@@ -29,18 +29,16 @@ jest.mock('../transport', () => ({
 
 jest.mock('../../store/db', () => ({
   loadAllLists: jest.fn(async () => []),
+  replaceCurrentList: jest.fn(async () => {}),
   saveList: jest.fn(async () => {}),
   deleteListFromDb: jest.fn(async () => {}),
   putTombstone: jest.fn(async () => {}),
   removeTombstone: jest.fn(async () => {}),
   getSyncMeta: jest.fn(async () => null),
   setSyncMeta: jest.fn(async () => {}),
-  loadAllKits: jest.fn(async () => []),
-  saveKit: jest.fn(async () => {}),
 }));
 
 import { useListsStore } from '../../store/lists';
-import { useKitsStore } from '../../store/kits';
 import { channelId, newSecret, seal, open } from '../crypto';
 import { clear as clearLog, serializeCurrent } from '../../feedback/log';
 import { useSyncStatusStore } from '../status';
@@ -53,7 +51,6 @@ import {
   type EngineTransport,
 } from '../index';
 import type { GroceryList } from '../../data/list';
-import type { Kit } from '../../data/kit';
 
 const SECRET = newSecret();
 
@@ -129,17 +126,6 @@ function soloList(items: GroceryList['items'] = []): GroceryList {
   return l;
 }
 
-function sampleKit(): Kit {
-  return {
-    id: 'k1',
-    name: 'Taco night',
-    nameUpdatedAt: 1000,
-    items: [],
-    createdAt: 1000,
-    updatedAt: 1000,
-  };
-}
-
 beforeEach(() => {
   created = [];
   restore = __setTransportFactory(
@@ -149,8 +135,7 @@ beforeEach(() => {
       return t;
     }
   );
-  useListsStore.setState({ lists: [], hydrated: true });
-  useKitsStore.setState({ kits: [], hydrated: true });
+  useListsStore.setState({ lists: [], hydrated: true, pendingJoin: false, transitioning: false });
   useSyncStatusStore.setState({ bySecret: {} });
   clearLog();
 });
@@ -161,7 +146,7 @@ afterEach(() => {
   jest.useRealTimers();
 });
 
-/** The lines of the diagnostic report the Send-feedback flow would attach. */
+/** The locally retained diagnostic lines. */
 function logLines(): string[] {
   return serializeCurrent().split('\n');
 }
@@ -173,7 +158,7 @@ function logLine(needle: string): string | undefined {
 const CH_TAG = channelId(SECRET).slice(0, 8);
 
 /** Just the peer-visible messages of one kind, decrypted. */
-function messagesOfKind(t: FakeTransport, kind: 'state' | 'hello' | 'kits'): any[] {
+function messagesOfKind(t: FakeTransport, kind: 'state' | 'hello'): any[] {
   return t
     .decoded()
     .filter((m) => (kind === 'state' ? m?.shareIdentity && !m?._sync : m?._sync === kind));
@@ -189,27 +174,24 @@ describe('channel lifecycle', () => {
 });
 
 describe('hello handshake (cold-start backfill)', () => {
-  test('an inbound hello force-publishes our current list AND kits', () => {
+  test('an inbound hello force-publishes our current list only', () => {
     useListsStore.setState({ lists: [sharedList([item('milk')])], hydrated: true });
-    useKitsStore.setState({ kits: [sampleKit()], hydrated: true });
     startSyncEngine();
     created[0].published = []; // ignore the debounced reconcile publish
 
     created[0].deliver(JSON.stringify({ _sync: 'hello' }));
 
     const msgs = created[0].decoded();
-    // One bare-list state message + one kits control message, both immediate.
+    // Only list state is published immediately.
+    expect(msgs).toHaveLength(1);
     const state = msgs.find((m) => m.shareIdentity && !m._sync);
-    const kits = msgs.find((m) => m._sync === 'kits');
     expect(state?.items?.some((it: any) => it.id === 'milk')).toBe(true);
-    expect(kits?.kits?.[0]?.id).toBe('k1');
   });
 });
 
 describe('reconnect (bidirectional)', () => {
-  test('onReconnect pushes our state + kits AND sends a hello to pull theirs', () => {
+  test('onReconnect pushes our state AND sends a hello to pull theirs', () => {
     useListsStore.setState({ lists: [sharedList([item('eggs')])], hydrated: true });
-    useKitsStore.setState({ kits: [sampleKit()], hydrated: true });
     startSyncEngine();
     created[0].published = [];
 
@@ -217,7 +199,7 @@ describe('reconnect (bidirectional)', () => {
 
     const msgs = created[0].decoded();
     expect(msgs.some((m) => m.shareIdentity && !m._sync)).toBe(true); // pushed state
-    expect(msgs.some((m) => m._sync === 'kits')).toBe(true); // pushed kits
+    expect(msgs.some((m) => m._sync === 'kits')).toBe(false);
     expect(msgs.some((m) => m._sync === 'hello')).toBe(true); // pulled via hello
   });
 });
@@ -243,6 +225,22 @@ describe('debounced publish', () => {
 });
 
 describe('receive() dispatch', () => {
+  test.each(['kits', 'future-control', null])('ignores unsupported control %s even with valid list fields', (control) => {
+    jest.useFakeTimers();
+    useListsStore.setState({ lists: [sharedList([item('rice')])], hydrated: true });
+    startSyncEngine();
+    jest.advanceTimersByTime(700);
+    const before = useListsStore.getState().lists;
+    const status = { ...useSyncStatusStore.getState().bySecret };
+    created[0].published = [];
+    const remote = { ...sharedList([item('unwanted', 9000)]), _sync: control, kits: [{ id: 'old-kit' }] };
+    created[0].deliver(JSON.stringify(remote));
+    jest.advanceTimersByTime(1000);
+    expect(useListsStore.getState().lists).toBe(before);
+    expect(useSyncStatusStore.getState().bySecret).toEqual(status);
+    expect(created[0].published).toEqual([]);
+  });
+
   test('a peer state message with our secret is merged into the store', () => {
     useListsStore.setState({ lists: [sharedList([item('bread')])], hydrated: true });
     startSyncEngine();
@@ -253,15 +251,6 @@ describe('receive() dispatch', () => {
 
     const merged = useListsStore.getState().lists[0];
     expect(merged.items.map((i) => i.id).sort()).toEqual(['bread', 'butter']);
-  });
-
-  test('a kits control message merges into the kits store', () => {
-    useListsStore.setState({ lists: [sharedList()], hydrated: true });
-    startSyncEngine();
-
-    created[0].deliver(JSON.stringify({ _sync: 'kits', kits: [sampleKit()] }));
-
-    expect(useKitsStore.getState().kits.map((k) => k.id)).toContain('k1');
   });
 
   test('an unknown _sync tag is ignored (forward wire-compat), no merge, no throw', () => {
@@ -307,9 +296,9 @@ describe('unshared lists', () => {
     expect(created).toHaveLength(0);
   });
 
-  test('a solo list sitting beside a shared one leaves exactly one channel', () => {
+  test('replacing a solo list with a shared list opens exactly one channel', () => {
     useListsStore.setState({
-      lists: [soloList([item('milk')]), sharedList([item('eggs')])],
+      lists: [sharedList([item('eggs')])],
       hydrated: true,
     });
     startSyncEngine();
@@ -417,63 +406,17 @@ describe('flushSyncEngine (the app is backgrounding)', () => {
     jest.advanceTimersByTime(700);
     expect(created[0].published).toHaveLength(sent);
   });
-
-  test('a kit edit still inside its debounce window is pushed too', () => {
-    jest.useFakeTimers();
-    useListsStore.setState({ lists: [sharedList()], hydrated: true });
-    startSyncEngine();
-    jest.advanceTimersByTime(700);
-    created[0].published = [];
-
-    useKitsStore.setState({ kits: [sampleKit()], hydrated: true });
-    expect(messagesOfKind(created[0], 'kits')).toHaveLength(0);
-
-    flushSyncEngine();
-
-    expect(messagesOfKind(created[0], 'kits')).toHaveLength(1);
-    const sent = created[0].published.length;
-    jest.advanceTimersByTime(700);
-    expect(created[0].published).toHaveLength(sent);
-  });
-
-  test('flushing with nothing shared must not record the kits as already broadcast', () => {
-    // Backgrounding while no list is shared sends nothing — there is nowhere to
-    // send it. The engine must not come away believing the collection went out:
-    // the kit broadcast is deduped against the last payload actually published,
-    // so a phantom entry silences the first real broadcast after the user pairs.
-    jest.useFakeTimers();
-    useKitsStore.setState({ kits: [sampleKit()], hydrated: true });
-    useListsStore.setState({ lists: [soloList()], hydrated: true });
-    startSyncEngine();
-    expect(created).toHaveLength(0); // nothing shared → no channel
-
-    flushSyncEngine();
-
-    // The user now shares the list, so a channel opens.
-    useListsStore.setState({ lists: [sharedList()], hydrated: true });
-    expect(created).toHaveLength(1);
-    created[0].published = [];
-
-    // Kit hydration settles with the collection unchanged. Nothing was ever
-    // published, so this first broadcast has to go out.
-    useKitsStore.setState({ hydrated: true });
-    jest.advanceTimersByTime(700);
-    expect(messagesOfKind(created[0], 'kits')).toHaveLength(1);
-    expect(messagesOfKind(created[0], 'kits')[0].kits[0].id).toBe('k1');
-  });
 });
 
 describe('resyncNow (the tap-to-resync affordance)', () => {
-  test('pushes our list and kits and asks peers for theirs', () => {
+  test('pushes our list and asks peers for theirs', () => {
     useListsStore.setState({ lists: [sharedList([item('eggs')])], hydrated: true });
-    useKitsStore.setState({ kits: [sampleKit()], hydrated: true });
     startSyncEngine();
     created[0].published = [];
 
     resyncNow(SECRET);
 
     expect(messagesOfKind(created[0], 'state')).toHaveLength(1);
-    expect(messagesOfKind(created[0], 'kits')).toHaveLength(1);
     expect(messagesOfKind(created[0], 'hello')).toHaveLength(1);
   });
 
@@ -508,25 +451,6 @@ describe('resyncNow (the tap-to-resync affordance)', () => {
   });
 });
 
-describe('kits broadcast', () => {
-  test('a real kit edit broadcasts once; an identical re-set broadcasts nothing', () => {
-    jest.useFakeTimers();
-    useListsStore.setState({ lists: [sharedList()], hydrated: true });
-    startSyncEngine();
-    jest.advanceTimersByTime(700);
-    created[0].published = [];
-
-    const kits = [sampleKit(), { ...sampleKit(), id: 'k2' }];
-    useKitsStore.setState({ kits, hydrated: true });
-    jest.advanceTimersByTime(700);
-    expect(messagesOfKind(created[0], 'kits')).toHaveLength(1);
-
-    useKitsStore.setState({ kits: [...kits], hydrated: true });
-    jest.advanceTimersByTime(700);
-    expect(messagesOfKind(created[0], 'kits')).toHaveLength(1);
-  });
-});
-
 describe('connection status the bar reads', () => {
   test('no open relay reads as not connected; at least one reads as connected', () => {
     useListsStore.setState({ lists: [sharedList()], hydrated: true });
@@ -547,15 +471,6 @@ describe('connection status the bar reads', () => {
     const remote = sharedList([item('a'), item('b', 5000)]);
     remote.id = 'peer-list-id';
     created[0].deliver(JSON.stringify(remote));
-
-    expect(useSyncStatusStore.getState().bySecret[SECRET].lastReceivedAt).toBeGreaterThan(0);
-  });
-
-  test('peer kits count as hearing from them too', () => {
-    useListsStore.setState({ lists: [sharedList()], hydrated: true });
-    startSyncEngine();
-
-    created[0].deliver(JSON.stringify({ _sync: 'kits', kits: [sampleKit()] }));
 
     expect(useSyncStatusStore.getState().bySecret[SECRET].lastReceivedAt).toBeGreaterThan(0);
   });
@@ -680,19 +595,6 @@ describe('hostile payloads on a public channel', () => {
     expect(useSyncStatusStore.getState().bySecret[SECRET]?.lastReceivedAt ?? null).toBeNull();
   });
 
-  test('a kits message whose payload is not a list of kits is ignored', () => {
-    useListsStore.setState({ lists: [sharedList()], hydrated: true });
-    useKitsStore.setState({ kits: [sampleKit()], hydrated: true });
-    startSyncEngine();
-
-    expect(() => created[0].deliver(JSON.stringify({ _sync: 'kits' }))).not.toThrow();
-    expect(() =>
-      created[0].deliver(JSON.stringify({ _sync: 'kits', kits: 'nope' }))
-    ).not.toThrow();
-
-    expect(useKitsStore.getState().kits.map((k) => k.id)).toEqual(['k1']);
-  });
-
   test("a state copy carrying someone else's secret never counts as hearing from our peer", () => {
     useListsStore.setState({ lists: [sharedList([item('rice')])], hydrated: true });
     startSyncEngine();
@@ -709,25 +611,20 @@ describe('hostile payloads on a public channel', () => {
 });
 
 describe('one channel carries exactly one list', () => {
-  test('answering a hello publishes THIS list, never another list on the device', () => {
-    const OTHER = newSecret();
-    const other = sharedList([item('other-household-only')]);
-    other.id = 'l2';
-    other.shareIdentity = { secret: OTHER, createdAt: 1000 };
-    // The other list is FIRST in the store, so "whichever list came to hand"
-    // would put its contents on this household's relay channel.
-    useListsStore.setState({ lists: [other, sharedList([item('milk')])], hydrated: true });
+  test('late callbacks from a replaced household cannot publish, merge, or restore status', async () => {
+    useListsStore.setState({ lists: [sharedList([item('milk')])], hydrated: true });
     startSyncEngine();
-
-    const ours = created.find((t) => t.channel === channelId(SECRET));
-    expect(ours).toBeDefined();
-    ours!.published = [];
-
-    ours!.deliver(JSON.stringify({ _sync: 'hello' }));
-
-    const state = messagesOfKind(ours!, 'state');
-    expect(state).toHaveLength(1);
-    expect(state[0].items.map((it: any) => it.id)).toEqual(['milk']);
+    const old = created[0];
+    const next = newSecret();
+    await useListsStore.getState().joinShared(next);
+    old.published = [];
+    old.deliver(JSON.stringify({ _sync: 'hello' }));
+    old.deliver(JSON.stringify(sharedList([item('late')])));
+    old.onStatus(2); old.onReconnect(); old.onPublishResult?.(true, '');
+    expect(old.closed).toBe(true);
+    expect(old.published).toEqual([]);
+    expect(useListsStore.getState().lists[0].items).toEqual([]);
+    expect(useSyncStatusStore.getState().bySecret[SECRET]).toBeUndefined();
   });
 });
 
@@ -775,26 +672,6 @@ describe('announce debounce', () => {
   });
 });
 
-describe('kit broadcast debounce', () => {
-  test('two kit edits inside one window broadcast once, not twice', () => {
-    jest.useFakeTimers();
-    useListsStore.setState({ lists: [sharedList()], hydrated: true });
-    startSyncEngine();
-    jest.advanceTimersByTime(700);
-    created[0].published = [];
-
-    useKitsStore.setState({ kits: [sampleKit()], hydrated: true });
-    jest.advanceTimersByTime(300);
-    useKitsStore.setState({
-      kits: [sampleKit(), { ...sampleKit(), id: 'k2' }],
-      hydrated: true,
-    });
-    jest.advanceTimersByTime(3000);
-
-    expect(messagesOfKind(created[0], 'kits')).toHaveLength(1);
-  });
-});
-
 describe('teardown leaves nothing armed', () => {
   test('unsharing cancels the pending copy — nothing lands on the closed channel', () => {
     jest.useFakeTimers();
@@ -827,12 +704,11 @@ describe('teardown leaves nothing armed', () => {
     const transport = created[0];
     transport.published = [];
 
-    // Arm both debounces (a list edit and a kit edit), then tear down.
+    // Arm the list debounce, then tear down.
     useListsStore.setState({
       lists: [sharedList([item('a'), item('milk', 3000)])],
       hydrated: true,
     });
-    useKitsStore.setState({ kits: [sampleKit()], hydrated: true });
     expect(jest.getTimerCount()).toBeGreaterThan(0);
 
     stopSyncEngine();
@@ -842,11 +718,6 @@ describe('teardown leaves nothing armed', () => {
     expect(jest.getTimerCount()).toBe(0);
     jest.advanceTimersByTime(5000);
     expect(transport.published).toHaveLength(0);
-
-    useKitsStore.setState({
-      kits: [sampleKit(), { ...sampleKit(), id: 'k2' }],
-      hydrated: true,
-    });
     useListsStore.setState({ lists: [sharedList([item('a')])], hydrated: true });
     expect(jest.getTimerCount()).toBe(0);
     expect(transport.published).toHaveLength(0);
@@ -873,55 +744,62 @@ describe('the transport seam', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// KNOWN-EQUIVALENT MUTANTS (mutation sweep record — do not chase these).
-//
-// sync/index.ts survivors that cannot change any observable outcome. Same
-// contract as the records in mergeDupNames.test.ts / mergeRecordSet.test.ts:
-// an equivalent mutant is a correct outcome, and killing one would need a
-// tautological test written backwards from the mutation.
-//
-// CLEARING A TIMER THAT IS NULL. Every `if (x.timer) clearTimeout(x.timer)`
-// guard mutated to `true` is equivalent: `clearTimeout(null)` is a no-op, and
-// the following `= null` assignment is idempotent. That covers forcePublish
-// L229, scheduleKitsPublish L262, publish L273, reconcile L298,
-// flushSyncEngine L323 + L331, and stopSyncEngine L347 + L353.
-//
-// • flushSyncEngine L323 in all four of its variants (`true`, `false`,
-//   dropping the `?.`, emptying the block): the block is REDUNDANT with
-//   forcePublish, which is called on the next line and clears the very same
-//   timer itself. `ch` is fetched from `channels.get()` inside a loop over
-//   `channels.keys()`, so it is never undefined. (This holds only while the
-//   "channel with no list" state is unreachable — see L226 below.)
-// • forcePublish L226 `if (!list) return` → false: a channel whose secret no
-//   list carries cannot exist. Channels are only created by `publish()`, which
-//   is only called from `reconcile()` with a list that carries the secret, and
-//   the moment a list stops carrying it the same reconcile closes and deletes
-//   the channel synchronously. The `!ch` guard above catches every caller that
-//   could reach here (e.g. resyncNow with a stale secret).
-// • receive L164 `catch { return }` → `catch {}`: the early return is
-//   redundant. `obj` stays undefined, the `obj && typeof obj` guard is false
-//   and `remote?.shareIdentity` short-circuits, so a malformed frame is
-//   dropped either way.
-// • receive L167 `typeof obj === 'object'` → true: the check only guards the
-//   property access below it, and reading `._sync` off a truthy non-object
-//   (42, 'text', true) yields undefined rather than throwing. Only null and
-//   undefined throw, and the `obj &&` half — which IS killed, by the bare-JSON-
-//   scalar test above — already excludes those.
-// • ensureChannel L144 `lastSent: ''`, the L109 `lastKitsPayload = ''` module
-//   initializer, and stopSyncEngine L351 `lastKitsPayload = ''` → 'Stryker was
-//   here!': all three fields exist only to be compared against a serialized
-//   payload, and a JSON list/kit payload can never equal either sentinel. The
-//   dedupe decision is identical.
-//
-// WITHDRAWN 2026-08-13 — flushSyncEngine L335 `channels.size > 0` → true /
-// `>= 0` was recorded here as work-avoidance, on the grounds that the only
-// trace publishing over zero channels leaves is `lastKitsPayload`, and a kit
-// edit always moves `updatedAt`. That misses the trigger: the kits subscriber
-// fires on ANY kits-store change, including hydration settling with the
-// collection unchanged, so the phantom `lastKitsPayload` silences the first
-// real broadcast after the user pairs a list. Killed by "flushing with nothing
-// shared must not record the kits as already broadcast" above. Lesson: a
-// write-only side effect is not equivalent just because nothing was sent —
-// follow the state it leaves behind into the next decision that reads it.
-// ---------------------------------------------------------------------------
+describe('single-list sharing lifecycle', () => {
+  test('joining stays read-only and never publishes a placeholder, including hello/reconnect/background', async () => {
+    useListsStore.setState({ lists: [soloList([item('private')])], hydrated: true });
+    startSyncEngine();
+    await useListsStore.getState().joinShared(SECRET);
+    const joining = created[0];
+    const id = useListsStore.getState().lists[0].id;
+    useListsStore.getState().addItem(id, 'Must not appear');
+    joining.onReconnect(); joining.deliver(JSON.stringify({ _sync: 'hello' })); flushSyncEngine();
+    expect(useListsStore.getState().lists[0].items).toEqual([]);
+    expect(joining.decoded().every(m => m._sync === 'hello')).toBe(true);
+    const remote = { ...sharedList([item('remote')]), categoryOrder: ['Custom','Other'] };
+    joining.deliver(JSON.stringify(remote));
+    await new Promise(resolve => setTimeout(resolve, 0));
+    expect(useListsStore.getState().pendingJoin).toBe(false);
+    expect(useListsStore.getState().lists[0]).toMatchObject({ id, items: remote.items, categoryOrder: remote.categoryOrder });
+    expect(useSyncStatusStore.getState().bySecret[SECRET].lastReceivedAt).not.toBeNull();
+    flushSyncEngine();
+    expect(created.at(-1)!.decoded().find(m => m.items)?.categoryOrder).toEqual(['Custom','Other']);
+  });
+
+  test('invalid and legacy control messages do not unlock a pending join or claim successful sync', async () => {
+    useListsStore.setState({ lists: [soloList()], hydrated: true });
+    startSyncEngine();
+    await useListsStore.getState().joinShared(SECRET);
+    const pending = created[0];
+    for(const data of [ { ...sharedList(), items: 'bad' }, { ...sharedList(), _sync:'kits' }, { ...sharedList(), updatedAt: null } ])
+      pending.deliver(JSON.stringify(data));
+    expect(useListsStore.getState().pendingJoin).toBe(true);
+    expect(useSyncStatusStore.getState().bySecret[SECRET]?.lastReceivedAt).toBeUndefined();
+  });
+
+  test('stop keeps a private copy, clears the channel, and starting again creates a different secret', async () => {
+    const original = { ...sharedList([item('milk')]), categoryOrder:['Custom','Other'], aislePreferences:[{id:'name:milk',category:'Custom',updatedAt:1000}] };
+    useListsStore.setState({ lists:[original], hydrated:true }); startSyncEngine();
+    const old = created[0];
+    await useListsStore.getState().stopSharing();
+    const privateList = useListsStore.getState().lists[0];
+    expect(privateList.items).toEqual(original.items);
+    expect(privateList.categoryOrder).toEqual(original.categoryOrder);
+    expect(privateList.aislePreferences).toEqual(original.aislePreferences);
+    expect(privateList.shareIdentity).toBeUndefined(); expect(privateList.id).not.toBe(original.id);
+    expect(old.closed).toBe(true);
+    const secret = await useListsStore.getState().shareList(privateList.id);
+    expect(secret).not.toBe(SECRET);
+    old.deliver(JSON.stringify(sharedList([item('late')])));
+    expect(useListsStore.getState().lists[0].items).toEqual(original.items);
+  });
+
+  test('failed replacement retains the former list and reopens its channel', async () => {
+    const db = require('../../store/db');
+    useListsStore.setState({ lists:[sharedList([item('keep')])], hydrated:true }); startSyncEngine();
+    db.replaceCurrentList.mockRejectedValueOnce(new Error('disk full'));
+    await expect(useListsStore.getState().joinShared(newSecret())).rejects.toThrow('disk full');
+    expect(useListsStore.getState().transitioning).toBe(false);
+    expect(useListsStore.getState().lists[0].items[0].name).toBe('keep');
+    expect(created.at(-1)?.closed).toBe(false);
+  });
+});

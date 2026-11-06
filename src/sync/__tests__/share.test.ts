@@ -8,7 +8,7 @@
 import { buildShareLink, parseShareLink } from '../share';
 import { SHARE_SCHEME } from '../shareConfig';
 
-const SECRET = 'abcdefghijklmnopqrstuvwxyz012345'; // 32 chars, plausibly a real secret
+const SECRET = 'A'.repeat(43) + '='; // base64 of 32 bytes
 
 describe('buildShareLink', () => {
   it('builds the app-scheme join URL with the secret URI-encoded', () => {
@@ -19,7 +19,7 @@ describe('buildShareLink', () => {
   it('round-trips: what one phone builds, the other parses back verbatim', () => {
     expect(parseShareLink(buildShareLink(SECRET))).toBe(SECRET);
     // Secrets with URL-hostile characters survive the trip too.
-    const hostile = 'abcd/efgh+ijkl=mnop&qrst?uvwx';
+    const hostile = '/+'.repeat(21) + 'A=';
     expect(parseShareLink(buildShareLink(hostile))).toBe(hostile);
   });
 });
@@ -46,10 +46,10 @@ describe('parseShareLink', () => {
     expect(parseShareLink(`${SHARE_SCHEME}://join?s=fifteen-chars15`)).toBeNull();
   });
 
-  it('accepts a secret of exactly the minimum plausible length (16)', () => {
+  it('rejects a truncated 16-character secret', () => {
     const sixteen = 'abcdefghij123456';
     expect(sixteen).toHaveLength(16);
-    expect(parseShareLink(`${SHARE_SCHEME}://join?s=${sixteen}`)).toBe(sixteen);
+    expect(parseShareLink(`${SHARE_SCHEME}://join?s=${sixteen}`)).toBeNull();
   });
 
   it('returns null (not a crash) on malformed percent-encoding', () => {

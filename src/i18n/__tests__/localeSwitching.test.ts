@@ -12,8 +12,8 @@ describe('i18n language switching', () => {
   afterEach(() => resetToBaseStrings());
 
   it('overlays a locale, then returns ALL THE WAY back to English', () => {
-    setLocaleStrings(LOCALES.es);
-    expect(t('common.cancel')).toBe('Cancelar');
+    setLocaleStrings({ common: { cancel: 'Test cancel A' } });
+    expect(t('common.cancel')).toBe('Test cancel A');
 
     // The reported bug: switching back to English must clear the overlay, not
     // leave the previous language stuck.
@@ -23,24 +23,24 @@ describe('i18n language switching', () => {
 
   it('survives repeated round-trips without a language sticking', () => {
     for (let i = 0; i < 3; i++) {
-      setLocaleStrings(LOCALES.fr);
-      expect(t('common.cancel')).toBe('Annuler');
+      setLocaleStrings({ common: { cancel: 'Test cancel B' } });
+      expect(t('common.cancel')).toBe('Test cancel B');
       resetToBaseStrings();
       expect(t('common.cancel')).toBe('Cancel');
 
-      setLocaleStrings(LOCALES.de);
-      expect(t('common.cancel')).toBe('Abbrechen');
+      setLocaleStrings({ common: { cancel: 'Test cancel C' } });
+      expect(t('common.cancel')).toBe('Test cancel C');
       resetToBaseStrings();
       expect(t('common.cancel')).toBe('Cancel');
     }
   });
 
   it('applyDeviceLocale resets to English when the device locale is unmatched', () => {
-    setLocaleStrings(LOCALES.de);
-    expect(t('common.cancel')).toBe('Abbrechen');
+    setLocaleStrings({ common: { cancel: 'Test cancel C' } });
+    expect(t('common.cancel')).toBe('Test cancel C');
 
     // The Jest runtime's locale is en-US, which has no overlay in LOCALES, so
-    // applyDeviceLocale must reset to the English base — not keep German.
+    // applyDeviceLocale must reset to the English base — not keep the test translation.
     applyDeviceLocale();
     expect(t('common.cancel')).toBe('Cancel');
   });

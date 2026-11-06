@@ -5,7 +5,7 @@ import { LOCALES } from './locales';
 type Dict = { [key: string]: string | Dict };
 
 
-export const CANONICAL_LOCALES = ['es', 'de', 'fr', 'it', 'pt-BR', 'ja'] as const;
+export const CANONICAL_LOCALES: string[] = Object.keys(LOCALES);
 
 function deepMerge(base: Dict, extra: Dict): Dict {
   const out: Dict = { ...base };

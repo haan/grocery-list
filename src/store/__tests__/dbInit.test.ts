@@ -129,7 +129,7 @@ describe('db init', () => {
       // Cold start: hydration (domain) and a shell settings read land together.
       await Promise.all([
         db.loadAllLists(),
-        kv.getAppSetting('theme'),
+        kv.getDb(),
         db.getAppSetting('gender'),
       ]);
 

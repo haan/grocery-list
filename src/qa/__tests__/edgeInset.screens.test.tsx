@@ -26,8 +26,6 @@ jest.mock('../../store/db', () => ({
   loadAllLists: () => Promise.resolve([]),
   saveList: () => Promise.resolve(),
   deleteListFromDb: () => Promise.resolve(),
-  loadAllKits: () => Promise.resolve([]),
-  saveKit: () => Promise.resolve(),
   putTombstone: () => Promise.resolve(),
   removeTombstone: () => Promise.resolve(),
   getSyncMeta: () => Promise.resolve(null),
@@ -38,14 +36,6 @@ jest.mock('../../store/db', () => ({
 // The sync engine (relays, crypto) has no bearing on padding; the status
 // store the sync bar reads stays real.
 jest.mock('../../sync', () => ({ resyncNow: jest.fn() }));
-jest.mock('../../lib/transfer', () => ({
-  exportLists: jest.fn(() => Promise.resolve()),
-  pickAndParseLists: jest.fn(() => Promise.resolve([])),
-}));
-jest.mock('../../lib/links', () => ({
-  ...jest.requireActual('../../lib/links'),
-  openUrl: jest.fn(),
-}));
 // The QR renderer and camera are native; the share screen's own layout stays real.
 jest.mock('react-native-qrcode-svg', () => {
   const { View } = require('react-native');
@@ -72,20 +62,6 @@ jest.mock('react-native-reanimated', () => {
       outRange[0] + (v - inRange[0]) * (outRange[1] - outRange[0]),
   };
 });
-jest.mock('../../feedback/FeedbackProvider', () => ({ useFeedback: () => ({ open: jest.fn() }) }));
-jest.mock('../../components/usePullRevealFooter', () => ({
-  usePullRevealFooter: () => ({
-    pullToReveal: false,
-    reveal: { value: 0 },
-    gesture: {},
-    onScroll: undefined,
-    onScrollJS: jest.fn(),
-    onScrollViewLayout: jest.fn(),
-    onContentSizeChange: jest.fn(),
-    footerHeight: 0,
-    onFooterLayout: jest.fn(),
-  }),
-}));
 jest.mock('react-native-gesture-handler', () => {
   const { View } = require('react-native');
   return {
@@ -96,27 +72,19 @@ jest.mock('react-native-gesture-handler', () => {
 
 import { auditScreen } from '../edgeInsetAudit';
 import ListsHomeScreen from '../../screens/ListsHomeScreen';
-import ListDetailScreen from '../../screens/ListDetailScreen';
-import KitsHomeScreen from '../../screens/KitsHomeScreen';
-import KitDetailScreen from '../../screens/KitDetailScreen';
 import ReorderAislesScreen from '../../screens/ReorderAislesScreen';
 import ShareScreen from '../../screens/ShareScreen';
 import SettingsScreen from '../../screens/SettingsScreen';
-import Credits from '../../components/Credits';
 import AddItemsSheet from '../../components/AddItemsSheet';
-import AddIngredientsSheet from '../../components/AddIngredientsSheet';
-import KitPicker from '../../components/KitPicker';
 import { useItemEditor } from '../../components/ItemEditor';
 import { useActionMenu, usePrompt, useConfirm } from '../../components/Dialogs';
 import { LanguageSetting } from '../../components/LanguageSetting';
 import { Snackbar } from '../../components/Snackbar';
 import { SyncStatusBar } from '../../components/SyncStatusBar';
 import { useListsStore } from '../../store/lists';
-import { useKitsStore } from '../../store/kits';
 import { useAccountStore } from '../../store/account';
 import { markConnected, markReceived } from '../../sync/status';
 import { makeList, makeItem, type GroceryList } from '../../data/list';
-import { makeKit, makeKitItem } from '../../data/kit';
 import { starterItemsForLocale } from '../../data/seedCatalog';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -135,8 +103,6 @@ const SECRET = 'edge-inset-secret';
 
 let shop: GroceryList;
 let party: GroceryList;
-let kitId = '';
-let emptyKitId = '';
 
 beforeEach(() => {
   const now = Date.now();
@@ -160,26 +126,10 @@ beforeEach(() => {
   shop.shareIdentity = { secret: SECRET, createdAt: now };
   party = makeList('Party');
   party.items = [makeItem('Crisps', 'en', 'Snacks')];
-  useListsStore.setState({ lists: [shop, party], hydrated: true });
-
-  const kit = makeKit('Weeknight pasta');
-  kit.items = [
-    makeKitItem('Spaghetti', 'en', 'Pantry', 2),
-    makeKitItem('Passata', 'en', 'Pantry'),
-    makeKitItem('Parmesan', 'en', 'Dairy & eggs'),
-    makeKitItem('Basil', 'en', 'Produce'),
-  ];
-  kitId = kit.id;
-  // An ingredient straight from the starter catalogue, so the brand-new
-  // ingredient picker shows its "In kit" pill.
-  const starterKit = makeKit('Breakfast');
-  starterKit.items = [makeKitItem(starterItemsForLocale('en')[0].name)];
-  emptyKitId = starterKit.id;
-  useKitsStore.setState({ kits: [kit, starterKit], hydrated: true });
+  useListsStore.setState({ lists: [shop], hydrated: true });
 
   useAccountStore.setState({
     hydrated: true,
-    staples: ['coffee', 'oat milk'],
     history: [
       { name: 'Coffee', count: 9, lastUsed: now - HOUR },
       { name: 'Oat milk', count: 6, lastUsed: now - 2 * HOUR },
@@ -207,11 +157,11 @@ function ActionMenuOpen() {
   const menu = useActionMenu();
   useEffect(() => {
     menu.open({
-      title: 'Weekly shop',
+      title: 'Recent item',
       options: [
         { label: 'Rename', onPress: noop },
-        { label: 'Share this list', onPress: noop },
-        { label: 'Delete list', destructive: true, onPress: noop },
+
+        { label: 'Forget item', destructive: true, onPress: noop },
       ],
     });
   }, []);
@@ -222,7 +172,7 @@ function PromptOpen() {
   const prompt = usePrompt();
   useEffect(() => {
     prompt.open({
-      title: 'Rename list',
+      title: 'Rename aisle',
       initialValue: 'Weekly shop',
       confirmLabel: 'Save',
       onSubmit: noop,
@@ -235,8 +185,8 @@ function ConfirmOpen() {
   const confirm = useConfirm();
   useEffect(() => {
     confirm.open({
-      title: 'Delete this list?',
-      message: 'It goes from this phone and any phone it is shared with.',
+      title: 'Stop sharing?',
+      message: 'Keep a private copy on this phone.',
       confirmLabel: 'Delete',
       destructive: true,
       onConfirm: noop,
@@ -249,7 +199,7 @@ describe("edge-inset audit — this app's screens", () => {
   it('Settings', async () => {
     expect(
       await auditScreen(<SettingsScreen navigation={navigation} route={route('Settings')} />, {
-        readyText: 'Export lists',
+        readyText: 'Sharing',
       })
     ).toEqual([]);
   });
@@ -257,7 +207,7 @@ describe("edge-inset audit — this app's screens", () => {
   it('Lists home', async () => {
     expect(
       await auditScreen(<ListsHomeScreen navigation={navigation} route={route('Lists')} />, {
-        readyText: 'Party',
+        readyText: 'Sourdough',
       })
     ).toEqual([]);
   });
@@ -265,25 +215,9 @@ describe("edge-inset audit — this app's screens", () => {
   it('List detail (shared, with a leftover from last shop)', async () => {
     expect(
       await auditScreen(
-        <ListDetailScreen navigation={navigation} route={route('ListDetail', { listId: shop.id })} />,
+        <ListsHomeScreen navigation={navigation} route={route('ListDetail', { listId: shop.id })} />,
         { readyText: 'Sourdough' }
       )
-    ).toEqual([]);
-  });
-
-  it('Kits home', async () => {
-    expect(
-      await auditScreen(<KitsHomeScreen navigation={navigation} route={route('Kits')} />, {
-        readyText: 'Weeknight pasta',
-      })
-    ).toEqual([]);
-  });
-
-  it('Kit detail', async () => {
-    expect(
-      await auditScreen(<KitDetailScreen navigation={navigation} route={route('KitDetail', { kitId })} />, {
-        readyText: 'Spaghetti',
-      })
     ).toEqual([]);
   });
 
@@ -302,26 +236,9 @@ describe("edge-inset audit — this app's screens", () => {
     ).toEqual([]);
   });
 
-  it('Acknowledgements', async () => {
-    expect(await auditScreen(<Credits onBack={noop} />)).toEqual([]);
-  });
-
-  it('Add items sheet (usuals and recent)', async () => {
+  it('Add items sheet (recent and catalog)', async () => {
     expect(
       await auditScreen(<AddItemsSheet visible listId={shop.id} onClose={noop} />, { readyText: 'Tomatoes' })
-    ).toEqual([]);
-  });
-
-  it('Add items sheet, Kits tab', async () => {
-    expect(await auditScreen(<KitPicker listId={shop.id} />, { readyText: 'Weeknight pasta' })).toEqual([]);
-  });
-
-  it('Add ingredients sheet (brand new, starter items)', async () => {
-    useAccountStore.setState({ staples: [], history: [] });
-    expect(
-      await auditScreen(<AddIngredientsSheet visible kitId={emptyKitId} onClose={noop} />, {
-        readyText: 'In kit',
-      })
     ).toEqual([]);
   });
 
@@ -330,15 +247,15 @@ describe("edge-inset audit — this app's screens", () => {
   });
 
   it('Action menu', async () => {
-    expect(await auditScreen(<ActionMenuOpen />, { readyText: 'Delete list' })).toEqual([]);
+    expect(await auditScreen(<ActionMenuOpen />, { readyText: 'Forget item' })).toEqual([]);
   });
 
   it('Prompt', async () => {
-    expect(await auditScreen(<PromptOpen />, { readyText: 'Rename list' })).toEqual([]);
+    expect(await auditScreen(<PromptOpen />, { readyText: 'Rename aisle' })).toEqual([]);
   });
 
   it('Confirm', async () => {
-    expect(await auditScreen(<ConfirmOpen />, { readyText: 'Delete this list?' })).toEqual([]);
+    expect(await auditScreen(<ConfirmOpen />, { readyText: 'Stop sharing?' })).toEqual([]);
   });
 
   it('Language picker sheet', async () => {
@@ -346,7 +263,7 @@ describe("edge-inset audit — this app's screens", () => {
       await auditScreen(<LanguageSetting />, {
         interact: async () => {
           await userEvent.setup().press(screen.getByRole('button', { name: /^Language/ }));
-          await screen.findByRole('radio', { name: 'Deutsch' });
+          await screen.findByRole('radio', { name: 'English' });
         },
       })
     ).toEqual([]);

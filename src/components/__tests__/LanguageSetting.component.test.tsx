@@ -43,6 +43,8 @@ describe('LanguageSetting', () => {
 
     // The sheet is open — the English option (a radio) is now reachable.
     expect(screen.getByRole('radio', { name: 'English' })).toBeTruthy();
+    expect(screen.getByRole('radio', { name: 'System' })).toBeTruthy();
+    expect(screen.getAllByRole('radio')).toHaveLength(2);
   });
 
   it('selects a language and closes the sheet when an option is pressed', async () => {
@@ -50,12 +52,12 @@ describe('LanguageSetting', () => {
     await render(<LanguageSetting />);
 
     await user.press(screen.getByRole('button', { name: 'Language, System' }));
-    // Spanish autonym is "Español" (grocery-list ships translations).
-    await user.press(screen.getByRole('radio', { name: 'Español' }));
+    // English is the only explicit language until new translations are added.
+    await user.press(screen.getByRole('radio', { name: 'English' }));
 
 
     expect(screen.queryByRole('radio', { name: 'English' })).toBeNull();
-    expect(screen.getByRole('button', { name: 'Idioma, Español' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Language, English' })).toBeTruthy();
   });
 
   it('closes without changing the language when the scrim (Cancel) is pressed', async () => {
@@ -87,8 +89,8 @@ describe('LanguageSetting', () => {
     await render(<LanguageSetting />);
 
     await user.press(screen.getByRole('button', { name: 'Language, System' }));
-    await user.press(screen.getByRole('radio', { name: 'Deutsch' }));
+    await user.press(screen.getByRole('radio', { name: 'English' }));
 
-    expect(screen.getByRole('button', { name: 'Sprache, Deutsch' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Language, English' })).toBeTruthy();
   });
 });

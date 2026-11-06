@@ -3,7 +3,93 @@
 Baseline: main commit 5edb48bd2bff1fd78e0700898604846c2b39aa8d. Work branch:
 cleanup/android-only. Audit date: 2026-11-06. No history rewrite or main merge.
 
-## Decisions and boundaries
+## Single-list simplification (current phase)
+
+This phase supersedes earlier multi-list, favorites, and import/export decisions
+below. Prior phases remain recorded as history, not as the current UI contract.
+The work is delivered on cleanup/android-only; no main merge.
+
+- ListsHomeScreen now renders shopping items directly, with a fixed Grocery List
+  heading, Sharing and Settings actions, and a compact bottom connection status.
+  ListDetailScreen and the old overview, naming, duplication, deletion, and
+  creation controls are removed. Settings owns Sharing and Manage aisles.
+- Favorites/Usuals and their persistence/actions are removed. Recent ranking,
+  editing, forgetting and Undo, catalog suggestions, item editing, and aisle
+  learning remain. No file import/export remains.
+- Database initialization performs the requested single-list-v1 reset once, in
+  one transaction: old lists/identities/items/custom aisles/preferences, history,
+  favorites and obsolete sync bookkeeping are cleared, and one private empty list
+  plus its marker are inserted. Subsequent starts retain data. Failed resets roll
+  back and show Retry. Appearance/language (AsyncStorage) and diagnostics remain.
+- Sharing starts only through an explicit action. All identity replacements are
+  durable before completing. Pending joins survive restart, request a snapshot,
+  and cannot edit or publish until a validated snapshot is adopted. Stop sharing
+  keeps a private copy; starting again creates a new secret. Stale writes/callbacks
+  cannot resurrect the previous identity. Wire format, encryption, relay slots,
+  clock semantics, and established-list merges remain compatible.
+- Native expo-document-picker and expo-sharing and the sharing config plugin
+  were removed. expo-file-system remains for local diagnostics; camera and React
+  Native Share remain. No retained dependency version changed.
+
+| Files/group | Current disposition |
+| --- | --- |
+| App.tsx, src/shell/AppShell.tsx | Direct items route, ordered initialization, startup error/retry, deferred share-link confirmation. |
+| src/screens/ListsHomeScreen.tsx | Retained item interactions; compact sharing footer and no list management. |
+| src/screens/ListDetailScreen.tsx | Removed; item UI moved to home. |
+| src/screens/SettingsScreen.tsx, ShareScreen.tsx | Sharing lifecycle, confirmation/scanning, aisle access, retained settings. |
+| src/components/SharingFooter.tsx | New compact, tappable sharing status. |
+| src/components/ItemPicker.tsx, ItemEditor.tsx, AddItemsSheet.tsx | Remove favorites and named-list toast; preserve Recent and item interactions. |
+| src/store/lists.ts, db.ts, account.ts; src/storage/kv.ts | One-list invariant, atomic reset/replacement, serialized saves, pending metadata; remove favorites and generic list-management helpers. |
+| src/sync/index.ts, share.ts, validateList.ts | Pending snapshot gate, old-channel guards, validated codes/snapshots; existing list protocol retained. |
+| src/lib/transfer.ts, src/lib/__tests__/aisleTransfer.test.ts | Removed with file import/export. |
+| src/store/__tests__/kitRemoval.test.ts | Replaced by singleListMigration.test.ts; real SQLite tests cover the superseding reset and rollback. |
+| qa/singleListFixture.ts | Test-only installation fixtures for retained store/merge simulations; never imported by the app. |
+| Retained component/screen/store/sync/layout/i18n tests | Updated for one list, confirmation, pending states and removed entry points; original intent/convergence suites retained. |
+| package.json, package-lock.json, app.json, scripts/check-android.cjs | Remove native file-transfer modules/plugin and guard against their return. |
+| README.md, ARCHITECTURE.md, PRIVACY.md, docs/development.md, scripts/lod/README.md | Current one-list workflow, local reset, sharing/privacy and device checks. |
+| Other retained files | Keep their previously audited disposition. MIT, third-party/font and LOD attribution unchanged. |
+
+Validation: clean npm ci, TypeScript, Android configuration guard, 16 fuzz-harness
+self-tests, Expo dependency check, Expo Doctor 21/21, and 387 Jest tests in 44 suites
+passed. Metro Android manifest and bundle return HTTP 200; configured package is
+io.github.haan.grocerylist.dev and platforms is Android only. Android manifest
+introspection also succeeds, and native autolinking excludes both removed file-transfer modules.
+
+Test-count comparison against the immediately preceding 388-test/45-suite phase:
+
+| Suite/group | Before | After | Explanation |
+| --- | ---: | ---: | --- |
+| ListsHomeScreen | 3 | 2 | Retire whole-list delete confirmation; test direct item home. |
+| ItemEditor | 9 | 8 | Remove favorite action test. |
+| ItemPicker | 8 | 5 | Remove three favorite/Usuals tests; keep Recent and entry tests. |
+| SettingsScreen | 7 | 5 | Remove import/export actions. |
+| aisleTransfer | 2 | 0 | Remove file-transfer feature tests. |
+| kitRemoval → singleListMigration | 3 | 4 | Superseding atomic reset, restart, rollback, pending-state and stale-write checks. |
+| ShareScreen | 6 | 9 | Explicit start, cancellation/reopening a link, duplicate-scan and stop-sharing checks. |
+| sync/engine | 39 | 43 | Replace multi-list fixture with stale-channel regression; add pending/invalid-snapshot, stop/restart and failed-replacement checks. |
+| Other suites | 311 | 311 | Retained regression coverage, adapted setup where needed. |
+
+Fresh native development build submitted using the existing EAS project and
+remote signing key: [29808259-1b41-4e50-b878-27df94a0177e](https://expo.dev/accounts/lean-mean-coding-team/projects/grocery-list/builds/29808259-1b41-4e50-b878-27df94a0177e).
+Version code 4 finished successfully in EAS. The user installed it as an update
+on the Pixel and confirmed that startup through Metro works and the current
+item and sharing state remain intact.
+
+Pixel checks through Metro: confirmed by the user. The one-time reset produced
+one empty private list; an item survived the next restart. Direct item home,
+Sharing/Settings header, status footer, and absence of list naming/overview were
+confirmed. Add/edit/check/Undo, Luxembourgish suggestions, learned aisles, Recent,
+aisle dragging/renaming, and removal of favorites/import-export all work.
+Opening Sharing stays private; cancellation and confirmation of Stop sharing
+work, items remain, and starting sharing again produces a different QR code.
+Two-phone sync: the user confirmed pairing and bidirectional item additions,
+quantity edits, check-offs, and aisle corrections. Re-adding the corrected product
+on the other phone uses the learned aisle. With Wi-Fi and mobile data disabled on
+the second phone, independent edits on both phones converged after reconnecting
+without losing either phone's changes, including after reopening the apps.
+The two-phone testing deferral is resolved; automated simulations also pass.
+
+## Initial Android-only cleanup: decisions and boundaries
 
 - Keep the current Android app, LOD catalog, learning/aisle management, kits,
   persistence, sharing, accessibility, and local diagnostic privacy checks.
@@ -40,8 +126,8 @@ cleanup/android-only. Audit date: 2026-11-06. No history rewrite or main merge.
   2026-11-06: settings/feedback, add/edit/check, Luxembourgish suggestions and
   learned aisle corrections, aisle drag ordering, rename initial selection,
   replacement and appending, kit additions, and test-data export/import.
-- Two-phone sync: deferred at the user's request while the second Android phone
-  charges. Simulated sync tests pass; physical two-device acceptance remains pending.
+- Two-phone sync was deferred during this phase while the second phone charged.
+  Physical checks were subsequently completed in the single-list phase above.
 
 ### Test-count changes
 
@@ -76,6 +162,65 @@ Appearance localization tests, covering English and all six translated locales.
 After this fix, the full Android suite passes: 467 tests in 48 suites. TypeScript,
 the Android configuration guard, and all 16 fuzz-harness self-checks pass. Metro's
 Android manifest and bundle both return HTTP 200.
+
+## Follow-up simplification (2026-11-06)
+
+Baseline for this phase: a516299 on cleanup/android-only. This section supersedes
+the earlier descriptions of retained kits, feedback UI, and translated interfaces.
+
+| Area | Final disposition |
+| --- | --- |
+| App/navigation | Direct Lists stack route; remove bottom tabs, kit routes, acknowledgements route, and obsolete navigation types. |
+| Lists/Add items | Remove feedback/branding footer and pull animation; item picker has no Items/Kits switch; preserve safe areas and ordinary scrolling. |
+| Settings | Appearance, Language, export/import, standalone Version only; remove About actions and promotional footer. |
+| Feedback code | Delete provider/context and browser-opening action; initialize bounded local diagnostics in AppShell. |
+| Kits | Delete screens, pickers, ingredients UI, types, store, persistence functions, merge engine, timers, and kit-only list operations. |
+| Database upgrade | Idempotent DROP TABLE IF EXISTS kits; preserve all other data, including list items originally added from kits. No relay deletion or remote wipe. |
+| Synchronization | Preserve list messages, encryption, relay slots and clocks; ignore unsupported control messages without list merges or received-status updates. |
+| Interface languages | Remove es/de/fr/it/pt-BR/ja and shell dictionaries. Keep English, System/English picker, translation registry and synthetic-dictionary tests. Retired saved choices migrate to System. |
+| Catalog | Keep Luxembourgish products/aisle labels, LOD attribution, and French/German product aliases unchanged. |
+| Dependencies | Remove only @react-navigation/bottom-tabs from the lockfile; no retained package version changes, no native dependency changes. |
+| Attribution | Keep LICENSE, CREDITS.md, font licenses and LOD attribution; delete unused runtime credits data and screen. |
+
+Validation: clean npm ci, TypeScript, Android-only guard, 16 fuzz-harness checks,
+Expo dependency validation, and Expo Doctor (21/21) pass. Resolved config retains
+Android-only platforms, package io.github.haan.grocerylist.dev, and Expo project
+80882728-1f01-40c5-b4aa-56fcfa53f928. Metro Android manifest and bundle return 200.
+No native rebuild is required. Real SQLite tests exercise fresh installs and two
+successive opens of both legacy and current databases, verifying only kits are removed.
+Real stack tests cover direct home navigation, Settings/back, and cold-start share links.
+
+Full retained suite: **388 tests in 45 suites pass** (previously 467 in 48).
+All differences are accounted for below; other suites retain their counts.
+
+| Suite | Before | After | Reason |
+| --- | ---: | ---: | --- |
+| App.navigation | 0 | 2 | Direct Lists stack, back navigation, cold-start share link. |
+| Credits.component | 2 | 0 | Removed screen. |
+| FeedbackFooter.component | 2 | 0 | Removed footer. |
+| KitDetailScreen.screen | 8 | 0 | Removed screen. |
+| KitsHomeScreen.screen | 7 | 0 | Removed screen. |
+| ListsHomeScreen.screen | 7 | 3 | Remove six locale cases; add home/Settings and direct picker/learning checks. |
+| SettingsScreen.screen | 17 | 7 | Remove six locale and five removed-action cases; add simplified Settings check. |
+| aisleLearning | 16 | 14 | Remove two kit-only cases; retain ordinary item/alias learning. |
+| edgeInset.screens | 18 | 13 | Remove five retired surfaces; retain Android layout coverage. |
+| engine | 43 | 39 | Remove seven kit-only cases; add three unsupported-control/status cases; adapt mixed tests to lists. |
+| keyParity | 2 | 3 | Add app-wide literal-key validation against English. |
+| kitRemoval | 0 | 3 | Real SQLite upgrade/fresh-install/idempotence checks. |
+| kits | 6 | 0 | Removed store. |
+| localePreference | 0 | 6 | Migrate each retired saved locale and retain English selection. |
+| mergeKits | 14 | 0 | Removed merge code. |
+| storeAndForward | 16 | 15 | Remove kit-only replay; retain list offline replay. |
+| voiceControlNames | 28 | 2 | Remove retired locales and kit-only accessible labels. |
+
+Pixel verification for this phase: confirmed by the user on 2026-11-06 after
+closing and reopening the app. Existing lists remain; the bottom tabs and feedback
+footer are gone; Settings shows Appearance, System/English language selection,
+import/export, and Version. Add items has no tabs. Adding, editing, checking,
+Luxembourgish suggestions, learned aisle corrections, and test-data export/import
+all work. Two-device sync was deferred during this phase because the second phone
+was not ready; physical checks were subsequently completed in the single-list
+phase above. Automated list-sync tests pass.
 
 ## Complete tracked-file disposition
 
@@ -345,17 +490,17 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | scripts/render-screenshots.mjs | Remove | Removed orphaned factory/device/store automation. |
 | src/components/AboutRow.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/AddAction.tsx | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
-| src/components/AddIngredientsSheet.tsx | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/components/AddIngredientsSheet.tsx | Remove | Retired kit feature and its dedicated tests; list behavior retained. |
 | src/components/AddItemsSheet.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/AnimatedSplash.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
-| src/components/Credits.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/components/Credits.tsx | Remove | Removed in-app acknowledgements; repository CREDITS.md and licenses retained. |
 | src/components/Dialogs.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/EmptyState.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/ErrorBoundary.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/FundingFooter.tsx | Remove | Replaced by FeedbackFooter; removed donation action, retained feedback and animation. |
 | src/components/ItemEditor.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/ItemPicker.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
-| src/components/KitPicker.tsx | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/components/KitPicker.tsx | Remove | Retired kit feature and its dedicated tests; list behavior retained. |
 | src/components/LanguageSetting.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/LaunchNoticeModal.tsx | Remove | Removed unused purchase, review, launch, promotion, or duplicate About feature. |
 | src/components/MoreFromJA.tsx | Remove | Removed unused purchase, review, launch, promotion, or duplicate About feature. |
@@ -368,9 +513,9 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | src/components/SwipeRow.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/SyncStatusBar.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/TipJarSheet.tsx | Remove | Removed unused purchase, review, launch, promotion, or duplicate About feature. |
-| src/components/Wordmark.tsx | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/components/Wordmark.tsx | Remove | Removed feedback/footer/navigation UI or its unused support code. |
 | src/components/__tests__/AboutRow.component.test.tsx | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
-| src/components/__tests__/Credits.component.test.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/components/__tests__/Credits.component.test.tsx | Remove | Removed in-app acknowledgements; repository CREDITS.md and licenses retained. |
 | src/components/__tests__/Dialogs.component.test.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/__tests__/FundingFooter.component.test.tsx | Remove | Replaced by FeedbackFooter; removed donation action, retained feedback and animation. |
 | src/components/__tests__/ItemEditor.component.test.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
@@ -387,7 +532,7 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | src/components/dialogShared.ts | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/jaCatalog.ts | Remove | Removed unused purchase, review, launch, promotion, or duplicate About feature. |
 | src/components/tipJarStyles.ts | Remove | Removed unused purchase, review, launch, promotion, or duplicate About feature. |
-| src/components/usePullRevealFooter.ts | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/components/usePullRevealFooter.ts | Remove | Removed feedback/footer/navigation UI or its unused support code. |
 | src/constants/tipProducts.ts | Remove | Removed unused purchase, review, launch, promotion, or duplicate About feature. |
 | src/data/__tests__/aisleOrder.test.ts | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/data/__tests__/categories.test.ts | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
@@ -397,13 +542,13 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | src/data/catalog.ts | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/data/categories.ts | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/data/categoryKeywords.ts | Remove | Obsolete English catalog tooling/classifier; reviewed LOD catalog is authoritative. |
-| src/data/credits.ts | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
-| src/data/kit.ts | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/data/credits.ts | Remove | Removed in-app acknowledgements; repository CREDITS.md and licenses retained. |
+| src/data/kit.ts | Remove | Retired kit feature and its dedicated tests; list behavior retained. |
 | src/data/list.ts | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/data/seedCatalog.ts | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/data/seedCatalogData.ts | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/feedback/FeedbackLogPreview.tsx | Remove | Removed unused email-report UI/composition; GitHub action and local diagnostics remain. |
-| src/feedback/FeedbackProvider.tsx | Update | Retained bounded local diagnostics, privacy tests, and GitHub issue action; no upload. |
+| src/feedback/FeedbackProvider.tsx | Remove | Removed feedback/footer/navigation UI or its unused support code. |
 | src/feedback/FeedbackSheet.tsx | Remove | Removed unused email-report UI/composition; GitHub action and local diagnostics remain. |
 | src/feedback/FeedbackTypePicker.tsx | Remove | Removed unused email-report UI/composition; GitHub action and local diagnostics remain. |
 | src/feedback/__tests__/feedback.test.ts | Update | Retained bounded local diagnostics, privacy tests, and GitHub issue action; no upload. |
@@ -416,23 +561,23 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | src/i18n/__tests__/localeSwitching.test.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
 | src/i18n/__tests__/voiceControlNames.test.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
 | src/i18n/appStrings.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
-| src/i18n/de.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
-| src/i18n/es.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
-| src/i18n/fr.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
+| src/i18n/de.ts | Remove | Retired interface translation; retain English and translation infrastructure. |
+| src/i18n/es.ts | Remove | Retired interface translation; retain English and translation infrastructure. |
+| src/i18n/fr.ts | Remove | Retired interface translation; retain English and translation infrastructure. |
 | src/i18n/index.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
-| src/i18n/it.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
-| src/i18n/ja.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
+| src/i18n/it.ts | Remove | Retired interface translation; retain English and translation infrastructure. |
+| src/i18n/ja.ts | Remove | Retired interface translation; retain English and translation infrastructure. |
 | src/i18n/localePreference.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
 | src/i18n/locales.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
-| src/i18n/pt-BR.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
-| src/i18n/shellLocales.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
+| src/i18n/pt-BR.ts | Remove | Retired interface translation; retain English and translation infrastructure. |
+| src/i18n/shellLocales.ts | Remove | Retired interface translation; retain English and translation infrastructure. |
 | src/i18n/shellStrings.ts | Update | Retained interface languages and accessibility tests; removed obsolete feature copy/directives. |
-| src/lib/__tests__/aisleTransfer.test.ts | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/lib/__tests__/aisleTransfer.test.ts | Remove | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/lib/backup.ts | Remove | Unused generic legacy backup helper; active transfer.ts export/import remains. |
 | src/lib/id.ts | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
-| src/lib/links.ts | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/lib/links.ts | Remove | Removed feedback/footer/navigation UI or its unused support code. |
 | src/lib/tipJar.ts | Remove | Removed unused purchase, review, launch, promotion, or duplicate About feature. |
-| src/lib/transfer.ts | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/lib/transfer.ts | Remove | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/qa/__tests__/edgeInset.proof.test.tsx | Update | Retained test-only layout audit; Android representative dimensions and retained screens. |
 | src/qa/__tests__/edgeInset.screens.test.tsx | Update | Retained test-only layout audit; Android representative dimensions and retained screens. |
 | src/qa/edgeInset.ts | Update | Retained test-only layout audit; Android representative dimensions and retained screens. |
@@ -440,19 +585,19 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | src/qa/fixtures.example.ts | Remove | Removed production demo/capture mode and unused example fixture. |
 | src/qa/fixtures.ts | Remove | List sample moved to test-only support; runtime seeding and demo secret removed. |
 | src/qa/qaMode.ts | Remove | Removed production demo/capture mode and unused example fixture. |
-| src/screens/KitDetailScreen.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
-| src/screens/KitsHomeScreen.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/screens/KitDetailScreen.tsx | Remove | Retired kit feature and its dedicated tests; list behavior retained. |
+| src/screens/KitsHomeScreen.tsx | Remove | Retired kit feature and its dedicated tests; list behavior retained. |
 | src/screens/ListDetailScreen.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/screens/ListsHomeScreen.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/screens/ReorderAislesScreen.tsx | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/screens/SettingsScreen.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/screens/ShareScreen.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
-| src/screens/__tests__/KitDetailScreen.screen.test.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
-| src/screens/__tests__/KitsHomeScreen.screen.test.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/screens/__tests__/KitDetailScreen.screen.test.tsx | Remove | Retired kit feature and its dedicated tests; list behavior retained. |
+| src/screens/__tests__/KitsHomeScreen.screen.test.tsx | Remove | Retired kit feature and its dedicated tests; list behavior retained. |
 | src/screens/__tests__/ReorderAislesScreen.screen.test.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/screens/__tests__/SettingsScreen.screen.test.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/screens/__tests__/ShareScreen.screen.test.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
-| src/screens/navTypes.ts | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/screens/navTypes.ts | Remove | Removed feedback/footer/navigation UI or its unused support code. |
 | src/shell/AppShell.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/shell/navTheme.ts | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/siri/__tests__/drain.test.ts | Remove | Removed native voice assistant integration and its hooks, UI, docs, and tests. |
@@ -470,11 +615,11 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | src/store/__tests__/aislePersistence.test.ts | Keep | Retained state/persistence and tests; only obsolete runtime demo seeding removed. |
 | src/store/__tests__/dbInit.test.ts | Keep | Retained state/persistence and tests; only obsolete runtime demo seeding removed. |
 | src/store/__tests__/historyRank.test.ts | Keep | Retained state/persistence and tests; only obsolete runtime demo seeding removed. |
-| src/store/__tests__/kits.test.ts | Keep | Retained state/persistence and tests; only obsolete runtime demo seeding removed. |
+| src/store/__tests__/kits.test.ts | Remove | Retired kit feature and its dedicated tests; list behavior retained. |
 | src/store/account.ts | Update | Retained state/persistence and tests; only obsolete runtime demo seeding removed. |
 | src/store/db.ts | Update | Retained state/persistence and tests; only obsolete runtime demo seeding removed. |
 | src/store/historyRank.ts | Keep | Retained state/persistence and tests; only obsolete runtime demo seeding removed. |
-| src/store/kits.ts | Update | Retained state/persistence and tests; only obsolete runtime demo seeding removed. |
+| src/store/kits.ts | Remove | Retired kit feature and its dedicated tests; list behavior retained. |
 | src/store/lists.ts | Update | Retained state/persistence and tests; only obsolete runtime demo seeding removed. |
 | src/sync/__tests__/clock.test.ts | Keep | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
 | src/sync/__tests__/crypto.test.ts | Update | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
@@ -483,7 +628,7 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | src/sync/__tests__/intentFuzz.model.test.ts | Update | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
 | src/sync/__tests__/intentFuzz.test.ts | Keep | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
 | src/sync/__tests__/mergeDupNames.test.ts | Keep | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
-| src/sync/__tests__/mergeKits.test.ts | Keep | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
+| src/sync/__tests__/mergeKits.test.ts | Remove | Retired kit feature and its dedicated tests; list behavior retained. |
 | src/sync/__tests__/mergeRecordSet.test.ts | Update | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
 | src/sync/__tests__/publishRejectionStatus.test.tsx | Keep | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
 | src/sync/__tests__/reportedDefects.test.ts | Keep | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
@@ -496,7 +641,7 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | src/sync/crypto.ts | Keep | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
 | src/sync/index.ts | Update | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
 | src/sync/merge.ts | Update | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
-| src/sync/mergeKits.ts | Keep | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
+| src/sync/mergeKits.ts | Remove | Retired kit feature and its dedicated tests; list behavior retained. |
 | src/sync/mergeRecordSet.ts | Keep | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
 | src/sync/share.ts | Update | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
 | src/sync/shareConfig.ts | Update | Retained sharing protocol, clocks, crypto, transport, and automated convergence checks. |
@@ -553,7 +698,16 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | babel.config.js | Explicit Expo Babel transform for Metro and Android Jest. |
 | docs/repository-audit.md | This complete audit and acceptance record. |
 | scripts/check-android.cjs | Retained Android app asset generation or configuration guard; host OS support preserved. |
-| src/components/FeedbackFooter.tsx | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
-| src/components/__tests__/FeedbackFooter.component.test.tsx | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/components/FeedbackFooter.tsx | Added in the first cleanup, then removed with the feedback footer. |
+| src/components/__tests__/FeedbackFooter.component.test.tsx | Added in the first cleanup, then removed with the feedback footer. |
 | src/sync/__tests__/support/listFixture.ts | Test-only list fixture, no production import or build-time share secret. |
 | src/screens/__tests__/ListsHomeScreen.screen.test.tsx | Localized delete-confirmation regression tests for all supported interface languages. |
+
+### Files added by the simplification
+
+| Path | Purpose |
+| --- | --- |
+| src/lib/version.ts | Runtime app/build version retained independently of removed links. |
+| src/screens/__tests__/App.navigation.test.tsx | Real stack navigation and share-link regression checks. |
+| src/store/__tests__/kitRemoval.test.ts | Real SQLite retirement migration and preservation checks. |
+| src/i18n/__tests__/localePreference.test.ts | Saved-language fallback and persistence regression checks. |

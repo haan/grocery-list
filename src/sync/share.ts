@@ -8,6 +8,10 @@ export interface ShareIdentity {
   createdAt: number;
 }
 
+export function isShareSecret(secret: string): boolean {
+  return /^[A-Za-z0-9+/]{43}=$/.test(secret);
+}
+
 export function makeShareIdentity(): ShareIdentity {
   return { secret: newSecret(), createdAt: Date.now() };
 }
@@ -29,7 +33,7 @@ export function parseShareLink(url: string): string | null {
   try {
     const secret = decodeURIComponent(m[1]);
     // base64 of 32 bytes ≈ 44 chars; sanity-check it's plausible.
-    return secret.length >= 16 ? secret : null;
+    return isShareSecret(secret) ? secret : null;
   } catch {
     return null;
   }

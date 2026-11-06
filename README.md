@@ -27,11 +27,25 @@ The cloud build uses Expo project `80882728-1f01-40c5-b4aa-56fcfa53f928`, owned 
 
 See [the development guide](docs/development.md) for installation, debugging, credentials, networking, and the device acceptance checklist.
 
-## Sharing and feedback
+## Shopping and sharing
 
-The development app has its own Android identity and share-link scheme and can coexist with the original app. Use disposable lists for development and device acceptance.
+The app opens directly into one shopping list. The header has Sharing and Settings;
+a compact footer shows connection status. Settings contains Appearance, Language,
+Sharing, Manage aisles, and Version. The language picker offers System and English,
+ready for future Luxembourgish interface translations. Product suggestions and
+built-in aisle labels remain Luxembourgish. Recent items remain local; favorites,
+kits, and file import/export have been removed.
 
-Feedback opens this repository's issue form without automatically including diagnostic logs. There are no purchase, store-review, or promotion features. Public relay availability is best-effort.
+Opening Sharing does not publish anything. Start sharing creates a QR code/link;
+scanning another code asks before replacing this phone's list. A joining phone
+waits for a valid shared snapshot before editing or publishing. Stop sharing keeps
+a private copy; starting again creates a new code. Other phones keep their own
+copies. Public relay availability and retention are best-effort.
+
+**Single-list upgrade:** the first launch of this phase intentionally clears all
+old shopping lists, sharing identities, learned/custom aisles, history, and
+favorites, then creates one empty private list. This reset is atomic and runs once.
+Appearance and language remain. Use disposable shopping data for development.
 
 See [the repository audit](docs/repository-audit.md) for retained code and removed legacy tooling.
 

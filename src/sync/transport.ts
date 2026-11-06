@@ -11,7 +11,7 @@
  *    later subscriber. Used for the list state itself, so a phone that opens
  *    hours or days later still receives what its partner left — store-and-
  *    forward, no partner online needed. The `d` tag is `<channel>:<slot>`
- *    (slots: the list, the kits); the author key is derived per device from
+ *    (slot: the list); the author key is derived per device from
  *    `authorSeed`, so each device owns its own slot and can never overwrite a
  *    partner's deposit with a stale copy. A stored publish also fans out live
  *    to anyone subscribed, so it replaces (not duplicates) the old ephemeral
@@ -243,7 +243,7 @@ export class DropBoxTransport {
 
   /** Deposit: the relay keeps the latest copy of this device's `slot` and
    *  replays it to anyone who subscribes later — AND fans it out live to peers
-   *  listening now. For state (the list, the kits). */
+   *  listening now. For list state. */
   publishStored(ciphertext: string, slot: string): void {
     const d = `${this.channel}:${slot}`;
     this.send(STORED_KIND, [['d', d], ['t', this.channel]], ciphertext, d);

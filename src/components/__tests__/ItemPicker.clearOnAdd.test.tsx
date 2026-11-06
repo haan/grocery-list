@@ -46,7 +46,6 @@ function render(onAdd: (name: string) => void) {
         <ItemPicker
           activeNames={new Set()}
           onAdd={onAdd}
-          targetName="Weekly shop"
           onClose={() => {}}
           presentLabel="On list"
           presentA11y={(name) => `${name} on list`}

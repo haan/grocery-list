@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Modal, View, Text, Pressable, StyleSheet } from 'react-native';
 import {
   SafeAreaProvider,
@@ -7,7 +7,6 @@ import {
 } from 'react-native-safe-area-context';
 import { useReducedMotion } from './Dialogs';
 import ItemPicker from './ItemPicker';
-import KitPicker from './KitPicker';
 import { useListsStore } from '../store/lists';
 import { visibleItems } from '../data/list';
 import { t, pickLocale, getLocale, CANONICAL_LOCALES } from '../i18n';
@@ -16,10 +15,8 @@ import {
   useTheme,
   fontFamily,
   space,
-  radius,
   target,
   type as ty,
-  hairline,
   type Colors,
 } from '../theme';
 
@@ -29,13 +26,10 @@ interface Props {
   onClose: () => void;
 }
 
-type Tab = 'items' | 'kits';
-
 export default function AddItemsSheet({ visible, listId, onClose }: Props) {
   const { c } = useTheme();
   const s = makeStyles(c);
   const reduced = useReducedMotion();
-  const [tab, setTab] = useState<Tab>('items');
 
   const list = useListsStore((st) => st.lists.find((l) => l.id === listId));
   const addItem = useListsStore((st) => st.addItem);
@@ -45,11 +39,6 @@ export default function AddItemsSheet({ visible, listId, onClose }: Props) {
     pref === 'system'
       ? pickLocale(getLocale(), [...CANONICAL_LOCALES]) ?? 'en'
       : pref;
-
-  // Always open on the Items tab.
-  useEffect(() => {
-    if (visible) setTab('items');
-  }, [visible]);
 
   const activeNames = useMemo(
     () =>
@@ -63,21 +52,6 @@ export default function AddItemsSheet({ visible, listId, onClose }: Props) {
     },
     [addItem, listId, activeLocale]
   );
-
-  const renderTab = (which: Tab, label: string) => {
-    const active = tab === which;
-    return (
-      <Pressable
-        onPress={() => setTab(which)}
-        accessibilityRole="tab"
-        accessibilityState={{ selected: active }}
-        accessibilityLabel={label}
-        style={[s.segment, active && s.segmentActive]}
-      >
-        <Text style={[s.segmentText, active && s.segmentTextActive]}>{label}</Text>
-      </Pressable>
-    );
-  };
 
   return (
     <Modal
@@ -105,24 +79,14 @@ export default function AddItemsSheet({ visible, listId, onClose }: Props) {
             </Pressable>
           </View>
 
-          <View style={s.segments} accessibilityRole="tablist">
-            {renderTab('items', t('detail.tabItems'))}
-            {renderTab('kits', t('detail.tabKits'))}
-          </View>
-
-          {tab === 'items' ? (
-            <ItemPicker
-              activeNames={activeNames}
-              onAdd={onAdd}
-              targetName={list?.name ?? ''}
-              onClose={onClose}
-              presentLabel={t('detail.onList')}
-              presentA11y={(name) => t('detail.onListItemA11y', { name })}
-              addHint={t('detail.addItemHint')}
-            />
-          ) : (
-            <KitPicker listId={listId} />
-          )}
+          <ItemPicker
+            activeNames={activeNames}
+            onAdd={onAdd}
+            onClose={onClose}
+            presentLabel={t('detail.onList')}
+            presentA11y={(name) => t('detail.onListItemA11y', { name })}
+            addHint={t('detail.addItemHint')}
+          />
         </SafeAreaView>
       </SafeAreaProvider>
     </Modal>
@@ -158,38 +122,5 @@ function makeStyles(c: Colors) {
       color: c.accent,
     },
 
-    segments: {
-      flexDirection: 'row',
-      gap: space.s1,
-      marginHorizontal: space.s6,
-      marginBottom: space.s3,
-      padding: space.s1,
-      backgroundColor: c.bgSubtle,
-      borderWidth: hairline,
-      borderColor: c.hairline,
-      borderRadius: radius.md,
-    },
-    segment: {
-      flex: 1,
-      minHeight: target.min - space.s2,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: radius.sm,
-      paddingVertical: space.s2,
-    },
-    segmentActive: {
-      backgroundColor: c.bgElevated,
-      borderWidth: hairline,
-      borderColor: c.hairline,
-    },
-    segmentText: {
-      ...ty.base,
-      fontFamily: fontFamily.sans,
-      color: c.fgMuted,
-    },
-    segmentTextActive: {
-      fontFamily: fontFamily.sansSemibold,
-      color: c.fg,
-    },
   });
 }

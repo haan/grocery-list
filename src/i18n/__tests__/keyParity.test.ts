@@ -1,7 +1,10 @@
 import { APP_STRINGS } from '../appStrings';
 import { SHELL_STRINGS } from '../shellStrings';
-import { SHELL_LOCALES } from '../shellLocales';
 import { LOCALES } from '../locales';
+import { t, resetToBaseStrings } from '../index';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import ts from 'typescript';
 
 type Dict = { [key: string]: string | Dict };
 
@@ -24,10 +27,34 @@ function hasLeaf(d: Dict, path: string): boolean {
 }
 
 describe('i18n key parity (translation drift net)', () => {
-  it('every shell locale carries every SHELL_STRINGS key', () => {
+  it('every literal translation lookup in app code resolves in English', () => {
+    resetToBaseStrings();
+    const failures: string[] = [];
+    function scan(dir: string) {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (entry.name === '__tests__') continue;
+        const file = path.join(dir, entry.name);
+        if (entry.isDirectory()) { scan(file); continue; }
+        if (!/\.tsx?$/.test(file)) continue;
+        const source = ts.createSourceFile(file, fs.readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true);
+        function visit(node: ts.Node) {
+          if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === 't') {
+            const key = node.arguments[0];
+            if (key && ts.isStringLiteral(key) && t(key.text) === key.text) failures.push(`${entry.name}: ${key.text}`);
+          }
+          ts.forEachChild(node, visit);
+        }
+        visit(source);
+      }
+    }
+    scan(path.resolve(__dirname, '../..'));
+    expect(failures).toEqual([]);
+  });
+
+  it('every registered locale carries every SHELL_STRINGS key', () => {
     const shellKeys = leafPaths(SHELL_STRINGS as unknown as Dict);
     const failures: string[] = [];
-    for (const [locale, dict] of Object.entries(SHELL_LOCALES)) {
+    for (const [locale, dict] of Object.entries(LOCALES)) {
       const missing = shellKeys.filter((k) => !hasLeaf(dict as Dict, k));
       if (missing.length) failures.push(`${locale}: ${missing.join(', ')}`);
     }

@@ -7,7 +7,6 @@ import {
   resetToBaseStrings,
 } from './index';
 import { LOCALES } from './locales';
-import { SHELL_LOCALES } from './shellLocales';
 import { logEvent } from '../feedback/log';
 
 /** 'system' follows the phone (the default — today's behavior). Any other value
@@ -22,12 +21,6 @@ export type LocalePref = 'system' | string;
  */
 export const AUTONYMS: Record<string, string> = {
   en: 'English',
-  es: 'Español',
-  de: 'Deutsch',
-  fr: 'Français',
-  it: 'Italiano',
-  'pt-BR': 'Português (Brasil)',
-  ja: '日本語',
 };
 
 const STORAGE_KEY = 'ja.locale.preference';
@@ -86,11 +79,11 @@ export function setLocalePreference(p: LocalePref): void {
   // report of "it went blank / went back to the start" right after one wants to
   // show that it happened. The tag only; nothing about the user.
   logEvent('settings', 'language changed', { from: pref, to: p });
-  pref = p;
-  applyPref(p);
+  pref = coerce(p);
+  applyPref(pref);
   version += 1; // explicit switch -> remount the tree in the new language
   emit();
-  AsyncStorage.setItem(STORAGE_KEY, p).catch(() => {});
+  AsyncStorage.setItem(STORAGE_KEY, pref).catch(() => {});
 }
 
 let loadStarted = false;
@@ -105,8 +98,11 @@ export function loadLocalePreference(): void {
   AsyncStorage.getItem(STORAGE_KEY)
     .then((value) => {
       pref = coerce(value);
+      applyPref(pref);
+      if (value !== null && value !== pref) {
+        AsyncStorage.setItem(STORAGE_KEY, pref).catch(() => {});
+      }
       if (pref !== 'system') {
-        applyPref(pref);
         version += 1;
       }
     })
@@ -145,20 +141,7 @@ export function useLocalePreference(): {
   return { pref: value, setPref };
 }
 
-/** The locales this app is actually translated INTO, in canonical order — i.e.
- *  the app has overlaid its own DOMAIN strings on top of the shell chrome in
- *  `locales.ts` for that locale. Until then the control offers only System +
- *  English, so a user never lands on a half-translated app; each app's
- *  languages light up here, with no code change, as its P7 domain-translation
- *  pass lands. ('system' and 'en' are always offered by the control on top.)
- *
- *  Signal: the default `locales.ts` spreads SHELL_LOCALES, so an untranslated
- *  locale is reference-identical to its shell entry; a real translation merges
- *  a fresh object (`{ ...SHELL_LOCALES.es, ...es }`), which differs. */
+/** English and System are always offered; registered translations follow. */
 export function availableLocales(): string[] {
-  const shell = SHELL_LOCALES as Record<string, unknown>;
-  return CANONICAL_LOCALES.filter((l) => {
-    const dict = LOCALES[l];
-    return !!dict && (dict as unknown) !== shell[l];
-  });
+  return CANONICAL_LOCALES.filter((locale) => !!LOCALES[locale]);
 }

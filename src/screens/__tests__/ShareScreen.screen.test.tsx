@@ -1,9 +1,10 @@
+jest.mock('../../sync', () => ({ resyncNow: jest.fn() }));
 /**
  * Screen test — ShareScreen (Uplevel-3 T3 action coverage).
  *
  * Renders the real pairing screen and exercises every user-facing action:
  * close (dismiss), "Send link" (opens the OS share sheet with the pairing
- * link), and "Scan a code instead" (requests camera permission, then flips to
+ * link), and "Scan a list code" (requests camera permission, then flips to
  * the scanner where close backs out of scanning instead of the screen).
  * Queries by role/label/text only — no testIDs, no snapshots.
  */
@@ -37,10 +38,9 @@ jest.mock('../../store/db', () => ({
   deleteHistory: jest.fn(() => Promise.resolve()),
   putHistory: jest.fn(() => Promise.resolve()),
   loadAllLists: jest.fn(() => Promise.resolve([])),
+  replaceCurrentList: jest.fn(async () => {}),
   saveList: jest.fn(() => Promise.resolve()),
   deleteListFromDb: jest.fn(() => Promise.resolve()),
-  loadAllKits: jest.fn(() => Promise.resolve([])),
-  saveKit: jest.fn(() => Promise.resolve()),
   putTombstone: jest.fn(() => Promise.resolve()),
   removeTombstone: jest.fn(() => Promise.resolve()),
   getSyncMeta: jest.fn(() => Promise.resolve(null)),
@@ -87,7 +87,7 @@ import { buildShareLink } from '../../sync/share';
 
 function seedList() {
   const list = makeList('Weekly shop');
-  useListsStore.setState({ lists: [list], hydrated: true });
+  useListsStore.setState({ lists: [list], hydrated: true, pendingJoin: false, transitioning: false });
   return list;
 }
 
@@ -100,6 +100,8 @@ async function renderScreen(
     goBack: jest.fn(),
     replace: jest.fn(),
     setOptions: jest.fn(),
+    setParams: jest.fn(),
+    popToTop: jest.fn(),
     ...navOverrides,
   } as any;
   const route = { params: { listId } } as any;
@@ -137,6 +139,8 @@ describe('ShareScreen', () => {
     const user = userEvent.setup();
     await renderScreen(list.id);
 
+    expect(useListsStore.getState().lists[0].shareIdentity).toBeUndefined();
+    await user.press(screen.getByRole('button', { name: 'Start sharing' }));
     await user.press(screen.getByRole('button', { name: 'Send link' }));
 
     // Sharing minted the list's secret, and the OS sheet got its link.
@@ -147,13 +151,13 @@ describe('ShareScreen', () => {
     expect(shareSpy).toHaveBeenCalledWith({ message: buildShareLink(secret) });
   });
 
-  it('requests camera permission and enters scan mode on Scan a code instead', async () => {
+  it('requests camera permission and enters scan mode on Scan a list code', async () => {
     const list = seedList();
     const user = userEvent.setup();
     await renderScreen(list.id);
 
     await user.press(
-      screen.getByRole('button', { name: 'Scan a code instead' })
+      screen.getByRole('button', { name: 'Scan a list code' })
     );
 
     // The camera view mounts and the scan title/hint appear.
@@ -168,12 +172,12 @@ describe('ShareScreen', () => {
     await renderScreen(list.id);
 
     await user.press(
-      screen.getByRole('button', { name: 'Scan a code instead' })
+      screen.getByRole('button', { name: 'Scan a list code' })
     );
 
     // Permission denied → no camera, the share body still shows.
     expect(screen.queryByLabelText('camera')).toBeNull();
-    expect(screen.getByRole('button', { name: 'Send link' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Start sharing' })).toBeTruthy();
   });
 
   it('close backs out of scanning first, not the whole screen', async () => {
@@ -183,21 +187,21 @@ describe('ShareScreen', () => {
     const { navigation } = await renderScreen(list.id);
 
     await user.press(
-      screen.getByRole('button', { name: 'Scan a code instead' })
+      screen.getByRole('button', { name: 'Scan a list code' })
     );
     expect(await screen.findByLabelText('camera')).toBeTruthy();
 
     // Pressing Close while scanning returns to the share view, not goBack.
     await user.press(screen.getByRole('button', { name: 'Close' }));
     expect(navigation.goBack).not.toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: 'Send link' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Start sharing' })).toBeTruthy();
   });
 
-  it('joins a shared list and navigates when a valid code is scanned', async () => {
+  it('scanning the same shared code is a no-op', async () => {
     const list = seedList();
     cameraState.granted = true;
     // A second list already shared — scanning its link should pair to it.
-    useListsStore.getState().shareList(list.id);
+    await useListsStore.getState().shareList(list.id);
     const secret =
       useListsStore.getState().lists.find((l) => l.id === list.id)!
         .shareIdentity!.secret;
@@ -206,7 +210,7 @@ describe('ShareScreen', () => {
     const { navigation } = await renderScreen(list.id);
 
     await user.press(
-      screen.getByRole('button', { name: 'Scan a code instead' })
+      screen.getByRole('button', { name: 'Scan a list code' })
     );
     await screen.findByLabelText('camera');
 
@@ -215,9 +219,59 @@ describe('ShareScreen', () => {
       cameraState.onBarcodeScanned!({ data: buildShareLink(secret) });
     });
 
-    expect(navigation.replace).toHaveBeenCalledWith(
-      'ListDetail',
-      expect.objectContaining({ listId: expect.any(String) })
-    );
+    expect(navigation.popToTop).not.toHaveBeenCalled();
+    expect(screen.queryByText('Replace this list?')).toBeNull();
+    expect(useListsStore.getState().lists).toHaveLength(1);
   });
+});
+
+test('a different scanned code needs confirmation, cancellation preserves the list, duplicate scans cannot join twice', async () => {
+  const list = seedList();
+  const user = userEvent.setup();
+  await renderScreen(list.id);
+  await user.press(screen.getByRole('button', { name:'Scan a list code' }));
+  const data = buildShareLink('A'.repeat(43)+'=');
+  await act(async () => { cameraState.onBarcodeScanned!({data}); cameraState.onBarcodeScanned!({data}); });
+  expect(screen.getByText('Replace this list?')).toBeTruthy();
+  expect(useListsStore.getState().lists[0].id).toBe(list.id);
+  await user.press(screen.getAllByRole('button', {name:'Cancel'}).at(-1)!);
+  expect(useListsStore.getState().lists[0].id).toBe(list.id);
+  await user.press(screen.getByRole('button', { name:'Scan a list code' }));
+  await act(async () => { cameraState.onBarcodeScanned!({data}); });
+  await user.press(screen.getByRole('button', { name:'Join shared list' }));
+  expect(useListsStore.getState().lists).toHaveLength(1);
+  expect(useListsStore.getState().lists[0].shareIdentity?.secret).toBe('A'.repeat(43)+'=');
+  expect(useListsStore.getState().pendingJoin).toBe(true);
+});
+
+test('opening Sharing alone leaves the list private; Stop sharing requires confirmation', async () => {
+  const list = seedList(); const user = userEvent.setup();
+  await renderScreen(list.id);
+  expect(useListsStore.getState().lists[0].shareIdentity).toBeUndefined();
+  expect(screen.queryByLabelText('qr')).toBeNull();
+  await user.press(screen.getByRole('button', {name:'Start sharing'}));
+  const secret = useListsStore.getState().lists[0].shareIdentity!.secret;
+  expect(screen.getByLabelText('qr')).toBeTruthy();
+  await user.press(screen.getByRole('button', {name:'Stop sharing'}));
+  expect(useListsStore.getState().lists[0].shareIdentity?.secret).toBe(secret);
+  await user.press(screen.getAllByRole('button', {name:'Stop sharing'}).at(-1)!);
+  expect(useListsStore.getState().lists[0].shareIdentity).toBeUndefined();
+  expect(screen.getByRole('button', {name:'Start sharing'})).toBeTruthy();
+});
+
+test('a cancelled share link can be opened again on the same Sharing screen', async () => {
+  seedList(); const user = userEvent.setup();
+  const secret='A'.repeat(43)+'=';
+  const navigation={goBack:jest.fn(),popToTop:jest.fn(),setParams:jest.fn()} as any;
+  const view=(joinSecret?:string)=><SafeAreaProvider initialMetrics={METRICS}>
+    <ShareScreen navigation={navigation} route={{params:{joinSecret}} as any}/>
+  </SafeAreaProvider>;
+  const result=await render(view(secret));
+  expect(screen.getByText('Replace this list?')).toBeTruthy();
+  expect(navigation.setParams).toHaveBeenCalledWith({joinSecret:undefined});
+  await user.press(screen.getAllByRole('button',{name:'Cancel'}).at(-1)!);
+  await result.rerender(view());
+  await result.rerender(view(secret));
+  expect(screen.getByText('Replace this list?')).toBeTruthy();
+  expect(useListsStore.getState().lists[0].shareIdentity).toBeUndefined();
 });

@@ -29,7 +29,7 @@ export type TypographyRole = keyof typeof typography;
 
 /**
  * Weight-named family aliases. Prefer `typography` roles in app code; this
- * map exists for shared components (Credits and other controls) that
+ * map exists for shared controls that
  * think in "sans / sans-semibold / mono" rather than role names.
  */
 export const fontFamily = {

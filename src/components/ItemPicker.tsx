@@ -1,23 +1,3 @@
-/**
- * ItemPicker — the reusable usuals / recent / common-items picker.
- *
- * Extracted from AddItemsSheet so two surfaces can share one tuned, accessible,
- * localized picker without duplicating it:
- *   - adding items to a LIST (AddItemsSheet, "Items" tab), and
- *   - adding ingredients to a KIT (AddIngredientsSheet).
- *
- * It owns the search box, the ranked usuals/recent/seed rows, ★ usuals
- * toggling, the Recent edit/forget menu, the add haptic + toast, and keyboard
- * tracking. The TARGET is abstracted behind props: `activeNames` (what's
- * already there), `onAdd` (where a pick goes), `targetName` (toast), and the
- * "already added" pill label. Picks always enrich the user's own history
- * (recordUse) — the tenet holds: suggestions are only the user's own past
- * entries plus the built-in seed catalog.
- *
- * Cross-platform: pure RN, design-system tokens. Lives inside a parent that
- * already provides the SafeAreaProvider (canon § rn/modal-safe-area-provider).
- */
-
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
@@ -29,7 +9,7 @@ import {
   Keyboard,
 } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { Search, Pencil, Check, Star, X } from 'lucide-react-native';
+import { Search, Pencil, Check, X } from 'lucide-react-native';
 import { useReducedMotion, useActionMenu, usePrompt } from './Dialogs';
 import { Snackbar } from './Snackbar';
 import { useAccountStore, rankedHistoryNames } from '../store/account';
@@ -53,15 +33,13 @@ import {
 } from '../theme';
 
 interface Props {
-  /** Lowercased names already present on the target (list items / kit items). */
+  /** Lowercased names already present on the shopping list. */
   activeNames: Set<string>;
   /** Add a picked or typed item to the target. */
   onAdd: (name: string, category?: Category) => void;
-  /** Target name, for the "Added to …" toast. */
-  targetName: string;
   /** Close the whole sheet (the empty-submit "I'm done" path). */
   onClose: () => void;
-  /** The "already added" pill text (e.g. "On list" / "In kit"). */
+  /** The "already added" pill text ("On list"). */
   presentLabel: string;
   /** A11y label for an already-present row. */
   presentA11y: (name: string) => string;
@@ -75,8 +53,6 @@ type SheetRow =
       key: string;
       label: string;
       dim?: boolean;
-      star?: boolean;
-      toggle?: 'more' | 'less';
     }
   | { t: 'hint'; key: string; text: string }
   | {
@@ -85,14 +61,11 @@ type SheetRow =
       name: string;
       category?: Category;
       onList: boolean;
-      isUsual: boolean;
       recent: boolean;
     };
 
 const RECENT_BROWSE_CAP = 30;
 const RECENT_QUERY_CAP = 12;
-const USUALS_CAP = 50;
-const USUALS_PEEK = 8;
 const SEED_CAP = 20;
 
 /** Prefix-first, then substring; case-insensitive; deduped; capped. */
@@ -119,7 +92,6 @@ function rankNames(names: string[], query: string, cap: number): string[] {
 export default function ItemPicker({
   activeNames,
   onAdd,
-  targetName,
   onClose,
   presentLabel,
   presentA11y,
@@ -131,16 +103,12 @@ export default function ItemPicker({
   const prompt = usePrompt();
   const inputRef = useRef<TextInput>(null);
   const [query, setQuery] = useState('');
-  const [showAllUsuals, setShowAllUsuals] = useState(false);
 
   const recordUse = useAccountStore((st) => st.recordUse);
   const forgetUse = useAccountStore((st) => st.forgetUse);
   const restoreUse = useAccountStore((st) => st.restoreUse);
   const renameUse = useAccountStore((st) => st.renameUse);
-  const staples = useAccountStore((st) => st.staples);
   const history = useAccountStore((st) => st.history);
-  const addStaple = useAccountStore((st) => st.addStaple);
-  const removeStaple = useAccountStore((st) => st.removeStaple);
 
   const [snack, setSnack] = useState<{
     message: string;
@@ -161,9 +129,6 @@ export default function ItemPicker({
     return () => clearTimeout(id);
   }, []);
 
-  useEffect(() => {
-    if (query.trim()) setShowAllUsuals(false);
-  }, [query]);
 
   useEffect(() => {
     const show = Keyboard.addListener('keyboardDidShow', (e) =>
@@ -176,37 +141,26 @@ export default function ItemPicker({
     };
   }, []);
 
-  const usualSet = useMemo(() => new Set(staples), [staples]);
 
   const rows = useMemo<SheetRow[]>(() => {
     const q = query.trim();
     const browsing = !q;
     const historyNames = rankedHistoryNames(history, Date.now());
-    const recentSource = historyNames.filter(
-      (n) => !usualSet.has(n.toLowerCase())
-    );
+    const recentSource = historyNames;
 
     const dropOnList = (names: string[]) =>
       browsing ? names.filter((n) => !activeNames.has(n.toLowerCase())) : names;
 
-    const usualsRanked = rankNames(dropOnList(staples), q, USUALS_CAP);
     const recent = rankNames(
       dropOnList(recentSource),
       q,
       q ? RECENT_QUERY_CAP : RECENT_BROWSE_CAP
     );
 
-    const usualsHasMore = browsing && usualsRanked.length > USUALS_PEEK;
-    const usuals =
-      browsing && !showAllUsuals
-        ? usualsRanked.slice(0, USUALS_PEEK)
-        : usualsRanked;
-
     const exclude = new Set<string>([
-      ...staples,
       ...historyNames.map((n) => n.toLowerCase()),
     ]);
-    const brandNew = staples.length === 0 && history.length === 0;
+    const brandNew = history.length === 0;
     let common: SeedItem[] = [];
     if (q) {
       common = suggestSeed(q, activeLocale, exclude, SEED_CAP);
@@ -225,28 +179,17 @@ export default function ItemPicker({
         name,
         category,
         onList: activeNames.has(lower),
-        isUsual: usualSet.has(lower),
         recent: tier === 'r',
       });
     };
 
-    if (usuals.length) {
-      out.push({
-        t: 'header',
-        key: 'h-usuals',
-        label: t('detail.yourUsuals'),
-        star: true,
-        toggle: usualsHasMore ? (showAllUsuals ? 'less' : 'more') : undefined,
-      });
-      for (const n of usuals) mk(n, undefined, 'u');
-    }
     if (recent.length) {
       out.push({ t: 'header', key: 'h-recent', label: t('detail.recent') });
       for (const n of recent) mk(n, undefined, 'r');
     }
     if (browsing && brandNew) {
       out.push({ t: 'hint', key: 'hint-starter', text: t('detail.starterHint') });
-    } else if (browsing && usuals.length === 0 && recent.length === 0) {
+    } else if (browsing && recent.length === 0) {
       out.push({ t: 'hint', key: 'hint-all-on-list', text: t('detail.allOnList') });
     }
     if (common.length) {
@@ -259,7 +202,7 @@ export default function ItemPicker({
       for (const it of common) mk(it.name, it.category, 'c');
     }
     return out;
-  }, [query, staples, history, usualSet, activeNames, activeLocale, showAllUsuals]);
+  }, [query, history, activeNames, activeLocale]);
 
   const add = useCallback(
     (name: string, category?: Category) => {
@@ -273,11 +216,11 @@ export default function ItemPicker({
       setQuery('');
       Haptics.selectionAsync().catch(() => {});
       setSnack({
-        message: t('detail.addedToList', { name: targetName }),
+        message: t('detail.addedToList'),
         durationMs: 1500,
       });
     },
-    [onAdd, recordUse, targetName]
+    [onAdd, recordUse]
   );
 
   const forget = useCallback(
@@ -333,47 +276,21 @@ export default function ItemPicker({
     requestAnimationFrame(() => inputRef.current?.focus());
   }, [query, add, onClose]);
 
-  const toggleUsual = useCallback(
-    (name: string) => {
-      if (usualSet.has(name.trim().toLowerCase())) removeStaple(name);
-      else addStaple(name);
-    },
-    [usualSet, addStaple, removeStaple]
-  );
-
   const renderRow = useCallback(
     ({ item: row }: { item: SheetRow }) => {
       if (row.t === 'header') {
         return (
           <View style={s.headerRow} accessibilityRole="header">
-            {row.star ? (
-              <Star size={13} color={c.fgMuted} strokeWidth={2} fill={c.fgMuted} />
-            ) : null}
             <Text style={[s.sectionHeader, row.dim && s.sectionHeaderDim]}>
               {row.label}
             </Text>
-            {row.toggle ? (
-              <Pressable
-                onPress={() => setShowAllUsuals(row.toggle === 'more')}
-                hitSlop={8}
-                accessibilityRole="button"
-                accessibilityLabel={
-                  row.toggle === 'more' ? t('detail.showAll') : t('detail.showLess')
-                }
-                style={({ pressed }) => [s.headerToggle, pressed && s.pressed]}
-              >
-                <Text style={s.headerToggleText}>
-                  {row.toggle === 'more' ? t('detail.showAll') : t('detail.showLess')}
-                </Text>
-              </Pressable>
-            ) : null}
           </View>
         );
       }
       if (row.t === 'hint') {
         return <Text style={s.hint}>{row.text}</Text>;
       }
-      const { name, category, onList, isUsual, recent } = row;
+      const { name, category, onList, recent } = row;
       return (
         <View style={s.itemRow}>
           <Pressable
@@ -391,24 +308,6 @@ export default function ItemPicker({
                 <Text style={s.pillText}>{presentLabel}</Text>
               </View>
             ) : null}
-          </Pressable>
-
-          <Pressable
-            onPress={() => toggleUsual(name)}
-            hitSlop={6}
-            accessibilityRole="button"
-            accessibilityState={{ selected: isUsual }}
-            accessibilityLabel={
-              isUsual ? t('detail.removeFromUsuals') : t('detail.saveAsUsual')
-            }
-            style={({ pressed }) => [s.starBtn, pressed && s.pressed]}
-          >
-            <Star
-              size={18}
-              color={isUsual ? c.accent : c.fgSubtle}
-              strokeWidth={1.5}
-              fill={isUsual ? c.accent : 'transparent'}
-            />
           </Pressable>
 
           {recent ? (
@@ -433,7 +332,7 @@ export default function ItemPicker({
         </View>
       );
     },
-    [s, c, add, toggleUsual, editRecent, presentLabel, presentA11y]
+    [s, c, add, editRecent, presentLabel, presentA11y]
   );
 
   return (
@@ -599,12 +498,6 @@ function makeStyles(c: Colors) {
       ...ty.xs,
       fontFamily: fontFamily.sansSemibold,
       color: c.accent,
-    },
-    starBtn: {
-      width: target.min,
-      height: target.min,
-      alignItems: 'center',
-      justifyContent: 'center',
     },
     editBox: {
       width: target.min,

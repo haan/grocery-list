@@ -23,34 +23,13 @@ export const SHELL_STRINGS = {
     language: 'Language',
     languageSystem: 'System',
     languageSystemHint: 'Match your phone',
-    yourData: 'Your data',
-    about: 'About',
-    export: 'Export',
-    import: 'Import',
-    nothingImported: 'Nothing imported.',
-    couldntExport: "Couldn't export.",
-    couldntRead: "Couldn't read that file.",
-  },
-  about: {
-    feedback: 'Send feedback',
-    privacy: 'Privacy',
-    source: 'Source code',
-    acknowledgements: 'Acknowledgements',
     version: 'Version',
-    // Locked by canon § Settings / About (the attribution stamp one-liner).
-    oneLiner:
-      'An independent, open-source shopping list.',
-    learnMore: 'Learn more',
-    learnMoreA11y: 'Learn more at github.com/haan/grocery-list',
   },
   // Top-level error boundary fallback (ErrorBoundary).
   error: {
+    loadData: 'Could not open your shopping data. Please retry. A failed upgrade leaves your previous shopping data intact.',
+    retry: 'Retry',
     title: 'Something went wrong',
     body: 'The app hit an unexpected error. Reopen it to keep going — your data is safe on this device.',
-  },
-  // Acknowledgements screen (Credits). The header title reuses about.acknowledgements.
-  credits: {
-    footnote: "Full license texts live in each project's repository.",
-    linkHint: 'Opens the project page in your browser',
   },
 } as const;

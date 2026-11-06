@@ -45,8 +45,6 @@ jest.mock('../../store/db', () => ({
   removeTombstone: jest.fn(async () => {}),
   getSyncMeta: jest.fn(async () => null),
   setSyncMeta: jest.fn(async () => {}),
-  loadAllKits: jest.fn(async () => []),
-  saveKit: jest.fn(async () => {}),
 }));
 
 // @noble/* is pure ESM (jest doesn't transform it — see engine.test.ts). Here

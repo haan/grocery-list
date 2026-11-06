@@ -42,15 +42,13 @@ const PREFIX_PAIRS: Array<{ visible: string; label: string; what: string }> = [
 ];
 
 /**
- * Rows named by a runtime value (an item name, a kit name). The value has to
+ * Rows named by a runtime value (an item name). The value has to
  * come FIRST — "Add {name}" is unspeakable in English, "{name} hinzufügen" is
  * unspeakable in German. Leading with {name} is the only form that works in
  * every locale.
  */
 const NAME_LED = [
   'detail.onListItemA11y',
-  'kits.inKitItemA11y',
-  'kits.addKitA11y',
 ];
 
 describe('Voice Access can speak every accessible name', () => {

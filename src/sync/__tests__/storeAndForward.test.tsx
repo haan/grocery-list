@@ -14,8 +14,6 @@ jest.mock('../../store/db', () => ({
   removeTombstone: jest.fn(async () => {}),
   getSyncMeta: jest.fn(async () => null),
   setSyncMeta: jest.fn(async () => {}),
-  loadAllKits: jest.fn(async () => []),
-  saveKit: jest.fn(async () => {}),
 }));
 // @noble/* is pure ESM (jest doesn't transform it). The transport's wire
 // protocol IS the SUT here, so stub only the crypto primitives: real sha256
@@ -48,7 +46,6 @@ import React from 'react';
 import { render, screen, act, cleanup } from '@testing-library/react-native';
 
 import { useListsStore } from '../../store/lists';
-import { useKitsStore } from '../../store/kits';
 import { channelId, newSecret, seal, open } from '../crypto';
 import { DropBoxTransport, STORED_KIND, LIVE_KIND, STORED_WINDOW_S } from '../transport';
 import { useSyncStatusStore, markConnected, markReceived } from '../status';
@@ -60,7 +57,6 @@ import {
 } from '../index';
 import { SyncStatusBar } from '../../components/SyncStatusBar';
 import type { GroceryList } from '../../data/list';
-import type { Kit } from '../../data/kit';
 
 const SECRET = newSecret();
 const CHANNEL = channelId(SECRET);
@@ -88,9 +84,6 @@ function item(id: string, updatedAt = 1000) {
     addedAt: updatedAt,
     updatedAt,
   };
-}
-function kit(id: string): Kit {
-  return { id, name: id, nameUpdatedAt: 1000, items: [], createdAt: 1000, updatedAt: 1000 };
 }
 
 // ---------------------------------------------------------------------------
@@ -151,7 +144,6 @@ describe('engine store-and-forward (defect grocery-list-20261018-1)', () => {
       return t;
     });
     useListsStore.setState({ lists: [], hydrated: true });
-    useKitsStore.setState({ kits: [], hydrated: true });
     useSyncStatusStore.setState({ bySecret: {} });
   });
   afterEach(() => {
@@ -161,10 +153,9 @@ describe('engine store-and-forward (defect grocery-list-20261018-1)', () => {
   });
 
   /** One phone's session: boot the engine over this phone's local copy. */
-  function openAs(name: string, lists: GroceryList[], kits: Kit[] = []) {
+  function openAs(name: string, lists: GroceryList[]) {
     device = name;
     useListsStore.setState({ lists, hydrated: true });
-    useKitsStore.setState({ kits, hydrated: true });
     startSyncEngine();
   }
   function closeApp() {
@@ -183,16 +174,6 @@ describe('engine store-and-forward (defect grocery-list-20261018-1)', () => {
 
     const b = useListsStore.getState().lists[0];
     expect(b.items.map((i) => i.id)).toEqual(['milk']);
-  });
-
-  test('a kit created while the partner is closed arrives the same way', () => {
-    openAs('A', [list('a-local', [item('eggs')])], [kit('taco-night')]);
-    jest.advanceTimersByTime(700);
-    closeApp();
-
-    openAs('B', [list('b-local', [item('eggs')])]);
-
-    expect(useKitsStore.getState().kits.map((k) => k.id)).toContain('taco-night');
   });
 
   test('the hello handshake is never deposited — it must not overwrite a state slot', () => {
