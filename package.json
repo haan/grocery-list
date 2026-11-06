@@ -91,6 +91,7 @@
       "<rootDir>/qa/defect-reporter.cjs"
     ],
     "setupFilesAfterEnv": [
+      "<rootDir>/qa/nativeInput.setup.cjs",
       "<rootDir>/qa/quarantine.setup.cjs"
     ],
     "modulePathIgnorePatterns": [

@@ -24,7 +24,7 @@
 
 import React from 'react';
 import { fireEvent, render, screen, userEvent, waitFor } from '@testing-library/react-native';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, TextInput } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const METRICS = {
@@ -179,10 +179,12 @@ function PromptHarness({
   onSubmit,
   initialValue,
   confirmLabel,
+  selectAll,
 }: {
   onSubmit: (t: string) => void;
   initialValue?: string;
   confirmLabel?: string;
+  selectAll?: boolean;
 }) {
   const { open, element } = usePrompt();
   return (
@@ -196,6 +198,7 @@ function PromptHarness({
             placeholder: 'List name',
             initialValue,
             confirmLabel,
+            selectAll,
             onSubmit,
           })
         }
@@ -208,6 +211,39 @@ function PromptHarness({
 }
 
 describe('usePrompt', () => {
+  it('selects once on opening and never reselects replacement text or a user-positioned cursor', async () => {
+    const user = userEvent.setup({ delay: 0 });
+    const onSubmit = jest.fn();
+    // Observe selection commands at the native boundary; Jest cannot reproduce
+    // Android's deferred selectTextOnFocus layout behavior.
+    const selectionCommand = jest.spyOn(TextInput.prototype, 'setSelection');
+    selectionCommand.mockClear();
+    await render(wrap(<PromptHarness onSubmit={onSubmit} initialValue="Deli" selectAll />));
+    await user.press(screen.getByRole('button', { name: 'trigger' }));
+    const input = screen.getByLabelText('Rename list');
+    expect(input.props.selectTextOnFocus).toBeFalsy();
+    await fireEvent(input, 'focus');
+    expect(selectionCommand).toHaveBeenCalledWith(0, 4);
+    expect(selectionCommand).toHaveBeenCalledTimes(1);
+    // Type directly over the initial selection without touching the field.
+    await fireEvent.changeText(input, 'N');
+    await fireEvent.changeText(input, 'New');
+    expect(screen.getByDisplayValue('New').props.selectTextOnFocus).toBeFalsy();
+    // Moving the cursor, appending, and focusing again must not select all.
+    await fireEvent(input, 'touchStart');
+    await fireEvent(input, 'selectionChange', { nativeEvent: { selection: { start: 3, end: 3 } } });
+    await fireEvent(input, 'blur');
+    await fireEvent(input, 'focus');
+    await fireEvent.changeText(input, 'New aisle');
+    expect(selectionCommand).toHaveBeenCalledTimes(1);
+    await user.press(screen.getByRole('button', { name: 'Save' }));
+    expect(onSubmit).toHaveBeenCalledWith('New aisle');
+    await user.press(screen.getByRole('button', { name: 'trigger' }));
+    await fireEvent(screen.getByDisplayValue('Deli'), 'focus');
+    expect(selectionCommand).toHaveBeenCalledTimes(2);
+    selectionCommand.mockRestore();
+  });
+
   it('submits the typed text and closes when Save is pressed', async () => {
     const user = userEvent.setup({ delay: 0 });
     const onSubmit = jest.fn();

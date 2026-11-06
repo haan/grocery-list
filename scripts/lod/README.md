@@ -93,3 +93,8 @@ Metro serves the startup manifest and Android bundle successfully. The new
 JavaScript-only draggable list uses the gesture/animation libraries already in
 the development APK. The user confirmed dragging, edge scrolling, and matching
 Add aisle / Add an item styling on the Pixel 8 on 2026-11-06.
+
+Rename input confirmation on 2026-11-06: the original name is selected on opening;
+typing a replacement retains its first character, and placing the cursor at the
+end allows appending without reselecting the name. All three behaviors were
+confirmed on the Pixel 8 after switching to a one-time native selection command.

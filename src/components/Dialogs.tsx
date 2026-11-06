@@ -21,7 +21,7 @@
  * render `element` once in the screen tree.
  */
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Modal, View, Text, Pressable, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { useTheme } from '../theme';
 import { t } from '../i18n';
@@ -130,6 +130,8 @@ export function usePrompt(): {
   const { c } = useTheme();
   const s = makeStyles(c);
   const reduced = useReducedMotion();
+  const inputRef = useRef<TextInput>(null);
+  const selectInitialText = useRef(false);
   const [state, setState] = useState<PromptState>({
     visible: false,
     title: '',
@@ -139,7 +141,10 @@ export function usePrompt(): {
 
   const close = useCallback(() => setState((p) => ({ ...p, visible: false })), []);
   const open = useCallback(
-    (cfg: PromptConfig) => setState({ ...cfg, visible: true, value: cfg.initialValue ?? '' }),
+    (cfg: PromptConfig) => {
+      selectInitialText.current = !!cfg.selectAll;
+      setState({ ...cfg, visible: true, value: cfg.initialValue ?? '' });
+    },
     [],
   );
   const submit = useCallback(() => {
@@ -172,15 +177,26 @@ export function usePrompt(): {
             </Text>
             {state.message ? <Text style={s.cardMessage}>{state.message}</Text> : null}
             <TextInput
+              ref={inputRef}
               style={s.input}
               value={state.value}
-              onChangeText={(value) => setState((p) => ({ ...p, value }))}
+              onChangeText={(value) => {
+                selectInitialText.current = false;
+                setState((p) => ({ ...p, value }));
+              }}
+              // Select once, without Android's selectTextOnFocus flag: that
+              // flag can select the first replacement character on a later layout.
+              onFocus={() => {
+                if (!selectInitialText.current) return;
+                selectInitialText.current = false;
+                inputRef.current?.setSelection(0, state.value.length);
+              }}
+              onTouchStart={() => { selectInitialText.current = false; }}
               placeholder={state.placeholder}
               placeholderTextColor={c.fgMuted}
               autoFocus
               keyboardType={state.keyboardType ?? 'default'}
               autoCapitalize={state.autoCapitalize ?? 'sentences'}
-              selectTextOnFocus={state.selectAll}
               returnKeyType="done"
               onSubmitEditing={submit}
               accessibilityLabel={state.title}
