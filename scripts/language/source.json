@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/spellchecker-lu/dictionary-lb-lu",
+  "commit": "4b75d78d12a67afe6111814da034acb83a732d95",
+  "license": "EUPL-1.1",
+  "sha256": {
+    "lb_LU.aff": "0f32ab1e7e9e3a0e6f8ddf2d062897291587d8db60f6b04d0bfbcac14965a643",
+    "lb_LU.dic": "cfecae45110b2ae5330d828f2f964e641871b9abcbba5c7319abfa59f1bf804f",
+    "LICENSE.txt": "a05a516849ca7c4dd907cf6804a5b9c4fda375b3efcc3f34e8dfcc90902b06d2"
+  }
+}

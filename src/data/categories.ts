@@ -23,7 +23,7 @@ export type Category = string;
 const CATEGORY_LABEL_LB: Record<BuiltinCategory, string> = {
   Produce: 'Uebst a Geméis', Bakery: 'Brout a Gebäck',
   'Meat & seafood': 'Fleesch a Fësch', 'Dairy & eggs': 'Mëllechprodukter an Eeër',
-  Frozen: 'Déifkillprodukter', Pantry: 'Vorrat', Snacks: 'Snacks a Séissegkeeten',
+  Frozen: 'Déifkillprodukter', Pantry: 'Spënnchen', Snacks: 'Snacken a Séissegkeeten',
   Beverages: 'Gedrénks', Household: 'Stot', 'Personal care': 'Kierperfleeg', Other: 'Aneres',
 };
 

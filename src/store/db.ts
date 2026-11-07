@@ -85,18 +85,20 @@ async function openDb(): Promise<SQLite.SQLiteDatabase> {
     try { await _db.execAsync('ALTER TABLE lists ADD COLUMN aislePreferences TEXT'); }
     catch (err) { if (!/duplicate column name/i.test(String(err))) throw err; }
   }
-  // One transaction owns the destructive, explicitly requested shopping reset.
+  // One transaction owns the explicitly requested pre-release shopping reset.
   // Settings unrelated to shopping (appearance/language) remain untouched.
   await _db.execAsync('BEGIN IMMEDIATE');
   try {
     await _db.execAsync('DROP TABLE IF EXISTS kits');
     const done = await _db.getFirstAsync<{ v: string }>(
-      "SELECT v FROM app_settings WHERE k = 'single-list-v1'"
+      "SELECT v FROM app_settings WHERE k = 'luxembourgish-shopping-v1'"
     );
     if (!done) {
       await _db.execAsync("DELETE FROM lists; DELETE FROM item_history; DELETE FROM tombstones; DELETE FROM sync_meta; DELETE FROM app_settings WHERE k IN ('staples', 'pending-join');");
       await insertList(_db, makeList());
-      await _db.runAsync("INSERT INTO app_settings (k,v) VALUES ('single-list-v1','1')");
+      // Also mark the earlier reset complete on fresh installs. Neither marker
+      // is a catalog version: future wording corrections must NOT clear data.
+      await _db.runAsync("INSERT OR REPLACE INTO app_settings (k,v) VALUES ('single-list-v1','1'),('luxembourgish-shopping-v1','1')");
     }
     await _db.execAsync('COMMIT');
   } catch (err) {

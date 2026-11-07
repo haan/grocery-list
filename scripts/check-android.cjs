@@ -11,6 +11,9 @@ assert.equal(expo.ios, undefined, 'Remove the Apple app configuration');
 assert.equal(expo.web, undefined, 'Remove the web app configuration');
 assert.equal(expo.android.package, 'io.github.haan.grocerylist.dev');
 assert.equal(expo.extra.eas.projectId, '80882728-1f01-40c5-b4aa-56fcfa53f928');
+const localization = expo.plugins.find(p => Array.isArray(p) && p[0] === 'expo-localization');
+assert.deepEqual(localization?.[1]?.supportedLocales, { android: ['en', 'lb'] }, 'Declare only the actual translated Android languages');
+assert(!expo.plugins.includes('./plugins/withAndroidLocaleConfig'), 'Do not restore the obsolete locale plugin');
 for (const [name, command] of Object.entries(pkg.scripts)) {
   assert(!/^(ios|web)$/.test(name) && !/run:ios|--platform\s+ios|start\s+--web/.test(command), `Unsupported script: ${name}`);
 }

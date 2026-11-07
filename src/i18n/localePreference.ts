@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useSyncExternalStore } from 'react';
+import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   CANONICAL_LOCALES,
   applyDeviceLocale,
   setLocaleStrings,
   resetToBaseStrings,
+  getActiveLocale,
 } from './index';
 import { LOCALES } from './locales';
 import { logEvent } from '../feedback/log';
@@ -21,6 +23,7 @@ export type LocalePref = 'system' | string;
  */
 export const AUTONYMS: Record<string, string> = {
   en: 'English',
+  lb: 'Lëtzebuergesch',
 };
 
 const STORAGE_KEY = 'ja.locale.preference';
@@ -62,7 +65,7 @@ function applyPref(p: LocalePref): void {
     return;
   }
   const dict = LOCALES[p];
-  if (dict) setLocaleStrings(dict);
+  if (dict) setLocaleStrings(dict, p);
   else resetToBaseStrings();
 }
 
@@ -71,38 +74,35 @@ function coerce(value: string | null): LocalePref {
   return value && value in LOCALES ? value : 'system';
 }
 
-/** Persist + apply a new preference and re-render the app in that language.
- *  Exported for non-React call sites (e.g. QA seeding); UI should prefer the
- *  `useLocalePreference` hook. */
+/** Persist + apply a choice. Remount navigation only if its language changes. */
 export function setLocalePreference(p: LocalePref): void {
   // A breadcrumb, because a language switch remounts the whole tree — so any
   // report of "it went blank / went back to the start" right after one wants to
   // show that it happened. The tag only; nothing about the user.
   logEvent('settings', 'language changed', { from: pref, to: p });
+  const before = getActiveLocale();
   pref = coerce(p);
   applyPref(pref);
-  version += 1; // explicit switch -> remount the tree in the new language
+  if (before !== getActiveLocale()) version += 1;
   emit();
   AsyncStorage.setItem(STORAGE_KEY, pref).catch(() => {});
 }
 
 let loadStarted = false;
 
-/** Load the saved preference from disk and apply it. Idempotent — safe to call
- *  from more than one mounted component; the read happens once. A saved
- *  non-System choice bumps the version once so already-mounted screens adopt it;
- *  System needs no bump (the device locale was applied on i18n import). */
+/** Restore once; refresh existing screens if the effective language changes. */
 export function loadLocalePreference(): void {
   if (loadStarted) return;
   loadStarted = true;
   AsyncStorage.getItem(STORAGE_KEY)
     .then((value) => {
+      const before = getActiveLocale();
       pref = coerce(value);
       applyPref(pref);
       if (value !== null && value !== pref) {
         AsyncStorage.setItem(STORAGE_KEY, pref).catch(() => {});
       }
-      if (pref !== 'system') {
+      if (before !== getActiveLocale()) {
         version += 1;
       }
     })
@@ -118,7 +118,19 @@ export function loadLocalePreference(): void {
 export function useApplyLocalePreference(): void {
   useEffect(() => {
     loadLocalePreference();
+    const subscription = AppState.addEventListener('change', state => {
+      if (state === 'active') refreshSystemLocale();
+    });
+    return () => subscription.remove();
   }, []);
+}
+
+/** Called on foreground; explicit choices are never overridden by Android. */
+export function refreshSystemLocale(): void {
+  if (pref !== 'system') return;
+  const before = getActiveLocale();
+  applyDeviceLocale();
+  if (before !== getActiveLocale()) { version += 1; emit(); }
 }
 
 /**

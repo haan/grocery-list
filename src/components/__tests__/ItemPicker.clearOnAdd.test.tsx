@@ -63,14 +63,14 @@ test('selecting keeps the query until a successful save clears it', () => {
   const addApple = tree.root.findAll(
     (el) =>
       el.props.accessibilityRole === 'button' &&
-      el.props.accessibilityLabel === 'Apel'
+      el.props.accessibilityLabel === 'Äppel'
   );
   expect(addApple.length).toBeGreaterThan(0);
 
   act(() => addApple[0].props.onPress());
 
   // The item was added...
-  expect(onAdd).toHaveBeenCalledWith('Apel', expect.anything(), expect.any(Function));
+  expect(onAdd).toHaveBeenCalledWith('Äppel', expect.anything(), expect.any(Function));
   expect(input(tree).props.value).toBe('ape');
   act(() => onAdd.mock.calls[0][2](true));
   // ...and the box is now empty, ready for the next add or a clean exit.

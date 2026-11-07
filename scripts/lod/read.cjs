@@ -20,6 +20,8 @@ async function readLod(path) {
     entries.push({
       id: n.attrs.id,
       name: value(n.children.find(c => c.tag === 'lemma')),
+      // Keep standalone forms separate from context-dependent n-rule variants.
+      pluralForms: descendants(n, 'inflection').filter(c => c.attrs.type === 'plural').flatMap(c => descendants(c, 'form').map(f => ({ form: value(f), nRuleForm: f.attrs.nRuleForm || null }))),
       plurals: descendants(n, 'inflection').filter(c => c.attrs.type === 'plural').flatMap(c => descendants(c, 'form').flatMap(f => [value(f), f.attrs.nRuleForm].filter(Boolean))),
       tags: descendants(n, 'category').map(value),
       meanings: descendants(n, 'meaning').map(m => ({

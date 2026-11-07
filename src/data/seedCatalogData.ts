@@ -3,7 +3,7 @@ import type { CatalogProduct } from './catalog';
 export const PRODUCTS: readonly CatalogProduct[] = [
   {
     "id": "lod:GROMPER1UNI1",
-    "name": "Gromper",
+    "name": "Gromperen",
     "category": "Produce",
     "aliases": [
       "Gromper",
@@ -17,17 +17,19 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:GROMPER1UNI3",
-    "name": "Séiss Gromper",
+    "name": "Séiss Gromperen",
     "category": "Produce",
     "aliases": [
       "Séiss Gromper",
+      "Séiss Grompere",
+      "Séiss Gromperen",
       "Süßkartoffel",
       "patate douce"
     ]
   },
   {
     "id": "lod:TOMAT1UNI2",
-    "name": "Tomat",
+    "name": "Tomaten",
     "category": "Produce",
     "aliases": [
       "Tomat",
@@ -39,7 +41,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:TOMAT1UNI3",
-    "name": "Kleng Tomat",
+    "name": "Kleng Tomaten",
     "category": "Produce",
     "aliases": [
       "Kiischtentomat",
@@ -47,6 +49,8 @@ export const PRODUCTS: readonly CatalogProduct[] = [
       "Kiischtentomaten",
       "Kirschtomate",
       "Kleng Tomat",
+      "Kleng Tomate",
+      "Kleng Tomaten",
       "Tomate cerise",
       "Tomate-cerisen",
       "Tomate-cerisë",
@@ -55,7 +59,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:APEL1UNI1",
-    "name": "Apel",
+    "name": "Äppel",
     "category": "Produce",
     "aliases": [
       "Apel",
@@ -68,7 +72,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:BANANN1UNI1",
-    "name": "Banann",
+    "name": "Banannen",
     "category": "Produce",
     "aliases": [
       "Banane",
@@ -80,7 +84,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:AERDBIER1UNI3",
-    "name": "Äerdbier",
+    "name": "Äerdbieren",
     "category": "Produce",
     "aliases": [
       "Erdbeere",
@@ -94,7 +98,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MUERT1UNI1",
-    "name": "Muert",
+    "name": "Muerten",
     "category": "Produce",
     "aliases": [
       "Muert",
@@ -109,7 +113,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ZWIWWEL1UNI1",
-    "name": "Zwiwwel",
+    "name": "Zwiwwelen",
     "category": "Produce",
     "aliases": [
       "Zwiebel",
@@ -134,7 +138,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:CHAMPIGNON1UNI1",
-    "name": "Champignon",
+    "name": "Champignonen",
     "category": "Produce",
     "aliases": [
       "Champignon",
@@ -148,7 +152,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:CONCOMBER1UNI1",
-    "name": "Concomber",
+    "name": "Concomberen",
     "category": "Produce",
     "aliases": [
       "Concomber",
@@ -160,7 +164,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:COURGETTE1UNI1",
-    "name": "Courgette",
+    "name": "Courgetten",
     "category": "Produce",
     "aliases": [
       "Courgette",
@@ -183,7 +187,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:CHOUFLEUR1UNI1",
-    "name": "Choufleur",
+    "name": "Choufleuren",
     "category": "Produce",
     "aliases": [
       "Blumenkohl",
@@ -195,7 +199,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ANDEIF1UNI1",
-    "name": "Andéif",
+    "name": "Andéiwen",
     "category": "Produce",
     "aliases": [
       "Andéif",
@@ -206,7 +210,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ARTICHAUT1UNI1",
-    "name": "Artichaut",
+    "name": "Artichauten",
     "category": "Produce",
     "aliases": [
       "Artichaut",
@@ -218,7 +222,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:AUBERGINE2UNI1",
-    "name": "Aubergine",
+    "name": "Auberginnen",
     "category": "Produce",
     "aliases": [
       "Aubergine",
@@ -229,7 +233,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:AVOCADO1UNI1",
-    "name": "Avocado",
+    "name": "Avocadoen",
     "category": "Produce",
     "aliases": [
       "Avocado",
@@ -240,7 +244,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ANANAS1UNI1",
-    "name": "Ananas",
+    "name": "Ananassen",
     "category": "Produce",
     "aliases": [
       "Ananas",
@@ -251,7 +255,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:APRIKOS1UNI1",
-    "name": "Aprikos",
+    "name": "Aprikosen",
     "category": "Produce",
     "aliases": [
       "Aprikos",
@@ -262,7 +266,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:BIER3UNI1",
-    "name": "Bier",
+    "name": "Bieren",
     "category": "Produce",
     "aliases": [
       "Bier",
@@ -274,7 +278,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:HAMMBIER1UNI1",
-    "name": "Hammbier",
+    "name": "Hammbieren",
     "category": "Produce",
     "aliases": [
       "Hammbier",
@@ -288,7 +292,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:SCHWAARZBIER1UNI2",
-    "name": "Schwaarzbier",
+    "name": "Schwaarzbieren",
     "category": "Produce",
     "aliases": [
       "Brombeere",
@@ -302,7 +306,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MOLBIER1UNI1",
-    "name": "Molbier",
+    "name": "Molbieren",
     "category": "Produce",
     "aliases": [
       "Heidelbeere",
@@ -316,7 +320,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KIISCHT1UNI1",
-    "name": "Kiischt",
+    "name": "Kiischten",
     "category": "Produce",
     "aliases": [
       "Kiischt",
@@ -328,7 +332,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KIWI1UNI1",
-    "name": "Kiwi",
+    "name": "Kiwien",
     "category": "Produce",
     "aliases": [
       "Kiwi",
@@ -339,7 +343,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ORANGE1UNI1",
-    "name": "Orange",
+    "name": "Orangen",
     "category": "Produce",
     "aliases": [
       "Orange",
@@ -350,7 +354,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:CLEMENTINE1UNI1",
-    "name": "Clementine",
+    "name": "Clementinnen",
     "category": "Produce",
     "aliases": [
       "Clementine",
@@ -361,7 +365,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MANDARINE1UNI1",
-    "name": "Mandarine",
+    "name": "Mandarinnen",
     "category": "Produce",
     "aliases": [
       "Mandarine",
@@ -372,7 +376,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ZITROUN1UNI1",
-    "name": "Zitroun",
+    "name": "Zitrounen",
     "category": "Produce",
     "aliases": [
       "Zitrone",
@@ -384,7 +388,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:LIMETT1UNI1",
-    "name": "Limett",
+    "name": "Limetten",
     "category": "Produce",
     "aliases": [
       "Limett",
@@ -398,7 +402,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:GRAPEFRUIT1UNI1",
-    "name": "Grapefruit",
+    "name": "Grapefruiten",
     "category": "Produce",
     "aliases": [
       "Grapefruit",
@@ -410,7 +414,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MELOUN1UNI1",
-    "name": "Meloun",
+    "name": "Melounen",
     "category": "Produce",
     "aliases": [
       "Melone",
@@ -422,7 +426,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:WAASSERMELOUN1UNI1",
-    "name": "Waassermeloun",
+    "name": "Waassermelounen",
     "category": "Produce",
     "aliases": [
       "Waassermeloun",
@@ -434,7 +438,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:PIISCH1UNI1",
-    "name": "Piisch",
+    "name": "Pijen",
     "category": "Produce",
     "aliases": [
       "Pfirsich",
@@ -446,7 +450,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:NEKTARINN1UNI1",
-    "name": "Nektarinn",
+    "name": "Nektarinnen",
     "category": "Produce",
     "aliases": [
       "Nektarine",
@@ -459,7 +463,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:PROMM1UNI1",
-    "name": "Promm",
+    "name": "Prommen",
     "category": "Produce",
     "aliases": [
       "Pflaume",
@@ -471,7 +475,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:QUETSCH1UNI1",
-    "name": "Quetsch",
+    "name": "Quetschen",
     "category": "Produce",
     "aliases": [
       "Quetsch",
@@ -483,7 +487,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MIRABELL1UNI1",
-    "name": "Mirabell",
+    "name": "Mirabellen",
     "category": "Produce",
     "aliases": [
       "Mirabell",
@@ -494,7 +498,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:DRAUF1UNI2",
-    "name": "Drauf",
+    "name": "Drauwen",
     "category": "Produce",
     "aliases": [
       "Drauf",
@@ -506,7 +510,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MANGO1UNI1",
-    "name": "Mango",
+    "name": "Mangoen",
     "category": "Produce",
     "aliases": [
       "Mango",
@@ -517,7 +521,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:PAPAYA1UNI1",
-    "name": "Papaya",
+    "name": "Papayaen",
     "category": "Produce",
     "aliases": [
       "Papaya",
@@ -528,7 +532,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:PASSIOUNSFRUUCHT1UNI1",
-    "name": "Passiounsfruucht",
+    "name": "Passiounsfriichten",
     "category": "Produce",
     "aliases": [
       "Maracuja",
@@ -544,7 +548,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:GRANATAPEL1UNI1",
-    "name": "Granatapel",
+    "name": "Granatäppel",
     "category": "Produce",
     "aliases": [
       "Granatapel",
@@ -555,7 +559,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:FIG1UNI1",
-    "name": "Fig",
+    "name": "Figen",
     "category": "Produce",
     "aliases": [
       "Feige",
@@ -567,7 +571,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KAKI1UNI1",
-    "name": "Kaki",
+    "name": "Kakien",
     "category": "Produce",
     "aliases": [
       "Kaki",
@@ -578,7 +582,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:DATTEL1UNI1",
-    "name": "Dattel",
+    "name": "Dattelen",
     "category": "Produce",
     "aliases": [
       "Dattel",
@@ -680,7 +684,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:PORRETT1UNI1",
-    "name": "Porrett",
+    "name": "Porretten",
     "category": "Produce",
     "aliases": [
       "Lauchstange",
@@ -693,7 +697,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:SCHALLOTT1UNI1",
-    "name": "Schallott",
+    "name": "Schallotten",
     "category": "Produce",
     "aliases": [
       "Schallott",
@@ -705,7 +709,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:FREIJOERSENN1UNI1",
-    "name": "Fréijoersënn",
+    "name": "Fréijoersënnen",
     "category": "Produce",
     "aliases": [
       "Fréijoerszwiwwel",
@@ -723,7 +727,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ROMMEL1UNI1",
-    "name": "Rommel",
+    "name": "Rommelen",
     "category": "Produce",
     "aliases": [
       "Navet",
@@ -740,17 +744,19 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ROMMEL1UNI2",
-    "name": "Rout Rommel",
+    "name": "Rout Rommelen",
     "category": "Produce",
     "aliases": [
       "Rote Bete",
       "Rout Rommel",
+      "Rout Rommele",
+      "Rout Rommelen",
       "betterave rouge"
     ]
   },
   {
     "id": "lod:REIDCHEN1UNI1",
-    "name": "Réidchen",
+    "name": "Réidercher",
     "category": "Produce",
     "aliases": [
       "Radieschen",
@@ -764,7 +770,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:PASTINAK1UNI1",
-    "name": "Pastinak",
+    "name": "Pastinaken",
     "category": "Produce",
     "aliases": [
       "Pastinak",
@@ -776,7 +782,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KOLRAF1UNI1",
-    "name": "Kolraf",
+    "name": "Kolrawen",
     "category": "Produce",
     "aliases": [
       "Kohlrabi",
@@ -788,7 +794,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KURBIS1UNI1",
-    "name": "Kürbis",
+    "name": "Kürbissen",
     "category": "Produce",
     "aliases": [
       "Kalbass",
@@ -833,7 +839,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:IERBES1UNI1",
-    "name": "Ierbes",
+    "name": "Ierbessen",
     "category": "Produce",
     "aliases": [
       "Erbse",
@@ -846,7 +852,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:BOUN1UNI1",
-    "name": "Boun",
+    "name": "Bounen",
     "category": "Produce",
     "aliases": [
       "Boun",
@@ -856,7 +862,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:GAARDEBOUN1UNI2",
-    "name": "Gaardeboun",
+    "name": "Gaardebounen",
     "category": "Produce",
     "aliases": [
       "Feldbohne",
@@ -882,7 +888,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:BROCKELCHEN1UNI2",
-    "name": "Brockelchen",
+    "name": "Brockelcher",
     "category": "Produce",
     "aliases": [
       "Brockelchen",
@@ -893,7 +899,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:POIVRON1UNI1",
-    "name": "Poivron",
+    "name": "Poivronen",
     "category": "Produce",
     "aliases": [
       "Paprika",
@@ -908,7 +914,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:CHILI1UNI1",
-    "name": "Chili",
+    "name": "Chilien",
     "category": "Produce",
     "aliases": [
       "Chili",
@@ -920,7 +926,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ZOCKERIERBES1UNI1",
-    "name": "Zockerierbes",
+    "name": "Zockerierbessen",
     "category": "Produce",
     "aliases": [
       "Mange-tout",
@@ -1033,7 +1039,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:BRATZEL2UNI1",
-    "name": "Bratzel",
+    "name": "Bratzelen",
     "category": "Produce",
     "aliases": [
       "Bratzel",
@@ -1134,7 +1140,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:BAGUETTE1UNI1",
-    "name": "Baguette",
+    "name": "Baguetten",
     "category": "Bakery",
     "aliases": [
       "Baguette",
@@ -1146,7 +1152,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:BREITCHEN1UNI1",
-    "name": "Bréitchen",
+    "name": "Bréidercher",
     "category": "Bakery",
     "aliases": [
       "Bréidercher",
@@ -1157,7 +1163,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:CROISSANT1UNI1",
-    "name": "Croissant",
+    "name": "Croissanten",
     "category": "Bakery",
     "aliases": [
       "Croissant",
@@ -1282,7 +1288,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:APPELTASCH1UNI1",
-    "name": "Äppeltäsch",
+    "name": "Äppeltäschen",
     "category": "Bakery",
     "aliases": [
       "Apfeltasche",
@@ -1319,7 +1325,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:QUETSCHENTASCH1UNI1",
-    "name": "Quetschentäsch",
+    "name": "Quetschentäschen",
     "category": "Bakery",
     "aliases": [
       "Quetschentäsch",
@@ -1389,7 +1395,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MUFFIN1UNI1",
-    "name": "Muffin",
+    "name": "Muffinnen",
     "category": "Bakery",
     "aliases": [
       "Muffin",
@@ -1401,7 +1407,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ECLAIR1UNI1",
-    "name": "Eclair",
+    "name": "Eclairen",
     "category": "Bakery",
     "aliases": [
       "Eclair",
@@ -1413,7 +1419,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:BEIGNET1UNI1",
-    "name": "Beignet",
+    "name": "Beigneten",
     "category": "Bakery",
     "aliases": [
       "Beignet",
@@ -1463,7 +1469,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:EISEKUCH1UNI1",
-    "name": "Eisekuch",
+    "name": "Eisekuchen",
     "category": "Bakery",
     "aliases": [
       "Eisekuch",
@@ -1475,7 +1481,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MADELEINE1UNI1",
-    "name": "Madeleine",
+    "name": "Madeleinen",
     "category": "Bakery",
     "aliases": [
       "Madeleine",
@@ -1498,7 +1504,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:SCHNECK1UNI1",
-    "name": "Schneck",
+    "name": "Schnecken",
     "category": "Bakery",
     "aliases": [
       "Schneck",
@@ -1509,7 +1515,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:BOXEMANNCHEN1UNI1",
-    "name": "Boxemännchen",
+    "name": "Boxemännercher",
     "category": "Bakery",
     "aliases": [
       "Boxemännchen",
@@ -1520,7 +1526,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:FUESKICHELCHEN1UNI1",
-    "name": "Fueskichelchen",
+    "name": "Fueskichelcher",
     "category": "Bakery",
     "aliases": [
       "Fastnachtsgebäck",
@@ -1531,7 +1537,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:VERWUERELTEN1UNI1",
-    "name": "Verwuerelten",
+    "name": "Verwuerelter",
     "category": "Bakery",
     "aliases": [
       "Fastnachtsgebäck",
@@ -1663,7 +1669,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:WURSCHT1UNI2",
-    "name": "Wurscht",
+    "name": "Wurschten",
     "category": "Meat & seafood",
     "aliases": [
       "Wurscht",
@@ -1675,7 +1681,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ZOOSSISS1UNI1",
-    "name": "Zoossiss",
+    "name": "Zoossissen",
     "category": "Meat & seafood",
     "aliases": [
       "Dauerwurst",
@@ -1689,7 +1695,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:GRILLWURSCHT1UNI1",
-    "name": "Grillwurscht",
+    "name": "Grillwurschten",
     "category": "Meat & seafood",
     "aliases": [
       "Grillbratwurst",
@@ -1705,7 +1711,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:WIRSCHTCHEN1UNI1",
-    "name": "Wirschtchen",
+    "name": "Wirschtercher",
     "category": "Meat & seafood",
     "aliases": [
       "Knackwurst",
@@ -1741,7 +1747,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:WAINZOOSSISS1UNI1",
-    "name": "Wäinzoossiss",
+    "name": "Wäinzoossissen",
     "category": "Meat & seafood",
     "aliases": [
       "Weinwurst",
@@ -1752,7 +1758,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:BIFDECK1UNI1",
-    "name": "Bifdeck",
+    "name": "Bifdecker",
     "category": "Meat & seafood",
     "aliases": [
       "Bifdeck",
@@ -1764,7 +1770,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:FAUXFILET1UNI1",
-    "name": "Faux-filet",
+    "name": "Faux-fileten",
     "category": "Meat & seafood",
     "aliases": [
       "Faux-filet",
@@ -1777,7 +1783,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:FILETMIGNON1UNI1",
-    "name": "Filet mignon",
+    "name": "Filet-mignonen",
     "category": "Meat & seafood",
     "aliases": [
       "Filet mignon",
@@ -1789,7 +1795,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:RENDSFILET1UNI1",
-    "name": "Rëndsfilet",
+    "name": "Rëndsfileten",
     "category": "Meat & seafood",
     "aliases": [
       "Rinderfilet",
@@ -1801,7 +1807,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KOTLETT1UNI1",
-    "name": "Kotlett",
+    "name": "Kotletten",
     "category": "Meat & seafood",
     "aliases": [
       "Kotelett",
@@ -1813,7 +1819,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:SCHNITZEL1UNI1",
-    "name": "Schnitzel",
+    "name": "Schnitzelen",
     "category": "Meat & seafood",
     "aliases": [
       "Schnitzel",
@@ -1824,7 +1830,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KALLEFSSCHNITZEL1UNI1",
-    "name": "Kallefsschnitzel",
+    "name": "Kallefsschnitzelen",
     "category": "Meat & seafood",
     "aliases": [
       "Kalbsschnitzel",
@@ -1880,7 +1886,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:SARDINN1UNI2",
-    "name": "Sardinn",
+    "name": "Sardinnen",
     "category": "Meat & seafood",
     "aliases": [
       "Sardine",
@@ -1902,7 +1908,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:CREVETTE1UNI1",
-    "name": "Crevette",
+    "name": "Crevetten",
     "category": "Meat & seafood",
     "aliases": [
       "Crevette",
@@ -1914,7 +1920,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:SCAMPI1UNI1",
-    "name": "Scampi",
+    "name": "Scampien",
     "category": "Meat & seafood",
     "aliases": [
       "Scampi",
@@ -1925,7 +1931,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MULL1UNI1",
-    "name": "Mull",
+    "name": "Mullen",
     "category": "Meat & seafood",
     "aliases": [
       "Miesmuschel",
@@ -1937,7 +1943,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:AUSTER1UNI1",
-    "name": "Auster",
+    "name": "Austeren",
     "category": "Meat & seafood",
     "aliases": [
       "Auster",
@@ -1982,7 +1988,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ROLLMOPS1UNI2",
-    "name": "Rollmops",
+    "name": "Rollmopsen",
     "category": "Meat & seafood",
     "aliases": [
       "Rollmops",
@@ -2003,7 +2009,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:EE1UNI1",
-    "name": "Ee",
+    "name": "Eeër",
     "category": "Dairy & eggs",
     "aliases": [
       "Ee",
@@ -2342,7 +2348,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:FISCHSTABCHEN1UNI2",
-    "name": "Fischstäbchen",
+    "name": "Fischstäbercher",
     "category": "Frozen",
     "aliases": [
       "Fischstäbchen",
@@ -2375,7 +2381,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:NUDDEL1UNI1",
-    "name": "Nuddel",
+    "name": "Nuddelen",
     "category": "Pantry",
     "aliases": [
       "Deegwueren",
@@ -2435,7 +2441,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:VOLLKARNUDDEL1UNI1",
-    "name": "Vollkarnuddel",
+    "name": "Vollkarnuddelen",
     "category": "Pantry",
     "aliases": [
       "Vollkarnuddel",
@@ -2585,7 +2591,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:PEFFERKAR1UNI1",
-    "name": "Pefferkär",
+    "name": "Pefferkären",
     "category": "Pantry",
     "aliases": [
       "Pefferkär",
@@ -2648,7 +2654,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:NEELCHESKAPP1UNI1",
-    "name": "Neelcheskapp",
+    "name": "Neelcheskäpp",
     "category": "Pantry",
     "aliases": [
       "Gewürznelke",
@@ -2710,7 +2716,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:LORBERBLAT1UNI1",
-    "name": "Lorberblat",
+    "name": "Lorberblieder",
     "category": "Pantry",
     "aliases": [
       "Lorbeerblatt",
@@ -2731,7 +2737,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:VANILLSSTAANG1UNI1",
-    "name": "Vanillsstaang",
+    "name": "Vanillsstaangen",
     "category": "Pantry",
     "aliases": [
       "Vanilleschote",
@@ -3053,7 +3059,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KICHERIERBES1UNI1",
-    "name": "Kicherierbes",
+    "name": "Kicherierbessen",
     "category": "Pantry",
     "aliases": [
       "Kichererbse",
@@ -3069,7 +3075,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:OLIV1UNI1",
-    "name": "Oliv",
+    "name": "Oliven",
     "category": "Pantry",
     "aliases": [
       "Oliv",
@@ -3080,7 +3086,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KAPER1UNI1",
-    "name": "Kaper",
+    "name": "Kaperen",
     "category": "Pantry",
     "aliases": [
       "Kaper",
@@ -3114,7 +3120,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:GEMEISKUB1UNI1",
-    "name": "Geméisküb",
+    "name": "Geméisküben",
     "category": "Pantry",
     "aliases": [
       "Geméisküb",
@@ -3126,7 +3132,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:POULETSKUB1UNI1",
-    "name": "Pouletsküb",
+    "name": "Pouletsküben",
     "category": "Pantry",
     "aliases": [
       "Hühnerbrühwürfel",
@@ -3209,7 +3215,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ROSENG1UNI1",
-    "name": "Roséng",
+    "name": "Roséngen",
     "category": "Pantry",
     "aliases": [
       "Rosine",
@@ -3221,7 +3227,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MANDEL1UNI1",
-    "name": "Mandel",
+    "name": "Mandelen",
     "category": "Pantry",
     "aliases": [
       "Mandel",
@@ -3232,7 +3238,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MANDELBLIETCHEN1UNI1",
-    "name": "Mandelblietchen",
+    "name": "Mandelbliedercher",
     "category": "Pantry",
     "aliases": [
       "Mandelbliedercher",
@@ -3243,7 +3249,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:HIESELNOSS1UNI1",
-    "name": "Hieselnoss",
+    "name": "Hieselnëss",
     "category": "Pantry",
     "aliases": [
       "Haselnuss",
@@ -3254,7 +3260,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:HACKERNOSS1UNI1",
-    "name": "Hackernoss",
+    "name": "Hackernëss",
     "category": "Pantry",
     "aliases": [
       "Déck Noss",
@@ -3266,7 +3272,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:CASHEWNOSS1UNI1",
-    "name": "Cashewnoss",
+    "name": "Cashewnëss",
     "category": "Pantry",
     "aliases": [
       "Cashewnoss",
@@ -3277,7 +3283,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KAKUETT1UNI1",
-    "name": "Kakuett",
+    "name": "Kakuetten",
     "category": "Pantry",
     "aliases": [
       "Afennoss",
@@ -3291,7 +3297,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:PISTASCH1UNI1",
-    "name": "Pistasch",
+    "name": "Pistaschen",
     "category": "Pantry",
     "aliases": [
       "Pistasch",
@@ -3303,7 +3309,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KOKOSNOSS1UNI1",
-    "name": "Kokosnoss",
+    "name": "Kokosnëss",
     "category": "Pantry",
     "aliases": [
       "Kokosnoss",
@@ -3313,7 +3319,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MACADAMIANOSS1UNI1",
-    "name": "Macadamianoss",
+    "name": "Macadamianëss",
     "category": "Pantry",
     "aliases": [
       "Macadamianoss",
@@ -3324,7 +3330,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MAROUN1UNI1",
-    "name": "Maroun",
+    "name": "Marounen",
     "category": "Pantry",
     "aliases": [
       "Esskastanie",
@@ -3369,9 +3375,10 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:SCHOCKELA2UNI2",
-    "name": "schwaarze Schockela",
+    "name": "Schwaarze Schockela",
     "category": "Snacks",
     "aliases": [
+      "Schwaarze Schockela",
       "chocolat noir",
       "schwaarze Schockela",
       "schwarze Schokolade"
@@ -3379,9 +3386,10 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:SCHOCKELA2UNI3",
-    "name": "wäisse Schockela",
+    "name": "Wäisse Schockela",
     "category": "Snacks",
     "aliases": [
+      "Wäisse Schockela",
       "chocolat blanc",
       "weiße Schokolade",
       "wäisse Schockela"
@@ -3420,7 +3428,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:SALZSTAANG1UNI1",
-    "name": "Salzstaang",
+    "name": "Salzstaangen",
     "category": "Snacks",
     "aliases": [
       "Salzstaang",
@@ -3431,7 +3439,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KICHELCHEN1UNI1",
-    "name": "Kichelchen",
+    "name": "Kichelcher",
     "category": "Snacks",
     "aliases": [
       "Biscuit",
@@ -3445,7 +3453,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:PETITBEURRE1UNI1",
-    "name": "Petit-beurre",
+    "name": "Petit-beurren",
     "category": "Snacks",
     "aliases": [
       "Butterkeks",
@@ -3468,7 +3476,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KAMELL1UNI1",
-    "name": "Kamell",
+    "name": "Kamellen",
     "category": "Snacks",
     "aliases": [
       "Bonbon",
@@ -3482,7 +3490,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:SUCETTE1UNI1",
-    "name": "Sucette",
+    "name": "Sucetten",
     "category": "Snacks",
     "aliases": [
       "Lutscher",
@@ -3541,7 +3549,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:MUUSLIRIGEL1UNI1",
-    "name": "Müüslirigel",
+    "name": "Müüslirigelen",
     "category": "Snacks",
     "aliases": [
       "Müsliriegel",
@@ -3553,7 +3561,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:AERDBIERSKAMELL1UNI1",
-    "name": "Äerdbierskamell",
+    "name": "Äerdbierskamellen",
     "category": "Snacks",
     "aliases": [
       "Erdbeerbonbon",
@@ -3622,7 +3630,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:KAFFISBOUN1UNI1",
-    "name": "Kaffisboun",
+    "name": "Kaffisbounen",
     "category": "Beverages",
     "aliases": [
       "Kaffeebohne",
@@ -4049,7 +4057,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:DRECKSTUT1UNI1",
-    "name": "Dreckstut",
+    "name": "Dreckstuten",
     "category": "Household",
     "aliases": [
       "Dreckstut",
@@ -4095,7 +4103,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:SCHWAMP1UNI1",
-    "name": "Schwamp",
+    "name": "Schwämm",
     "category": "Household",
     "aliases": [
       "Schwamm",
@@ -4106,7 +4114,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:NUESSCHNAPPECH1UNI1",
-    "name": "Nuesschnappech",
+    "name": "Nuesschnappecher",
     "category": "Household",
     "aliases": [
       "Nuesschnappech",
@@ -4117,7 +4125,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ZERWEIT1UNI1",
-    "name": "Zerwéit",
+    "name": "Zerwéiten",
     "category": "Household",
     "aliases": [
       "Serviette",
@@ -4128,10 +4136,11 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:SEEF1UNI3",
-    "name": "schwaarz Seef",
+    "name": "Schwaarz Seef",
     "category": "Household",
     "aliases": [
       "Schmierseife",
+      "Schwaarz Seef",
       "savon noir",
       "schwaarz Seef"
     ]
@@ -4177,7 +4186,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:ZANNBIISCHT1UNI1",
-    "name": "Zännbiischt",
+    "name": "Zännbiischten",
     "category": "Personal care",
     "aliases": [
       "Zahnbürste",
@@ -4213,7 +4222,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:WENDEL1UNI2",
-    "name": "Wëndel",
+    "name": "Wëndelen",
     "category": "Personal care",
     "aliases": [
       "Windel",
@@ -4225,7 +4234,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:BIND1UNI1",
-    "name": "Bind",
+    "name": "Binden",
     "category": "Personal care",
     "aliases": [
       "Bind",
@@ -4237,7 +4246,7 @@ export const PRODUCTS: readonly CatalogProduct[] = [
   },
   {
     "id": "lod:TAMPON1UNI1",
-    "name": "Tampon",
+    "name": "Tamponen",
     "category": "Personal care",
     "aliases": [
       "Tampon",

@@ -22,9 +22,9 @@ test('suggestions and starters are Luxembourgish in every interface language', (
 });
 test('matches accent-free names and foreign aliases, deduplicating by product', () => {
   expect(suggestSeed('mellech', 'en', new Set())[0].name).toBe('Mëllech');
-  expect(suggestSeed('Kartoffeln', 'en', new Set()).map(p=>p.name)).toEqual(['Gromper']);
+  expect(suggestSeed('Kartoffeln', 'en', new Set()).map(p=>p.name)).toEqual(['Gromperen']);
   const results = suggestSeed('champignon', 'en', new Set());
-  expect(results.filter(p=>p.name === 'Champignon')).toHaveLength(1);
+  expect(results.filter(p=>p.name === 'Champignonen')).toHaveLength(1);
   expect(suggestSeed('lait', 'en', new Set(['MELLECH'])).some(p=>p.name === 'Mëllech')).toBe(false);
 });
 test('bounds results and excludes empty queries', () => {

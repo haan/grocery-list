@@ -272,6 +272,48 @@ uninstalling or clearing storage, to verify the native dependency removals.
 
 Build and device results are recorded in [repository audit](repository-audit.md).
 
+## Luxembourgish feature — November 2026
+
+`feature/luxembourgish` adds the complete interface translation and natural
+shopping labels. Settings → Language now offers System, English and Lëtzebuergesch.
+Explicit selections are local to each phone and override Android's preference;
+System follows Android's first supported language, with English fallback. Foreground
+changes refresh the interface only if its effective language changes. The native
+localization module and corrected Android language declaration require a new APK.
+
+This pre-release upgrade intentionally clears test shopping data once, using the
+`luxembourgish-shopping-v1` database marker. Items, Recent, custom aisles/order,
+learned assignments, pending joins and sharing identity are reset together before
+hydration and sync. Appearance/language survive. Later launches and wording updates
+do not reset data. Update both test phones and pair them again; old relay data is
+not deleted and is isolated by the new private-list identity.
+
+Language quality resources:
+
+- [English/Luxembourgish screen review](luxembourgish-review.md)
+- [Catalog before/after review](../scripts/lod/review.md)
+- [Spelling results](luxembourgish-spelling.md) and [Docker instructions/glossary](../scripts/language/README.md)
+
+Feature acceptance (leave unchecked until observed on the rebuilt APK):
+
+- [x] First update starts empty/private; add an item and restart to verify no second reset.
+- [x] Choose Lëtzebuergesch and restart; the language selection persists.
+- [ ] Return to English and test System on the phone.
+- [ ] Review home, Add items, item forms, Recent edit/forget/Undo, aisle add/rename/delete,
+      language picker, sharing/private/connected/scanning/join confirmations and errors.
+- [ ] Check long text, large fonts, light/dark mode and action buttons above the keyboard.
+- [ ] Search Banann/Banannen, Apel/appel, Ee/Eeër, Kartoffeln and Milch; check natural labels.
+- [ ] Change quantity without changing the product label; verify learned aisle assignment.
+- [ ] On two updated, newly paired phones use English on one and Luxembourgish on the other;
+      verify item details, aisle learning, and offline/reconnect convergence.
+
+Pixel confirmation (2026-11-07), APK 1.0.12 (6), build
+`3d0aa2e9-da74-4608-ae22-86b7df6a5f71`: the user confirmed the empty/private
+Luxembourgish startup and persistence of both a new item and the language choice
+after restart. The list looks good on initial inspection; wording can be refined
+over time. This initial review does not mark every detailed layout, search,
+accessibility, or two-phone scenario above as completed.
+
 ## Credentials
 
 Expo account credentials and tokens stay outside the repository. To inspect or

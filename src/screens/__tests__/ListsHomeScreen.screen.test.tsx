@@ -73,7 +73,7 @@ test('home shows items directly with Sharing, Settings, and a compact footer', a
 test('Add items opens the picker directly and applies learned aisles to suggestions', async () => {
   const state = useListsStore.getState();
   const id = seedList(useListsStore, 'Disposable');
-  state.addItem(id, 'Apel');
+  state.addItem(id, 'Äppel');
   const apple = useListsStore.getState().getList(id)!.items[0];
   state.recategorize(id, apple.id, 'Pantry');
   state.deleteItem(id, apple.id);
@@ -86,10 +86,10 @@ test('Add items opens the picker directly and applies learned aisles to suggesti
   expect(screen.queryByText('Kits')).toBeNull();
   const input = screen.getByLabelText('Search items');
   await user.type(input, 'ape');
-  await user.press(screen.getByRole('button', { name: 'Apel' }));
+  await user.press(screen.getByRole('button', { name: 'Äppel' }));
   await user.press(screen.getByRole('button', { name: 'Add item' }));
   const added = useListsStore.getState().getList(id)!.items.filter(i => !i.deletedAt);
-  expect(added).toEqual([expect.objectContaining({ name: 'Apel', category: 'Pantry' })]);
+  expect(added).toEqual([expect.objectContaining({ name: 'Äppel', category: 'Pantry' })]);
   expect(input.props.value).toBe('');
   await user.press(screen.getByRole('button', { name: 'Close' }));
   expect(close).toHaveBeenCalledTimes(1);

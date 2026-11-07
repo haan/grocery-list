@@ -18,7 +18,7 @@ test('no small suggestion cap truncates the filter', () => {
 });
 
 test('filters foreign aliases but displays the preferred catalog name', () => {
-  expect(browseSuggestions('Kartoffeln', []).map(row => row.name)).toEqual(['Gromper']);
+  expect(browseSuggestions('Kartoffeln', []).map(row => row.name)).toEqual(['Gromperen']);
   expect(browseSuggestions('lait', []).some(row => row.name === 'Mëllech')).toBe(true);
 });
 
@@ -29,8 +29,8 @@ test('accents, decomposed characters, and whitespace match; accented names use b
 });
 
 test('personal names join the alphabet and catalog duplicates keep Recent controls', () => {
-  const rows = browseSuggestions('', ['Zzz custom', 'Apel', 'Aaa custom']);
-  expect(rows.filter(row => row.name === 'Apel')).toEqual([expect.objectContaining({ recent: true, category: 'Produce' })]);
+  const rows = browseSuggestions('', ['Zzz custom', 'Äppel', 'Aaa custom']);
+  expect(rows.filter(row => row.name === 'Äppel')).toEqual([expect.objectContaining({ recent: true, category: 'Produce' })]);
   expect(rows[0].name).toBe('Aaa custom');
   expect(rows.at(-1)?.name).toBe('Zzz custom');
   expect(rows).toHaveLength(PRODUCTS.length + 2);
@@ -70,8 +70,8 @@ test('cached results refresh after Recent rename, forgetting, and Undo', () => {
   expect(browseSuggestions('bags', ['New bags']).map(row => row.name)).toEqual(['New bags']);
   expect(browseSuggestions('bags', [])).toEqual([]);
   expect(browseSuggestions('bags', ['New bags']).map(row => row.name)).toEqual(['New bags']);
-  expect(browseSuggestions('Apel', ['Apel']).find(row => row.name === 'Apel')?.recent).toBe(true);
-  expect(browseSuggestions('Apel', []).find(row => row.name === 'Apel')?.recent).toBe(false);
+  expect(browseSuggestions('Äppel', ['Äppel']).find(row => row.name === 'Äppel')?.recent).toBe(true);
+  expect(browseSuggestions('Äppel', []).find(row => row.name === 'Äppel')?.recent).toBe(false);
 });
 
 test('evicting old searches never truncates the complete catalog', () => {

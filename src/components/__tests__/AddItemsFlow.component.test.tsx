@@ -64,11 +64,11 @@ test('prepares hidden rows once and reuses them on opening and reopening', async
   </SafeAreaProvider>;
   const ui = await render(view(false));
   await act(() => jest.advanceTimersByTime(1));
-  const row = screen.getByRole('button', { name: 'Äerdbier', includeHiddenElements: true });
-  expect(screen.queryByRole('button', { name: 'Äerdbier' })).toBeNull();
+  const row = screen.getByRole('button', { name: 'Äerdbieren', includeHiddenElements: true });
+  expect(screen.queryByRole('button', { name: 'Äerdbieren' })).toBeNull();
   expect(screen.getByTestId('addItemsSurface', { includeHiddenElements: true }).props.pointerEvents).toBe('none');
   await ui.rerender(view(true));
-  expect(screen.getByRole('button', { name: 'Äerdbier' })).toBe(row);
+  expect(screen.getByRole('button', { name: 'Äerdbieren' })).toBe(row);
   await type('Search items', 'Plastiktut');
   await ui.rerender(view(false));
   expect(screen.queryByLabelText('Search items')).toBeNull();
@@ -76,14 +76,14 @@ test('prepares hidden rows once and reuses them on opening and reopening', async
   for (let i = 0; i < 24; i++) await act(() => jest.advanceTimersByTime(200));
   await ui.rerender(view(true));
   expect(search().props.value).toBe('');
-  const reopenedRow = screen.getByRole('button', { name: 'Äerdbier' });
+  const reopenedRow = screen.getByRole('button', { name: 'Äerdbieren' });
   expect(reopenedRow).toBe(row);
   expect(screen.getAllByRole('button').map(button => button.props.accessibilityLabel))
     .toEqual(expect.arrayContaining(PRODUCTS.map(product => product.name)));
   expect(screen.queryByText('Preparing remaining items…')).toBeNull();
   await ui.rerender(view(false));
   await ui.rerender(view(true));
-  expect(screen.getByRole('button', { name: 'Äerdbier' })).toBe(reopenedRow);
+  expect(screen.getByRole('button', { name: 'Äerdbieren' })).toBe(reopenedRow);
   expect(list().items).toEqual([]);
 });
 
@@ -120,8 +120,8 @@ test('Plastiktut: no match → complete details → one item and cleared search'
 });
 
 test('suggestions and keyboard open drafts; cancel retains query and has no side effects', async () => {
-  await setup(); await type('Search items', 'ape'); await press('Apel');
-  expect(screen.getByLabelText('Item').props.value).toBe('Apel');
+  await setup(); await type('Search items', 'ape'); await press('Äppel');
+  expect(screen.getByLabelText('Item').props.value).toBe('Äppel');
   await press('Cancel');
   expect(search().props.value).toBe('ape');
   expect(list().items).toEqual([]);
@@ -135,9 +135,9 @@ test('suggestions and keyboard open drafts; cancel retains query and has no side
 test('custom action is hidden for empty searches and exact names or aliases', async () => {
   await setup();
   expect(screen.queryByRole('button', { name: /Add.*…/ })).toBeNull();
-  await type('Search items', 'Apel');
-  expect(screen.getByRole('button', { name: 'Apel' })).toBeTruthy();
-  expect(screen.queryByRole('button', { name: 'Add “Apel”…' })).toBeNull();
+  await type('Search items', 'Äppel');
+  expect(screen.getByRole('button', { name: 'Äppel' })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'Add “Äppel”…' })).toBeNull();
   await type('Search items', '  mellech ');
   expect(screen.queryByRole('button', { name: /Add.*…/ })).toBeNull();
   await type('Search items', 'Milch');
@@ -222,12 +222,12 @@ test('existing unchecked item opens current details and saves desired total', as
 });
 
 test('checked item remains checked until Add item confirms re-addition', async () => {
-  const item = { ...makeItem('Apel'), quantity: 8, checked: true, note: 'Local' };
+  const item = { ...makeItem('Äppel'), quantity: 8, checked: true, note: 'Local' };
   useListsStore.setState({ lists: [{ ...list(), items: [item] }] });
-  await setup(); await type('Search items', 'Apel'); await press('Apel, on your list');
+  await setup(); await type('Search items', 'Äppel'); await press('Äppel, on your list');
   expect(screen.getByLabelText('Quantity').props.value).toBe('1'); expect(list().items[0].checked).toBe(true);
   await press('Cancel'); expect(list().items[0].checked).toBe(true);
-  await press('Apel, on your list'); await press('Add item');
+  await press('Äppel, on your list'); await press('Add item');
   expect(list().items[0]).toMatchObject({ checked: false, quantity: 1, note: 'Local' });
 });
 
@@ -246,14 +246,14 @@ test('remote name conflict stays open and can be corrected', async () => {
 });
 
 test('remote deletion is explained without resurrecting the item', async () => {
-  const item = makeItem('Apel');
+  const item = makeItem('Äppel');
   useListsStore.setState({ lists: [{ ...list(), items: [item] }] });
-  await setup(); await type('Search items', 'Apel'); await press('Apel, on your list');
+  await setup(); await type('Search items', 'Äppel'); await press('Äppel, on your list');
   await act(() => useListsStore.getState().deleteItem(list().id, item.id));
   await press('Save');
   expect(screen.getByText(/This item was removed on another phone/)).toBeTruthy();
   expect(list().items[0].deletedAt).toBeDefined();
-  await press('Cancel'); expect(search().props.value).toBe('Apel');
+  await press('Cancel'); expect(search().props.value).toBe('Äppel');
 });
 
 test('a deleted aisle is explained and choosing another aisle allows saving', async () => {
@@ -272,9 +272,9 @@ test('replacing the list closes an open draft without saving it', async () => {
 });
 
 test('Remove ignores unsaved edits and Undo restores the original item', async () => {
-  const item = { ...makeItem('Apel'), quantity: 2, note: 'Original' };
+  const item = { ...makeItem('Äppel'), quantity: 2, note: 'Original' };
   useListsStore.setState({ lists: [{ ...list(), items: [item] }] });
-  await setup(); await type('Search items', 'Apel'); await press('Apel, on your list');
+  await setup(); await type('Search items', 'Äppel'); await press('Äppel, on your list');
   await type('Note', 'Do not save'); await type('Quantity', '6'); await press('Remove');
   expect(list().items[0].deletedAt).toBeDefined(); await press('Undo');
   expect(list().items[0]).toMatchObject({ quantity: 2, note: 'Original' }); expect(list().items[0].deletedAt).toBeUndefined();

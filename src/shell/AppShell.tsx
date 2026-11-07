@@ -65,9 +65,8 @@ export function AppShell({ ready, children, navigationRef, onReady }: Props) {
   // before first paint. Drives useColorScheme() below and in every screen.
   useApplyThemePreference();
   // Restore + apply the saved language (System, or a locale the user chose). The
-  // version keys <NavigationContainer> below so an explicit switch re-renders the
-  // whole tree in the new language (canon § Translations). System needs no
-  // remount — the device locale is applied on i18n import.
+  // version keys <NavigationContainer> below so effective-language changes
+  // refresh the tree, including System changes detected on foreground.
   useApplyLocalePreference();
   const localeVersion = useLocaleVersion();
   const isDark = useColorScheme() === 'dark';

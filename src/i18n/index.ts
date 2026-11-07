@@ -1,6 +1,7 @@
 import { SHELL_STRINGS } from './shellStrings';
 import { APP_STRINGS } from './appStrings';
 import { LOCALES } from './locales';
+import { getLocales } from 'expo-localization';
 
 type Dict = { [key: string]: string | Dict };
 
@@ -27,6 +28,8 @@ function baseStrings(): Dict {
 }
 
 let active: Dict = baseStrings();
+let activeLocale = 'en';
+export function getActiveLocale(): string { return activeLocale; }
 
 /** Drop every locale overlay and return the active dictionary to English.
  *  This is what makes "English" (and System on an English phone) a real
@@ -35,12 +38,14 @@ let active: Dict = baseStrings();
  *  old language sticks on screen. */
 export function resetToBaseStrings(): void {
   active = baseStrings();
+  activeLocale = 'en';
 }
 
 /** Replace the active dictionary (locale switch). Keeps SHELL+APP as the
  *  English base and overlays the locale's translations on top. */
-export function setLocaleStrings(localeDict: Dict): void {
+export function setLocaleStrings(localeDict: Dict, locale = 'en'): void {
   active = deepMerge(baseStrings(), localeDict);
+  activeLocale = locale;
 }
 
 /**
@@ -71,10 +76,9 @@ export function applyDeviceLocale(): void {
   // to English instead of leaving a previous overlay in place.
   resetToBaseStrings();
   try {
-    const match = pickLocale(getLocale(), Object.keys(LOCALES));
-    if (match && LOCALES[match]) {
-      active = deepMerge(baseStrings(), LOCALES[match] as Dict);
-    }
+    // Include English when choosing: an English preference must beat a later lb.
+    const match = getLocales().map(l => pickLocale(l.languageTag, ['en', ...CANONICAL_LOCALES])).find(Boolean);
+    if (match && LOCALES[match]) setLocaleStrings(LOCALES[match], match);
   } catch {
     /* keep English base */
   }
@@ -98,15 +102,13 @@ export function t(key: string, vars?: Record<string, string | number>): string {
   );
 }
 
-// ---------- Locale-aware formatting (canon § Translations) ----------
-// Hermes ships Intl, so these need no extra dependency. Reading the resolved
-// locale from Intl avoids a hard dep on expo-localization; an app that already
-// depends on it can pass an explicit locale to override.
+// Device language and the selected interface language are deliberately separate.
+// Intl formats values; expo-localization reads Android's actual preferences.
 
 /** The device's resolved BCP-47 locale (e.g. "en-US"), with a safe fallback. */
 export function getLocale(): string {
   try {
-    return Intl.DateTimeFormat().resolvedOptions().locale || 'en-US';
+    return getLocales()[0]?.languageTag || 'en-US';
   } catch {
     return 'en-US';
   }
@@ -115,7 +117,7 @@ export function getLocale(): string {
 export function formatDate(
   value: Date | number,
   opts: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' },
-  locale = getLocale()
+  locale = getActiveLocale()
 ): string {
   try {
     return new Intl.DateTimeFormat(locale, opts).format(value);
@@ -127,7 +129,7 @@ export function formatDate(
 export function formatNumber(
   value: number,
   opts: Intl.NumberFormatOptions = {},
-  locale = getLocale()
+  locale = getActiveLocale()
 ): string {
   try {
     return new Intl.NumberFormat(locale, opts).format(value);
@@ -141,7 +143,7 @@ export function formatNumber(
 export function formatCurrency(
   amount: number,
   currency: string,
-  locale = getLocale()
+  locale = getActiveLocale()
 ): string {
   try {
     return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(amount);
@@ -150,7 +152,5 @@ export function formatCurrency(
   }
 }
 
-// Localize on import — picks the device locale from LOCALES, or stays English.
-// A no-op until translations land (LOCALES starts empty), so it's safe to ship
-// in every app from day one (canon § Translations: translation-ready by default).
+// The stored override is applied by the app shell during startup.
 applyDeviceLocale();

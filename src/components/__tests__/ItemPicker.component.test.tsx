@@ -56,8 +56,8 @@ test('tapping an item row requests details', async () => {
   const { onAdd, searchBox, getByLabelText } = await renderPicker();
   // Type a partial term that surfaces the built-in "apple" seed row.
   await fireEvent.changeText(searchBox(), 'ape');
-  await fireEvent.press(getByLabelText('Apel'));
-  expect(onAdd).toHaveBeenCalledWith('Apel', expect.anything(), expect.any(Function));
+  await fireEvent.press(getByLabelText('Äppel'));
+  expect(onAdd).toHaveBeenCalledWith('Äppel', expect.anything(), expect.any(Function));
 });
 
 test('starts with a screenful and queues the entire catalog without scrolling', async () => {
@@ -74,7 +74,7 @@ test('starts with a screenful and queues the entire catalog without scrolling', 
 
 test('filtering finds unprepared products immediately and preserves the alphabetical view', async () => {
   const { getByLabelText, queryByLabelText, searchBox, getAllByRole } = await renderPicker();
-  const firstRow = getByLabelText('Äerdbier');
+  const firstRow = getByLabelText('Äerdbieren');
   expect(queryByLabelText('Zopp')).toBeNull();
   await fireEvent.changeText(searchBox(), 'Zopp');
   expect(getByLabelText('Zopp')).toBeTruthy();
@@ -82,7 +82,7 @@ test('filtering finds unprepared products immediately and preserves the alphabet
   // The hidden unfiltered view continues preparing while search is in use.
   for (let i = 0; i < 24; i++) await act(() => jest.advanceTimersByTime(200));
   await fireEvent.press(getByLabelText('Clear search'));
-  expect(getByLabelText('Äerdbier')).toBe(firstRow);
+  expect(getByLabelText('Äerdbieren')).toBe(firstRow);
   expect(getAllByRole('button').map(button => button.props.accessibilityLabel))
     .toEqual(expect.arrayContaining(PRODUCTS.map(product => product.name)));
 });
