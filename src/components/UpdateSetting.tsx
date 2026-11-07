@@ -14,7 +14,10 @@ export function UpdateSetting() {
     && Updates.isEnabled && Updates.channel === 'production';
   return <View style={s.section}>
     <Text style={[s.title, { color: c.fgMuted }]} accessibilityRole="header">{t('updates.title')}</Text>
-    {enabled ? <EverydayUpdates /> : <Text style={[s.text, { color: c.fgMuted }]}>{t('updates.dev')}</Text>}
+    {enabled ? <EverydayUpdates /> : <Pressable accessibilityRole="button" accessibilityState={{ disabled: true }} disabled
+      style={[s.button, { borderColor: c.hairline }, s.dim]}>
+      <Text style={[s.buttonText, { color: c.fgMuted }]}>{t('updates.dev')}</Text>
+    </Pressable>}
   </View>;
 }
 
@@ -69,27 +72,20 @@ function EverydayUpdates() {
     : phase === 'downloading' || updates.isDownloading ? 'downloading'
     : busy ? 'checking'
     : result === 'error' || (!result && !pending && (updates.checkError || updates.downloadError)) ? 'error'
-    : pending ? 'ready'
-    : result === 'current' ? 'current' : 'automatic';
+    : pending ? 'restart'
+    : result === 'current' ? 'current' : 'check';
   const disabled = busy || (pending && blocked);
-  return <>
-    <Text style={[s.text, { color: c.fgMuted }]} accessibilityLiveRegion="polite">{t(`updates.${status}`)}</Text>
-    <Pressable accessibilityRole="button" accessibilityState={{ disabled }} disabled={disabled}
+  return <Pressable accessibilityRole="button" accessibilityState={{ disabled, busy }} disabled={disabled}
       onPress={() => { void act(); }}
       style={({ pressed }) => [s.button, { borderColor: c.hairline }, (pressed || disabled) && s.dim]}>
-      <Text style={[s.buttonText, { color: c.fg }]}>{t(pending ? 'updates.restart' : 'updates.check')}</Text>
-    </Pressable>
-    {!updates.currentlyRunning.isEmbeddedLaunch && updates.currentlyRunning.updateId &&
-      <Text style={[s.revision, { color: c.fgMuted }]}>{t('updates.revision', { id: updates.currentlyRunning.updateId.slice(0, 8) })}</Text>}
-  </>;
+      <Text style={[s.buttonText, { color: c.fg }]} accessibilityLiveRegion="polite">{t(`updates.${status}`)}</Text>
+    </Pressable>;
 }
 
 const s = StyleSheet.create({
   section: { paddingHorizontal: space.s6, paddingTop: space.s7, gap: space.s3 },
   title: { ...ty.xs, fontFamily: fontFamily.sansSemibold, textTransform: 'uppercase', letterSpacing: 0.5 },
-  text: { ...ty.sm, fontFamily: fontFamily.sans },
   button: { minHeight: target.min, borderWidth: 1, borderRadius: 12, justifyContent: 'center', alignItems: 'center', padding: space.s3 },
-  buttonText: { ...ty.base, fontFamily: fontFamily.sansSemibold },
-  revision: { ...ty.xs, fontFamily: fontFamily.mono },
+  buttonText: { ...ty.base, fontFamily: fontFamily.sansSemibold, textAlign: 'center' },
   dim: { opacity: 0.5 },
 });
