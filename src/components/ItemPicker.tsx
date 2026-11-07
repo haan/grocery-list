@@ -59,6 +59,7 @@ type SheetRow =
       category?: Category;
       onList: boolean;
       recent: boolean;
+      editable: boolean;
       letter: string;
     };
 
@@ -238,7 +239,7 @@ function ItemPicker({
           </View>
         );
       }
-      const { name, category, onList, recent } = row;
+      const { name, category, onList, editable } = row;
       return (
         <View style={s.itemRow}>
           <Pressable
@@ -258,7 +259,7 @@ function ItemPicker({
             ) : null}
           </Pressable>
 
-          {recent ? (
+          {editable ? (
             <Pressable
               onPress={() => editRecent(name)}
               hitSlop={6}

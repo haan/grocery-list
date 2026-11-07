@@ -191,6 +191,8 @@ The original production APK's fingerprint is
 `c1cfabf69b96d9c0b35bb5bdeaa31b6c070c623b`. Expo's fingerprint includes npm
 scripts and the presence of an ignored generated Android directory. Consequently
 we keep this command in its own script rather than adding a package.json script.
+The fingerprint also hashes `eas.json` bytes; `.gitattributes` pins that file to
+LF so Windows checkouts do not change the runtime solely through line endings.
 For a fresh checkout targeting that APK, generate the ignored Android directory
 with `npx expo prebuild --platform android --no-install` first. Its native
 contents remain ignored; the wrapper compares the actual fingerprint before
@@ -227,9 +229,12 @@ The Checks workflow runs Android-only configuration checks, fuzz-harness self-te
 Add items opens an alphabetical browser of the entire catalog and personal
 Recent names, grouped under letter headings. The keyboard starts hidden for
 browsing. “Search items” filters names and confirmed aliases, including accent-free
-input; there is no result cap. Recent names retain their edit/forget/Undo controls,
-but frequency no longer changes their position in the alphabetical list.
-The Recent pencil opens Edit suggestion directly as a bottom sheet, with the name
+input; there is no result cap. Custom Recent names retain their edit/forget/Undo
+controls. Recognized catalog names and aliases never show a pencil, including
+after use; their history is still recorded. Matching ignores case, accents,
+Unicode representation and repeated whitespace. Longer custom names remain editable.
+Frequency no longer changes their position in the alphabetical list.
+The custom suggestion pencil opens Edit suggestion directly as a bottom sheet, with the name
 initially selected, a scope explanation, and Cancel/Save actions. Its header trash
 action is labeled Forget suggestion and retains Undo. Forget discards unsaved
 name changes; neither renaming nor forgetting changes existing shopping items.

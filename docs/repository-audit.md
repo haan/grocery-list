@@ -3,7 +3,30 @@
 Baseline: main commit 5edb48bd2bff1fd78e0700898604846c2b39aa8d. Work branch:
 cleanup/android-only. Audit date: 2026-11-06. No history rewrite or main merge.
 
-## Everyday Expo updates (current phase)
+## Custom suggestion editing (current phase)
+
+Branch `fix/catalog-suggestion-editing`: separate Recent membership from whether
+a suggestion can be edited. Catalog names and confirmed aliases never show the
+pencil, including after they enter history. Custom full names keep editing,
+forgetting and Undo. Item editing, history recording, matching and classification
+are unchanged. The catalog-name lookup is prepared once with the browser index.
+
+Changed `src/data/suggestionBrowser.ts`, `src/components/ItemPicker.tsx`, their
+existing regression tests, and the development guide. Regression coverage checks
+catalog plurals/aliases, case/accents/Unicode/whitespace normalization, custom
+longer names, history updates and the retained custom editing form.
+Validation: TypeScript, all 530 tests in 52 suites, Android configuration checks,
+and all 16 fuzz-harness self-tests passed. The user confirmed on the Pixel that
+Äppel has no pencil while custom suggestions retain theirs. This device check used
+the development app through Metro; loading recovered after a cache-clearing server
+restart.
+
+Release preparation also pins `eas.json` to LF in `.gitattributes`: Windows Git
+checkout had changed its line endings, producing a different Expo fingerprint
+with identical settings. The LF checkout restores compatibility with the installed
+everyday APK without overriding the runtime or modifying native configuration.
+
+## Everyday Expo updates
 
 Continues on `feature/app-variants`. Existing production APK already includes
 Expo Updates and automatic launch checks; no new native dependency, configuration,

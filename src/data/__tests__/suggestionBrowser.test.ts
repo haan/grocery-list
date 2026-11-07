@@ -28,12 +28,26 @@ test('accents, decomposed characters, and whitespace match; accented names use b
   expect(browseSuggestions('bio mellech', ['Bio  Mëllech'])).toHaveLength(1);
 });
 
-test('personal names join the alphabet and catalog duplicates keep Recent controls', () => {
+test('personal names join the alphabet and catalog duplicates remain Recent without editing controls', () => {
   const rows = browseSuggestions('', ['Zzz custom', 'Äppel', 'Aaa custom']);
-  expect(rows.filter(row => row.name === 'Äppel')).toEqual([expect.objectContaining({ recent: true, category: 'Produce' })]);
+  expect(rows.filter(row => row.name === 'Äppel')).toEqual([expect.objectContaining({ recent: true, editable: false, category: 'Produce' })]);
   expect(rows[0].name).toBe('Aaa custom');
   expect(rows.at(-1)?.name).toBe('Zzz custom');
   expect(rows).toHaveLength(PRODUCTS.length + 2);
+});
+
+test.each(['Äppel', 'Apel', '  APPEL  ', 'A\u0308ppel', 'Milch', 'lait', 'Mëllech'])(
+  'catalog names and aliases stay non-editable when recorded in history: %s', name => {
+    const row = browseSuggestions('', [name]).find(row => row.key === normalizeProductName(name));
+    expect(row).toMatchObject({ recent: true, editable: false });
+  },
+);
+
+test('custom full names remain editable even when they contain a catalog product', () => {
+  const rows = browseSuggestions('', ['Bio Mëllech 1L', 'Plastiktut']);
+  for (const name of ['Bio Mëllech 1L', 'Plastiktut']) {
+    expect(rows.find(row => row.name === name)).toMatchObject({ recent: true, editable: true });
+  }
 });
 
 test('numbers and symbols are browsable under a final # group', () => {
