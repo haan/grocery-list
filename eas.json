@@ -12,15 +12,23 @@
       "channel": "development",
       "android": {
         "buildType": "apk"
-      }
+      },
+      "env": {
+        "APP_VARIANT": "development"
+      },
+      "environment": "development"
     },
-    "preview": {
+    "production": {
       "node": "26.12.1",
       "distribution": "internal",
-      "channel": "preview",
+      "channel": "production",
       "autoIncrement": true,
       "android": {
         "buildType": "apk"
+      },
+      "environment": "production",
+      "env": {
+        "APP_VARIANT": "production"
       }
     }
   }

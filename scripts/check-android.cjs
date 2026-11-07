@@ -6,6 +6,48 @@ const root = path.resolve(__dirname, '..');
 const read = name => fs.readFileSync(path.join(root, name), 'utf8');
 const { expo } = JSON.parse(read('app.json'));
 const pkg = JSON.parse(read('package.json'));
+const eas = JSON.parse(read('eas.json'));
+const resolveVariant = require('../app.config');
+const savedVariant = process.env.APP_VARIANT;
+const savedProfile = process.env.EAS_BUILD_PROFILE;
+try {
+  assert.deepEqual(Object.keys(eas.build).sort(), ['development', 'production']);
+  for (const variant of ['development', 'production']) {
+    process.env.APP_VARIANT = variant;
+    process.env.EAS_BUILD_PROFILE = variant;
+    const resolved = resolveVariant({ config: expo });
+    const dev = variant === 'development';
+    assert.equal(resolved.android.package, `io.github.haan.grocerylist${dev ? '.dev' : ''}`);
+    assert.equal(resolved.scheme, `haan-grocerylist${dev ? '-dev' : ''}`);
+    assert.equal(resolved.name, dev ? 'Grocery List Dev' : 'Grocery List');
+    assert.equal(resolved.android.adaptiveIcon.backgroundColor, dev ? '#5B3A80' : '#05515F');
+    assert.deepEqual(resolved.platforms, ['android']);
+    assert.equal(resolved.ios, undefined);
+    assert.equal(resolved.web, undefined);
+    assert.equal(resolved.extra.eas.projectId, expo.extra.eas.projectId);
+    assert.deepEqual(resolved.plugins.find(p => p[0] === 'expo-dev-client'), ['expo-dev-client', { addGeneratedScheme: false }]);
+    const profile = eas.build[variant];
+    assert.equal(profile.env.APP_VARIANT, variant);
+    assert.equal(profile.channel, variant);
+    assert.equal(profile.environment, variant);
+    assert.equal(profile.android.buildType, 'apk');
+    assert.equal(profile.distribution, 'internal');
+    assert.equal(!!profile.developmentClient, dev);
+    assert.equal(profile.autoIncrement, true);
+  }
+  process.env.APP_VARIANT = 'typo';
+  assert.throws(() => resolveVariant({ config: expo }), /Unknown APP_VARIANT/);
+  process.env.APP_VARIANT = 'development';
+  assert.throws(() => resolveVariant({ config: expo }), /must match/);
+  delete process.env.APP_VARIANT;
+  delete process.env.EAS_BUILD_PROFILE;
+  assert.equal(resolveVariant({ config: expo }).android.package, expo.android.package);
+} finally {
+  if (savedVariant === undefined) delete process.env.APP_VARIANT;
+  else process.env.APP_VARIANT = savedVariant;
+  if (savedProfile === undefined) delete process.env.EAS_BUILD_PROFILE;
+  else process.env.EAS_BUILD_PROFILE = savedProfile;
+}
 assert.deepEqual(expo.platforms, ['android'], 'The app supports Android only');
 assert.equal(expo.ios, undefined, 'Remove the Apple app configuration');
 assert.equal(expo.web, undefined, 'Remove the web app configuration');

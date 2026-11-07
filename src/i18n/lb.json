@@ -172,5 +172,19 @@
     "remove": "Ewechhuelen",
     "decrease": "Manner",
     "increase": "Méi"
+  },
+  "updates": {
+    "title": "Updaten",
+    "dev": "Dës App kritt Ännerungen iwwer Metro.",
+    "automatic": "Updatë ginn automatesch beim Start vun der App erofgelueden. Si ginn beim nächste komplette Start benotzt.",
+    "check": "No Updatë sichen",
+    "checking": "No Updatë gëtt gesicht…",
+    "downloading": "Den Update gëtt erofgelueden…",
+    "current": "Fir dës installéiert Versioun ass keen neien Update disponibel.",
+    "ready": "En Update ass prett. Start d'App elo nei oder benotz den Update déi nächste Kéier.",
+    "restart": "Nei starten an aktualiséieren",
+    "restarting": "Späicheren an nei starten…",
+    "error": "Den Update konnt net ofgeschloss ginn. Déi aktuell Versioun bleift disponibel. Probéier nach eng Kéier.",
+    "revision": "Update: {id}"
   }
 }

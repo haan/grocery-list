@@ -12,14 +12,14 @@
     "dev:tunnel": "expo start --dev-client --tunnel",
     "typecheck": "tsc --noEmit",
     "build:dev": "npx eas-cli@27.5.0 build --platform android --profile development",
-    "build:preview": "npx eas-cli@27.5.0 build --platform android --profile preview",
     "android": "expo run:android",
     "test": "jest",
     "catalog:build": "node scripts/lod/build.cjs",
     "check:android": "node scripts/check-android.cjs",
     "test:fuzz-harness": "node qa/intent-fuzz/selftest.mjs",
     "language:review": "node scripts/language/review.cjs",
-    "language:spellcheck": "node scripts/language/review.cjs --spellcheck"
+    "language:spellcheck": "node scripts/language/review.cjs --spellcheck",
+    "build:production": "npx eas-cli@27.5.0 build --platform android --profile production"
   },
   "dependencies": {
     "@noble/curves": "^2.2.0",

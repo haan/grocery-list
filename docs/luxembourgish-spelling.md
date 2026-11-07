@@ -4,7 +4,7 @@ Dictionary: https://github.com/spellchecker-lu/dictionary-lb-lu, commit `4b75d78
 
 Checker: @(#) International Ispell Version 3.2.06 (but really Hunspell 1.7.2)
 
-525 strings/product labels checked; 80 findings, 0 unresolved.
+537 strings/product labels checked; 80 findings, 0 unresolved.
 
 Checks spelling only; grammar, n-rule context and shopping usage require editorial review. Foreign search aliases are deliberately excluded.
 

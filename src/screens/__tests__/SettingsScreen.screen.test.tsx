@@ -14,6 +14,7 @@ jest.mock('expo-haptics', () => ({
   notificationAsync: () => Promise.resolve(),
   NotificationFeedbackType: { Warning: 'warning' },
 }));
+jest.mock('../../sync', () => ({ flushSyncEngine: jest.fn() }));
 jest.mock('expo-font', () => ({
   useFonts: () => [true, null],
   isLoaded: () => true,
