@@ -12,6 +12,8 @@ Grocery List is built on the work of these open-source projects.
 - **react-native-svg** `15.15.4` (MIT): https://github.com/react-native-community/react-native-svg
 - **react-native-qrcode-svg** `6.3.21` (MIT): https://github.com/Expensify/react-native-qrcode-svg#readme
 - **Expo Camera** `57.0.6` (MIT): https://docs.expo.dev/versions/latest/sdk/camera/
+- **Expo Localization** `57.0.2` (MIT): https://docs.expo.dev/versions/v57.0.0/sdk/localization/
+- **rtl-detect** `1.1.2` (BSD-3-Clause): https://github.com/shadiabuhilal/rtl-detect
 - **Noble Curves** `2.3.0` (MIT): https://paulmillr.com/noble/
 - **Noble Hashes** `2.3.0` (MIT): https://paulmillr.com/noble/
 - **TweetNaCl.js** `1.0.3` (Unlicense): https://tweetnacl.js.org
@@ -28,3 +30,12 @@ linguistic data, published by the Zentrum fir d'Lëtzebuerger Sprooch under
 The app uses a reviewed selection of shopping meanings and aliases, rather than
 the complete dictionary. Source references, checksum, and generation instructions
 are in [scripts/lod](scripts/lod/README.md).
+
+## Development spelling review
+
+Luxembourgish wording is checked locally with **Hunspell** and the
+[Spellchecker.lu dictionary](https://github.com/spellchecker-lu/dictionary-lb-lu).
+The dictionary is copyright Michel Weimerskirch (2008–2015) and Michel Weimerskirch,
+Sandra Souza Morais (2016–2023), licensed under **EUPL 1.1**. Its license is downloaded
+alongside the pinned dictionary into ignored `tmp/`. It is not redistributed in the
+application. Version, checksums, exceptions and workflow: [scripts/language](scripts/language/README.md).

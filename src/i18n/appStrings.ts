@@ -119,7 +119,7 @@ export const APP_STRINGS = {
     inviteHelp: 'Scan this code on the other phone, or send a link.',
     accessHint: 'Anyone with this code or link can access your list.',
     joinTitle: 'Join another list',
-    waiting: 'Waiting for the shared list. Connect to the internet and keep the sharing phone online. Items will appear when the first copy arrives.',
+    waiting: 'Waiting for the shared list. Connect to the internet. Items will appear when a stored or newly shared copy arrives.',
     replaceTitle: 'Replace this list?',
     replaceBody: 'Joining replaces the shopping list on this phone with the shared list. Your recent suggestions remain. This cannot be undone.',
     join: 'Join shared list',

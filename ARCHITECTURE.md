@@ -35,12 +35,14 @@ external template synchronization is active. Preserve licenses and attribution.
 | src/qa | Test-only layout helpers and checks. |
 | qa/intent-fuzz | Active model-based testing, seed logging, replay. |
 | scripts/lod | Reviewed LOD source references and deterministic generation. |
+| scripts/language | Developer-only Hunspell/Docker checking, pinned dictionary source and contextual review. |
 
 ## Persistence and sharing invariants
 
-Database initialization runs the atomic single-list-v1 migration before either
-store hydrates or sync starts. It clears shopping tables and the old favorites
-setting, inserts one empty private list, and writes its marker in one transaction.
+Database initialization runs the atomic luxembourgish-shopping-v1 pre-release reset
+before either store hydrates or sync starts. It supersedes single-list-v1, clears
+shopping/history/aisle/sharing state and pending joins, inserts one empty private
+list, and writes both markers in one transaction.
 Failures roll back and show Retry; subsequent launches preserve the list/history.
 Appearance, language, and bounded local diagnostics are retained.
 
@@ -68,16 +70,20 @@ Name, checked-state, items, and preferences retain their clock/validation
 semantics. Check compatibility with installed fork versions before changing them.
 
 Product and built-in aisle labels are Luxembourgish; menus follow the selected
-interface language (currently English). The picker retains System and English;
-future translation dictionaries register in src/i18n/locales.ts. Retired saved
-language preferences migrate to System. The bundled catalog works offline. Manual aisle corrections
+interface language (English or Luxembourgish). The picker offers System, English
+and Lëtzebuergesch. Expo Localization reads Android's ordered language preferences;
+System selects the first supported one, falling back to English. Explicit local
+choices win. On foreground, an actual effective-language change refreshes navigation.
+Formatting follows the effective language; user content and language choices never
+get translated or synchronized. Retired saved language preferences migrate to System.
+The native Expo plugin declares only Android en/lb. The bundled catalog works offline. Manual aisle corrections
 apply to future additions in that list and synchronize with it. Removing a custom
 aisle reclassifies affected items and tombstones its preferences. See the
 [catalog guide](scripts/lod/README.md) for matching and learning rules.
 
 Kit storage is retired with an idempotent DROP TABLE IF EXISTS kits on database
-initialization. The one-time single-list migration supersedes the earlier kit-only
-upgrade; it deliberately resets all old shopping data.
+initialization. The versioned pre-release shopping reset also clears any data from
+earlier test installations. Future catalog wording edits must not change its marker.
 Unsupported control messages, including legacy kit messages, are ignored without
 updating list data or sync status. Existing list wire format and relay slots remain
 unchanged; no deletion is broadcast to older installations or relay storage.

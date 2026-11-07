@@ -1,3 +1,5 @@
+import { t, setLocaleStrings, resetToBaseStrings } from '../../i18n';
+import lb from '../../i18n/lb.json';
 jest.mock('react-native-draggable-flatlist', () => require('../../../qa/draggableFlatListMock.cjs'));
 
 
@@ -177,9 +179,9 @@ function PromptOpen() {
   const prompt = usePrompt();
   useEffect(() => {
     prompt.open({
-      title: 'Rename aisle',
+      title: t('reorder.renameTitle'),
       initialValue: 'Weekly shop',
-      confirmLabel: 'Save',
+      confirmLabel: t('common.save'),
       onSubmit: noop,
     });
   }, []);
@@ -190,9 +192,9 @@ function ConfirmOpen() {
   const confirm = useConfirm();
   useEffect(() => {
     confirm.open({
-      title: 'Stop sharing?',
-      message: 'Keep a private copy on this phone.',
-      confirmLabel: 'Delete',
+      title: t('share.stop'),
+      message: t('share.stopBody'),
+      confirmLabel: t('common.delete'),
       destructive: true,
       onConfirm: noop,
     });
@@ -200,11 +202,13 @@ function ConfirmOpen() {
   return confirm.element;
 }
 
-describe("edge-inset audit — this app's screens", () => {
+describe.each(['en', 'lb'])("edge-inset audit — %s", locale => {
+  beforeEach(() => { resetToBaseStrings(); if (locale === 'lb') setLocaleStrings(lb, 'lb'); });
+  afterEach(resetToBaseStrings);
   it('Settings', async () => {
     expect(
       await auditScreen(<SettingsScreen navigation={navigation} route={route('Settings')} />, {
-        readyText: 'Sharing',
+        readyText: t('share.title'),
       })
     ).toEqual([]);
   });
@@ -243,12 +247,12 @@ describe("edge-inset audit — this app's screens", () => {
 
   it('Add items sheet (recent and catalog)', async () => {
     expect(
-      await auditScreen(<AddItemsSheet visible listId={shop.id} onClose={noop} />, { readyText: 'Äerdbier' })
+      await auditScreen(<AddItemsSheet visible listId={shop.id} onClose={noop} />, { readyText: 'Äerdbieren' })
     ).toEqual([]);
   });
 
   it('Item editor', async () => {
-    expect(await auditScreen(<ItemEditorOpen />, { readyText: 'Edit item' })).toEqual([]);
+    expect(await auditScreen(<ItemEditorOpen />, { readyText: t('detail.editItem') })).toEqual([]);
   });
 
   it('Action menu', async () => {
@@ -256,18 +260,18 @@ describe("edge-inset audit — this app's screens", () => {
   });
 
   it('Prompt', async () => {
-    expect(await auditScreen(<PromptOpen />, { readyText: 'Rename aisle' })).toEqual([]);
+    expect(await auditScreen(<PromptOpen />, { readyText: t('reorder.renameTitle') })).toEqual([]);
   });
 
   it('Confirm', async () => {
-    expect(await auditScreen(<ConfirmOpen />, { readyText: 'Stop sharing?' })).toEqual([]);
+    expect(await auditScreen(<ConfirmOpen />, { readyText: t('share.stop') })).toEqual([]);
   });
 
   it('Language picker sheet', async () => {
     expect(
       await auditScreen(<LanguageSetting />, {
         interact: async () => {
-          await userEvent.setup().press(screen.getByRole('button', { name: /^Language/ }));
+          await userEvent.setup().press(screen.getByRole('button', { name: new RegExp('^' + t('settings.language')) }));
           await screen.findByRole('radio', { name: 'English' });
         },
       })

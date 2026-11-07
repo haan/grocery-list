@@ -66,11 +66,21 @@ describe('i18n key parity (translation drift net)', () => {
     if (appKeys.length === 0) return; // fresh app, no domain copy yet
     const failures: string[] = [];
     for (const [locale, dict] of Object.entries(LOCALES)) {
-      const present = appKeys.filter((k) => hasLeaf(dict as Dict, k));
-      if (present.length === 0) continue; // no domain pass for this locale yet
       const missing = appKeys.filter((k) => !hasLeaf(dict as Dict, k));
       if (missing.length) failures.push(`${locale}: ${missing.join(', ')}`);
     }
     expect(failures).toEqual([]);
+  });
+
+  it('every translation preserves interpolation placeholders and is nonempty', () => {
+    resetToBaseStrings();
+    const keys = new Set([...leafPaths(SHELL_STRINGS), ...leafPaths(APP_STRINGS)]);
+    const tokens = (value: string) => [...new Set(value.match(/\{\w+\}/g) ?? [])].sort();
+    for (const dict of Object.values(LOCALES)) for (const key of keys) {
+      const translated = key.split('.').reduce<any>((value, part) => value?.[part], dict);
+      expect(typeof translated).toBe('string');
+      expect(translated.trim().length).toBeGreaterThan(0);
+      expect(tokens(translated)).toEqual(tokens(t(key)));
+    }
   });
 });

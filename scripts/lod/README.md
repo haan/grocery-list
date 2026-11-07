@@ -11,6 +11,16 @@ The app's inherited MIT notices remain unchanged.
 
 ## Editing and generating
 
+The Luxembourgish feature reviews all 371 products for natural shopping usage:
+136 plural labels, 162 substance names, 64 ambiguous food/product names retained
+without assuming a package, and 9 established collective names. Quantity does not
+inflect the name. `shoppingLabel` records the original headword, usage, provenance
+and rationale. Qualified plurals such as Séiss Gromperen are reviewed explicitly;
+the parser keeps standalone plurals separate from n-rule variants. Stable product
+IDs and former labels/search aliases remain. The per-aisle [review](review.md)
+shows before/after labels. `--select` is disabled because bootstrap selection would
+discard these decisions. The original selection file still defines aisle groups.
+
 `manifest.json` is the reviewed source of truth: permanent product IDs, preferred
 Luxembourgish names, LOD entry/meaning references, approved aliases, and aisles.
 Keep IDs stable when editing labels or extending aliases. Do not reuse retired

@@ -5,8 +5,8 @@ import { normalizeProductName } from './catalog';
 export interface SeedItem { name: string; category: Category }
 const items: SeedItem[] = PRODUCTS.map(({name, category}) => ({name, category}));
 export function seedItemsForLocale(_locale: string): SeedItem[] { return items; }
-const starterNames = ['Gromper', 'Tomat', 'Apel', 'Mëllech', 'Ee', 'Botter', 'Brout', 'Baguette', 'Poulet', 'Miel', 'Räis', 'Waasser', 'Kaffi', 'Toilettëpabeier', 'Spullmëttel', 'Zännseef'];
-const starters = starterNames.flatMap(name => items.filter(p => p.name === name));
+const starterIds = ["lod:GROMPER1UNI1","lod:TOMAT1UNI2","lod:APEL1UNI1","lod:MELLECH1UNI1","lod:EE1UNI1","lod:BOTTER1UNI1","lod:BROUT1UNI1","lod:BAGUETTE1UNI1","lod:POULET1UNI1","lod:MIEL1UNI1","lod:RAIS1UNI2","lod:WAASSER2UNI1","lod:KAFFI1UNI2","lod:TOILETTEPABEIER1UNI1","lod:SPULLMETTEL1UNI1","lod:ZANNSEEF1UNI1"];
+const starters: SeedItem[] = starterIds.flatMap(id => PRODUCTS.filter(p => p.id === id).map(({name, category}) => ({name, category})));
 export function starterItemsForLocale(_locale: string): SeedItem[] { return starters; }
 export function suggestSeed(query: string, _locale: string, exclude: Set<string>, limit = 20): SeedItem[] {
   const q = normalizeProductName(query);

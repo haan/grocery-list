@@ -32,7 +32,6 @@
         }
       ],
       "./plugins/withGradleJvmArgs",
-      "./plugins/withAndroidLocaleConfig",
       [
         "expo-splash-screen",
         {
@@ -42,7 +41,19 @@
           "backgroundColor": "#05515F"
         }
       ],
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "expo-localization",
+        {
+          "supportedLocales": {
+            "android": [
+              "en",
+              "lb"
+            ]
+          },
+          "allowDynamicLocaleChangesAndroid": true
+        }
+      ]
     ],
     "extra": {
       "eas": {

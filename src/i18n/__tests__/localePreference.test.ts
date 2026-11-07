@@ -14,7 +14,7 @@ test.each(['es', 'de', 'fr', 'it', 'pt-BR', 'ja'])('saved removed language %s mi
     preference.loadLocalePreference();
     await new Promise(resolve => setTimeout(resolve, 0));
     expect(i18n.t('common.cancel')).toBe('Cancel');
-    expect(preference.availableLocales()).toEqual([]);
+    expect(preference.availableLocales()).toEqual(['lb']);
     expect(storage.setItem).toHaveBeenCalledWith('ja.locale.preference', 'system');
     preference.setLocalePreference('en');
     expect(storage.setItem).toHaveBeenLastCalledWith('ja.locale.preference', 'en');

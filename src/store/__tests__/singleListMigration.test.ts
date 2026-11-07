@@ -7,7 +7,7 @@ jest.mock('../../storage/kv', () => ({ getDb: async () => ({
   getAllAsync: async (sql: string, args: unknown[] = []) => mockSqlite.prepare(sql).all(...args),
   getFirstAsync: async (sql: string, args: unknown[] = []) => mockSqlite.prepare(sql).get(...args),
   runAsync: async (sql: string, args: unknown[] = []) => {
-    if (mockFailMarker && sql.includes("VALUES ('single-list-v1'")) throw new Error('disk full');
+    if (mockFailMarker && sql.includes("luxembourgish-shopping-v1")) throw new Error('disk full');
     return mockSqlite.prepare(sql).run(...args);
   },
 }) }));
@@ -24,7 +24,7 @@ function legacy() {
     CREATE TABLE item_history (name TEXT PRIMARY KEY, count INTEGER, lastUsed INTEGER);
     INSERT INTO item_history VALUES ('Mëllech',3,20);
     CREATE TABLE app_settings (k TEXT PRIMARY KEY, v TEXT);
-    INSERT INTO app_settings VALUES ('staples','["Mëllech"]'),('theme','dark'),('language','en');
+    INSERT INTO app_settings VALUES ('staples','["Mëllech"]'),('theme','dark'),('language','en'),('single-list-v1','1'),('pending-join','old');
     CREATE TABLE sync_meta (k TEXT PRIMARY KEY, v TEXT); INSERT INTO sync_meta VALUES ('clock','42');
     CREATE TABLE tombstones (id TEXT PRIMARY KEY, deletedAt INTEGER); INSERT INTO tombstones VALUES ('old-list',15);
   `);
@@ -40,6 +40,9 @@ test.each([false,true])('initializes exactly one empty private list once (upgrad
     expect(lists[0].categoryOrder).not.toContain('Custom aisle');
     expect(await db.loadHistory()).toEqual([]);
     expect(await db.getAppSetting('staples')).toBeNull();
+    expect(await db.getAppSetting('pending-join')).toBeNull();
+    expect(await db.getAppSetting('luxembourgish-shopping-v1')).toBe('1');
+    expect(lists[0].aislePreferences ?? []).toEqual([]);
     expect(await db.getSyncMeta('clock')).toBeNull();
     expect(mockSqlite.prepare('SELECT * FROM tombstones').all()).toEqual([]);
     if(upgrade) {
@@ -62,7 +65,7 @@ test('failed reset rolls back all shopping data and marker; retry succeeds', asy
     await expect(db.loadAllLists()).rejects.toThrow('disk full');
     expect(mockSqlite.prepare('SELECT id FROM lists').get().id).toBe('old');
     expect(mockSqlite.prepare('SELECT * FROM item_history').all()).toHaveLength(1);
-    expect(mockSqlite.prepare("SELECT * FROM app_settings WHERE k='single-list-v1'").get()).toBeUndefined();
+    expect(mockSqlite.prepare("SELECT * FROM app_settings WHERE k='luxembourgish-shopping-v1'").get()).toBeUndefined();
     expect(mockSqlite.prepare("SELECT v FROM app_settings WHERE k='staples'").get()).toBeTruthy();
     mockFailMarker=false;
     expect((await db.loadAllLists())[0].id).not.toBe('old');

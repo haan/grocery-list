@@ -1,7 +1,7 @@
 [
   {
     "id": "lod:GROMPER1UNI1",
-    "name": "Gromper",
+    "name": "Gromperen",
     "category": "Produce",
     "sources": [
       {
@@ -17,11 +17,17 @@
       "Kartoffeln",
       "pomme de terre",
       "pommes de terre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Gromper",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:GROMPER1UNI3",
-    "name": "Séiss Gromper",
+    "name": "Séiss Gromperen",
     "category": "Produce",
     "sources": [
       {
@@ -31,13 +37,24 @@
     ],
     "aliases": [
       "Séiss Gromper",
+      "Séiss Grompere",
+      "Séiss Gromperen",
       "Süßkartoffel",
       "patate douce"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Séiss Gromper",
+      "usage": "plural",
+      "source": "reviewed-phrase",
+      "reason": "Reviewed adjective + standalone LOD noun plural; retain both n-rule forms for search.",
+      "evidence": [
+        "GROMPER1UNI3"
+      ]
+    }
   },
   {
     "id": "lod:TOMAT1UNI2",
-    "name": "Tomat",
+    "name": "Tomaten",
     "category": "Produce",
     "sources": [
       {
@@ -51,11 +68,17 @@
       "Tomaten",
       "tomate",
       "tomates"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Tomat",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:TOMAT1UNI3",
-    "name": "Kleng Tomat",
+    "name": "Kleng Tomaten",
     "category": "Produce",
     "sources": [
       {
@@ -77,15 +100,28 @@
       "Kiischtentomaten",
       "Kirschtomate",
       "Kleng Tomat",
+      "Kleng Tomate",
+      "Kleng Tomaten",
       "Tomate cerise",
       "Tomate-cerisen",
       "Tomate-cerisë",
       "tomate cerise"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kleng Tomat",
+      "usage": "plural",
+      "source": "reviewed-phrase",
+      "reason": "Reviewed adjective + standalone LOD noun plural; retain both n-rule forms for search.",
+      "evidence": [
+        "TOMAT1UNI3",
+        "KIISCHTENTOMAT1UNI1",
+        "TOMATECERISE1UNI1"
+      ]
+    }
   },
   {
     "id": "lod:APEL1UNI1",
-    "name": "Apel",
+    "name": "Äppel",
     "category": "Produce",
     "sources": [
       {
@@ -100,11 +136,17 @@
       "pommes",
       "Äpfel",
       "Äppel"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Apel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BANANN1UNI1",
-    "name": "Banann",
+    "name": "Banannen",
     "category": "Produce",
     "sources": [
       {
@@ -118,11 +160,17 @@
       "Bananne",
       "Banannen",
       "banane"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Banann",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:AERDBIER1UNI3",
-    "name": "Äerdbier",
+    "name": "Äerdbieren",
     "category": "Produce",
     "sources": [
       {
@@ -142,11 +190,17 @@
       "Äerdbier",
       "Äerdbiere",
       "Äerdbieren"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Äerdbier",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MUERT1UNI1",
-    "name": "Muert",
+    "name": "Muerten",
     "category": "Produce",
     "sources": [
       {
@@ -167,11 +221,17 @@
       "Wuerzele",
       "Wuerzelen",
       "carotte"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Muert",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ZWIWWEL1UNI1",
-    "name": "Zwiwwel",
+    "name": "Zwiwwelen",
     "category": "Produce",
     "sources": [
       {
@@ -192,7 +252,13 @@
       "Ënn",
       "Ënne",
       "Ënnen"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Zwiwwel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KNUEWELEK1UNI1",
@@ -208,11 +274,17 @@
       "Knoblauch",
       "Knuewelek",
       "ail"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Knuewelek",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:CHAMPIGNON1UNI1",
-    "name": "Champignon",
+    "name": "Champignonen",
     "category": "Produce",
     "sources": [
       {
@@ -228,11 +300,17 @@
       "Speisepilz",
       "champignon",
       "champignons"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Champignon",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:CONCOMBER1UNI1",
-    "name": "Concomber",
+    "name": "Concomberen",
     "category": "Produce",
     "sources": [
       {
@@ -246,11 +324,17 @@
       "Concomberen",
       "Salatgurke",
       "concombre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Concomber",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:COURGETTE1UNI1",
-    "name": "Courgette",
+    "name": "Courgetten",
     "category": "Produce",
     "sources": [
       {
@@ -270,7 +354,13 @@
       "Zucchinie",
       "Zucchinien",
       "courgette"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Courgette",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BROKKOLI1UNI1",
@@ -285,11 +375,17 @@
     "aliases": [
       "Brokkoli",
       "brocoli"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Brokkoli",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:CHOUFLEUR1UNI1",
-    "name": "Choufleur",
+    "name": "Choufleuren",
     "category": "Produce",
     "sources": [
       {
@@ -303,11 +399,17 @@
       "Choufleure",
       "Choufleuren",
       "chou-fleur"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Choufleur",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ANDEIF1UNI1",
-    "name": "Andéif",
+    "name": "Andéiwen",
     "category": "Produce",
     "sources": [
       {
@@ -320,11 +422,17 @@
       "Andéiwe",
       "Andéiwen",
       "Endivie"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Andéif",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ARTICHAUT1UNI1",
-    "name": "Artichaut",
+    "name": "Artichauten",
     "category": "Produce",
     "sources": [
       {
@@ -338,11 +446,17 @@
       "Artichauten",
       "Artischocke",
       "artichaut"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Artichaut",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:AUBERGINE2UNI1",
-    "name": "Aubergine",
+    "name": "Auberginnen",
     "category": "Produce",
     "sources": [
       {
@@ -355,11 +469,17 @@
       "Auberginne",
       "Auberginnen",
       "aubergine"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Aubergine",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:AVOCADO1UNI1",
-    "name": "Avocado",
+    "name": "Avocadoen",
     "category": "Produce",
     "sources": [
       {
@@ -372,11 +492,17 @@
       "Avocadoe",
       "Avocadoen",
       "avocat"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Avocado",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ANANAS1UNI1",
-    "name": "Ananas",
+    "name": "Ananassen",
     "category": "Produce",
     "sources": [
       {
@@ -389,11 +515,17 @@
       "Ananasse",
       "Ananassen",
       "ananas"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Ananas",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:APRIKOS1UNI1",
-    "name": "Aprikos",
+    "name": "Aprikosen",
     "category": "Produce",
     "sources": [
       {
@@ -406,11 +538,17 @@
       "Aprikose",
       "Aprikosen",
       "abricot"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Aprikos",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BIER3UNI1",
-    "name": "Bier",
+    "name": "Bieren",
     "category": "Produce",
     "sources": [
       {
@@ -424,11 +562,17 @@
       "Bieren",
       "Birne",
       "poire"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Bier",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:HAMMBIER1UNI1",
-    "name": "Hammbier",
+    "name": "Hammbieren",
     "category": "Produce",
     "sources": [
       {
@@ -448,11 +592,17 @@
       "Himbeeren",
       "framboise",
       "framboises"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Hammbier",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:SCHWAARZBIER1UNI2",
-    "name": "Schwaarzbier",
+    "name": "Schwaarzbieren",
     "category": "Produce",
     "sources": [
       {
@@ -472,11 +622,17 @@
       "Schwaarzbieren",
       "mûre",
       "mûres"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schwaarzbier",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MOLBIER1UNI1",
-    "name": "Molbier",
+    "name": "Molbieren",
     "category": "Produce",
     "sources": [
       {
@@ -496,11 +652,17 @@
       "Molbieren",
       "myrtille",
       "myrtilles"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Molbier",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KIISCHT1UNI1",
-    "name": "Kiischt",
+    "name": "Kiischten",
     "category": "Produce",
     "sources": [
       {
@@ -514,11 +676,17 @@
       "Kiischten",
       "Kirsche",
       "cerise"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kiischt",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KIWI1UNI1",
-    "name": "Kiwi",
+    "name": "Kiwien",
     "category": "Produce",
     "sources": [
       {
@@ -531,11 +699,17 @@
       "Kiwie",
       "Kiwien",
       "kiwi"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kiwi",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ORANGE1UNI1",
-    "name": "Orange",
+    "name": "Orangen",
     "category": "Produce",
     "sources": [
       {
@@ -548,11 +722,17 @@
       "Orangen",
       "Orangë",
       "orange"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Orange",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:CLEMENTINE1UNI1",
-    "name": "Clementine",
+    "name": "Clementinnen",
     "category": "Produce",
     "sources": [
       {
@@ -565,11 +745,17 @@
       "Clementinne",
       "Clementinnen",
       "clémentine"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Clementine",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MANDARINE1UNI1",
-    "name": "Mandarine",
+    "name": "Mandarinnen",
     "category": "Produce",
     "sources": [
       {
@@ -582,11 +768,17 @@
       "Mandarinne",
       "Mandarinnen",
       "mandarine"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mandarine",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ZITROUN1UNI1",
-    "name": "Zitroun",
+    "name": "Zitrounen",
     "category": "Produce",
     "sources": [
       {
@@ -600,11 +792,17 @@
       "Zitroune",
       "Zitrounen",
       "citron"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Zitroun",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:LIMETT1UNI1",
-    "name": "Limett",
+    "name": "Limetten",
     "category": "Produce",
     "sources": [
       {
@@ -624,11 +822,17 @@
       "Limoune",
       "Limounen",
       "citron vert"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Limett",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:GRAPEFRUIT1UNI1",
-    "name": "Grapefruit",
+    "name": "Grapefruiten",
     "category": "Produce",
     "sources": [
       {
@@ -642,11 +846,17 @@
       "Grapefruiten",
       "grapefruit",
       "pomélo"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Grapefruit",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MELOUN1UNI1",
-    "name": "Meloun",
+    "name": "Melounen",
     "category": "Produce",
     "sources": [
       {
@@ -660,11 +870,17 @@
       "Meloune",
       "Melounen",
       "melon"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Meloun",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:WAASSERMELOUN1UNI1",
-    "name": "Waassermeloun",
+    "name": "Waassermelounen",
     "category": "Produce",
     "sources": [
       {
@@ -678,11 +894,17 @@
       "Waassermelounen",
       "Wassermelone",
       "pastèque"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Waassermeloun",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:PIISCH1UNI1",
-    "name": "Piisch",
+    "name": "Pijen",
     "category": "Produce",
     "sources": [
       {
@@ -696,11 +918,17 @@
       "Pije",
       "Pijen",
       "pêche"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Piisch",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:NEKTARINN1UNI1",
-    "name": "Nektarinn",
+    "name": "Nektarinnen",
     "category": "Produce",
     "sources": [
       {
@@ -715,11 +943,17 @@
       "Nektarinnen",
       "brugnon",
       "nectarine"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Nektarinn",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:PROMM1UNI1",
-    "name": "Promm",
+    "name": "Prommen",
     "category": "Produce",
     "sources": [
       {
@@ -733,11 +967,17 @@
       "Promme",
       "Prommen",
       "prune"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Promm",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:QUETSCH1UNI1",
-    "name": "Quetsch",
+    "name": "Quetschen",
     "category": "Produce",
     "sources": [
       {
@@ -751,11 +991,17 @@
       "Quetschen",
       "Zwetschge",
       "quetsche"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Quetsch",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MIRABELL1UNI1",
-    "name": "Mirabell",
+    "name": "Mirabellen",
     "category": "Produce",
     "sources": [
       {
@@ -768,11 +1014,17 @@
       "Mirabelle",
       "Mirabellen",
       "mirabelle"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mirabell",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:DRAUF1UNI2",
-    "name": "Drauf",
+    "name": "Drauwen",
     "category": "Produce",
     "sources": [
       {
@@ -786,11 +1038,17 @@
       "Drauwen",
       "Traube",
       "raisin"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Drauf",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MANGO1UNI1",
-    "name": "Mango",
+    "name": "Mangoen",
     "category": "Produce",
     "sources": [
       {
@@ -803,11 +1061,17 @@
       "Mangoe",
       "Mangoen",
       "mangue"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mango",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:PAPAYA1UNI1",
-    "name": "Papaya",
+    "name": "Papayaen",
     "category": "Produce",
     "sources": [
       {
@@ -820,11 +1084,17 @@
       "Papayae",
       "Papayaen",
       "papaye"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Papaya",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:PASSIOUNSFRUUCHT1UNI1",
-    "name": "Passiounsfruucht",
+    "name": "Passiounsfriichten",
     "category": "Produce",
     "sources": [
       {
@@ -846,11 +1116,17 @@
       "Passiounsfruucht",
       "fruit de la passion",
       "maracuja"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Passiounsfruucht",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:GRANATAPEL1UNI1",
-    "name": "Granatapel",
+    "name": "Granatäppel",
     "category": "Produce",
     "sources": [
       {
@@ -863,11 +1139,17 @@
       "Granatapfel",
       "Granatäppel",
       "grenade"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Granatapel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:FIG1UNI1",
-    "name": "Fig",
+    "name": "Figen",
     "category": "Produce",
     "sources": [
       {
@@ -881,11 +1163,17 @@
       "Fige",
       "Figen",
       "figue"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Fig",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KAKI1UNI1",
-    "name": "Kaki",
+    "name": "Kakien",
     "category": "Produce",
     "sources": [
       {
@@ -898,11 +1186,17 @@
       "Kakie",
       "Kakien",
       "kaki"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kaki",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:DATTEL1UNI1",
-    "name": "Dattel",
+    "name": "Dattelen",
     "category": "Produce",
     "sources": [
       {
@@ -915,7 +1209,13 @@
       "Dattele",
       "Dattelen",
       "datte"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Dattel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KABES1UNI1",
@@ -931,7 +1231,13 @@
       "Kabes",
       "Kohl",
       "chou"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kabes",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:KABES1UNI2",
@@ -952,7 +1258,13 @@
       "Werjem",
       "Wirsing",
       "chou de Milan"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Gekrauselte Kabes",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:KABES1UNI3",
@@ -968,7 +1280,13 @@
       "Grénge Kabes",
       "Grünkohl",
       "chou frisé"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Grénge Kabes",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:KABES1UNI4",
@@ -984,7 +1302,13 @@
       "Rotkohl",
       "Roude Kabes",
       "chou rouge"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Roude Kabes",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:KABES1UNI5",
@@ -1000,7 +1324,13 @@
       "Spatze Kabes",
       "Spitzkohl",
       "chou pointu"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Spatze Kabes",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:KABES1UNI6",
@@ -1016,7 +1346,13 @@
       "Weißkohl",
       "Wäisse Kabes",
       "chou blanc"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Wäisse Kabes",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:ZELLERI1UNI1",
@@ -1049,7 +1385,13 @@
       "céleri",
       "céleri-rave",
       "tête de céleri-rave"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Zelleri",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:STAANGENZELLERI1UNI1",
@@ -1066,11 +1408,17 @@
       "Stangensellerie",
       "Staudensellerie",
       "céleri en branches"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Staangenzelleri",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:PORRETT1UNI1",
-    "name": "Porrett",
+    "name": "Porretten",
     "category": "Produce",
     "sources": [
       {
@@ -1085,11 +1433,17 @@
       "Porrette",
       "Porretten",
       "poireau"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Porrett",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:SCHALLOTT1UNI1",
-    "name": "Schallott",
+    "name": "Schallotten",
     "category": "Produce",
     "sources": [
       {
@@ -1103,11 +1457,17 @@
       "Schallotten",
       "Schalotte",
       "échalote"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schallott",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:FREIJOERSENN1UNI1",
-    "name": "Fréijoersënn",
+    "name": "Fréijoersënnen",
     "category": "Produce",
     "sources": [
       {
@@ -1131,11 +1491,17 @@
       "Winterzwiebel",
       "ciboule",
       "cive"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Fréijoersënn",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ROMMEL1UNI1",
-    "name": "Rommel",
+    "name": "Rommelen",
     "category": "Produce",
     "sources": [
       {
@@ -1158,11 +1524,17 @@
       "Speiserübe",
       "betterave",
       "navet"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rommel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ROMMEL1UNI2",
-    "name": "Rout Rommel",
+    "name": "Rout Rommelen",
     "category": "Produce",
     "sources": [
       {
@@ -1173,12 +1545,23 @@
     "aliases": [
       "Rote Bete",
       "Rout Rommel",
+      "Rout Rommele",
+      "Rout Rommelen",
       "betterave rouge"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rout Rommel",
+      "usage": "plural",
+      "source": "reviewed-phrase",
+      "reason": "Reviewed adjective + standalone LOD noun plural; retain both n-rule forms for search.",
+      "evidence": [
+        "ROMMEL1UNI2"
+      ]
+    }
   },
   {
     "id": "lod:REIDCHEN1UNI1",
-    "name": "Réidchen",
+    "name": "Réidercher",
     "category": "Produce",
     "sources": [
       {
@@ -1198,11 +1581,17 @@
       "Réidecher",
       "Réidercher",
       "radis"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Réidchen",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:PASTINAK1UNI1",
-    "name": "Pastinak",
+    "name": "Pastinaken",
     "category": "Produce",
     "sources": [
       {
@@ -1220,11 +1609,17 @@
       "Pastinaken",
       "Péitener",
       "panais"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Pastinak",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KOLRAF1UNI1",
-    "name": "Kolraf",
+    "name": "Kolrawen",
     "category": "Produce",
     "sources": [
       {
@@ -1238,11 +1633,17 @@
       "Kolrawe",
       "Kolrawen",
       "chou-rave"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kolraf",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KURBIS1UNI1",
-    "name": "Kürbis",
+    "name": "Kürbissen",
     "category": "Produce",
     "sources": [
       {
@@ -1264,7 +1665,13 @@
       "calebasse",
       "citrouille",
       "potiron"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kürbis",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:SPINAT1UNI2",
@@ -1279,7 +1686,13 @@
     "aliases": [
       "Spinat",
       "épinard"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Spinat",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SPARGEL1UNI1",
@@ -1296,7 +1709,13 @@
       "Spargele",
       "Spargelen",
       "asperge"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Spargel",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:FENCHEL1UNI1",
@@ -1311,11 +1730,17 @@
     "aliases": [
       "Fenchel",
       "fenouil"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Fenchel",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:IERBES1UNI1",
-    "name": "Ierbes",
+    "name": "Ierbessen",
     "category": "Produce",
     "sources": [
       {
@@ -1330,11 +1755,17 @@
       "Ierbessen",
       "petit-pois",
       "pois"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Ierbes",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BOUN1UNI1",
-    "name": "Boun",
+    "name": "Bounen",
     "category": "Produce",
     "sources": [
       {
@@ -1346,11 +1777,17 @@
       "Boun",
       "Boune",
       "Bounen"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Boun",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:GAARDEBOUN1UNI2",
-    "name": "Gaardeboun",
+    "name": "Gaardebounen",
     "category": "Produce",
     "sources": [
       {
@@ -1373,7 +1810,13 @@
       "Saubounen",
       "fève",
       "fève des marais"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Gaardeboun",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MAIS1UNI2",
@@ -1388,11 +1831,17 @@
     "aliases": [
       "Mais",
       "maïs"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mais",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:BROCKELCHEN1UNI2",
-    "name": "Brockelchen",
+    "name": "Brockelcher",
     "category": "Produce",
     "sources": [
       {
@@ -1405,11 +1854,17 @@
       "Brockelcher",
       "Rosenkohl",
       "chou de Bruxelles"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Brockelchen",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:POIVRON1UNI1",
-    "name": "Poivron",
+    "name": "Poivronen",
     "category": "Produce",
     "sources": [
       {
@@ -1430,11 +1885,17 @@
       "Poivronen",
       "piment doux",
       "poivron"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Poivron",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:CHILI1UNI1",
-    "name": "Chili",
+    "name": "Chilien",
     "category": "Produce",
     "sources": [
       {
@@ -1448,11 +1909,17 @@
       "Chilien",
       "Chilischote",
       "piment"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Chili",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ZOCKERIERBES1UNI1",
-    "name": "Zockerierbes",
+    "name": "Zockerierbessen",
     "category": "Produce",
     "sources": [
       {
@@ -1473,7 +1940,13 @@
       "Zockerierbessen",
       "Zuckererbse",
       "pois gourmand"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Zockerierbes",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:LAITUE1UNI2",
@@ -1498,7 +1971,13 @@
       "Laituen",
       "Laituë",
       "laitue"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Laitue",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:MAUSEIERCHERSZALOT1UNI1",
@@ -1515,7 +1994,13 @@
       "Mauséiercherszalot",
       "doucette",
       "mâche"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mauséiercherszalot",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:RUCOLA1UNI1",
@@ -1531,7 +2016,13 @@
       "Rauke",
       "Rucola",
       "roquette"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rucola",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:RAPPZALOT1UNI1",
@@ -1553,7 +2044,13 @@
       "Schnittsalat",
       "Schnëttzalot",
       "salade à couper"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rappzalot",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:MANGOLD1UNI1",
@@ -1569,7 +2066,13 @@
       "Mangold",
       "bette",
       "blette"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mangold",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:RUBBARB1UNI1",
@@ -1585,7 +2088,13 @@
       "Rhabarber",
       "Rubbarb",
       "rhubarbe"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rubbarb",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:GINGEMBRE1UNI1",
@@ -1610,7 +2119,13 @@
       "Gingembre",
       "Ingwer",
       "gingembre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Gingembre",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:BASILIKUM1UNI1",
@@ -1625,7 +2140,13 @@
     "aliases": [
       "Basilikum",
       "basilic"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Basilikum",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PEITERSEILEG1UNI1",
@@ -1641,11 +2162,17 @@
       "Petersilie",
       "Péiterséileg",
       "persil"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Péiterséileg",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:BRATZEL2UNI1",
-    "name": "Bratzel",
+    "name": "Bratzelen",
     "category": "Produce",
     "sources": [
       {
@@ -1659,7 +2186,13 @@
       "Bratzelen",
       "Schnittlauch",
       "ciboulette"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Bratzel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ROSMARIN1UNI1",
@@ -1674,7 +2207,13 @@
     "aliases": [
       "Rosmarin",
       "romarin"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rosmarin",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:THYMIAN1UNI1",
@@ -1694,7 +2233,13 @@
       "Teimerjännchen",
       "Thymian",
       "thym"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Thymian",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:DELL1UNI1",
@@ -1715,7 +2260,13 @@
       "Dëll",
       "Kornischongskraut",
       "aneth"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Dëll",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PEFFERMENZ1UNI1",
@@ -1730,7 +2281,13 @@
     "aliases": [
       "Peffermënz",
       "Pfefferminze"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Peffermënz",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KORIANDER1UNI1",
@@ -1745,7 +2302,13 @@
     "aliases": [
       "Koriander",
       "coriandre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Koriander",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:BARLAUCH1UNI1",
@@ -1771,7 +2334,13 @@
       "Wëlle Knuewelek",
       "ail des ours",
       "ail sauvage"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Bärlauch",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ESTRAGON1UNI1",
@@ -1786,7 +2355,13 @@
     "aliases": [
       "Estragon",
       "estragon"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Estragon",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SALBEI1UNI1",
@@ -1806,7 +2381,13 @@
       "Salbei",
       "Sauge",
       "sauge"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Salbei",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:BROUT1UNI1",
@@ -1822,11 +2403,17 @@
       "Brot",
       "Brout",
       "pain"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Brout",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:BAGUETTE1UNI1",
-    "name": "Baguette",
+    "name": "Baguetten",
     "category": "Bakery",
     "sources": [
       {
@@ -1840,11 +2427,17 @@
       "Baguettë",
       "baguette",
       "baguettes"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Baguette",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BREITCHEN1UNI1",
-    "name": "Bréitchen",
+    "name": "Bréidercher",
     "category": "Bakery",
     "sources": [
       {
@@ -1857,11 +2450,17 @@
       "Bréitchen",
       "Brötchen",
       "petit pain"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Bréitchen",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:CROISSANT1UNI1",
-    "name": "Croissant",
+    "name": "Croissanten",
     "category": "Bakery",
     "sources": [
       {
@@ -1875,7 +2474,13 @@
       "Croissanten",
       "Hörnchen",
       "croissant"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Croissant",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BRIOSCH1UNI1",
@@ -1893,7 +2498,13 @@
       "Briosche",
       "Brioschen",
       "brioche"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Briosch",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:BAUEREBROUT1UNI1",
@@ -1909,7 +2520,13 @@
       "Bauerebrout",
       "Bauernbrot",
       "pain de campagne"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Bauerebrout",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:KARBROUT1UNI1",
@@ -1925,7 +2542,13 @@
       "Karbrout",
       "Roggenbrot",
       "pain de seigle"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Karbrout",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:KAREBROUT1UNI1",
@@ -1941,7 +2564,13 @@
       "Kärebrout",
       "Mehrkornbrot",
       "pain aux céréales"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kärebrout",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:VOLLKARBROUT1UNI1",
@@ -1957,7 +2586,13 @@
       "Vollkarbrout",
       "Vollkornbrot",
       "pain complet"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Vollkarbrout",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:TOASTBROUT1UNI1",
@@ -1981,7 +2616,13 @@
       "Toasten",
       "pain de mie",
       "toast"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Toastbrout",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:KNACKEBROUT1UNI1",
@@ -1997,7 +2638,13 @@
       "Knäckebrot",
       "Knäckebrout",
       "pain suédois"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Knäckebrout",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:KUCH1UNI1",
@@ -2015,7 +2662,13 @@
       "Kuchen",
       "Torte",
       "gâteau"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kuch",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:TAART1UNI1",
@@ -2034,7 +2687,13 @@
       "Taarte",
       "Taarten",
       "tarte"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Taart",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:APPELTAART1UNI1",
@@ -2052,11 +2711,17 @@
       "Äppeltaart",
       "Äppeltaarte",
       "Äppeltaarten"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Äppeltaart",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:APPELTASCH1UNI1",
-    "name": "Äppeltäsch",
+    "name": "Äppeltäschen",
     "category": "Bakery",
     "sources": [
       {
@@ -2071,7 +2736,13 @@
       "Äppeltäsch",
       "Äppeltäsche",
       "Äppeltäschen"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Äppeltäsch",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:AERDBIERSTAART1UNI1",
@@ -2089,7 +2760,13 @@
       "Äerdbierstaart",
       "Äerdbierstaarte",
       "Äerdbierstaarten"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Äerdbierstaart",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:QUETSCHENTAART1UNI1",
@@ -2107,11 +2784,17 @@
       "Quetschentaarten",
       "Zwetschgentorte",
       "tarte aux quetsches"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Quetschentaart",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:QUETSCHENTASCH1UNI1",
-    "name": "Quetschentäsch",
+    "name": "Quetschentäschen",
     "category": "Bakery",
     "sources": [
       {
@@ -2125,7 +2808,13 @@
       "Quetschentäschen",
       "Zwetschgentasche",
       "chausson aux quetsches"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Quetschentäsch",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KIISCHTENTAART1UNI1",
@@ -2143,7 +2832,13 @@
       "Kiischtentaarten",
       "Kirschkuchen",
       "tarte aux cerises"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kiischtentaart",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:ZITROUNENTAART1UNI1",
@@ -2160,7 +2855,13 @@
       "Zitrounentaart",
       "Zitrounentaarte",
       "Zitrounentaarten"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Zitrounentaart",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:SCHOCKELASKUCH1UNI1",
@@ -2178,7 +2879,13 @@
       "Schockelaskuchen",
       "Schokoladenkuchen",
       "gâteau au chocolat"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schockelaskuch",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:SCHOCKELASRULL1UNI1",
@@ -2196,7 +2903,13 @@
       "Schockelasrullen",
       "Schokocroissant",
       "pain au chocolat"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schockelasrull",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:MARMERKUCH1UNI1",
@@ -2213,11 +2926,17 @@
       "Marmerkuche",
       "Marmerkuchen",
       "Marmorkuchen"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Marmerkuch",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:MUFFIN1UNI1",
-    "name": "Muffin",
+    "name": "Muffinnen",
     "category": "Bakery",
     "sources": [
       {
@@ -2231,11 +2950,17 @@
       "Muffinnen",
       "Muffins",
       "muffin"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Muffin",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ECLAIR1UNI1",
-    "name": "Eclair",
+    "name": "Eclairen",
     "category": "Bakery",
     "sources": [
       {
@@ -2249,11 +2974,17 @@
       "Eclairen",
       "Liebesknochen",
       "éclair"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Eclair",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BEIGNET1UNI1",
-    "name": "Beignet",
+    "name": "Beigneten",
     "category": "Bakery",
     "sources": [
       {
@@ -2275,7 +3006,13 @@
       "Donutten",
       "beignet",
       "donut"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Beignet",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BERLINER1UNI1",
@@ -2291,7 +3028,13 @@
       "Berliner",
       "beignet fourré",
       "boule de Berlin"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Berliner",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BAMKUCH1UNI1",
@@ -2309,7 +3052,13 @@
       "Bamkuchen",
       "Baumkuchen",
       "gâteau à la broche"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Bamkuch",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:KEISTAART1UNI1",
@@ -2327,11 +3076,17 @@
       "Kéistaarte",
       "Kéistaarten",
       "tarte au fromage blanc"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kéistaart",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:EISEKUCH1UNI1",
-    "name": "Eisekuch",
+    "name": "Eisekuchen",
     "category": "Bakery",
     "sources": [
       {
@@ -2345,11 +3100,17 @@
       "Eisekuchen",
       "Waffel",
       "gaufre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Eisekuch",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MADELEINE1UNI1",
-    "name": "Madeleine",
+    "name": "Madeleinen",
     "category": "Bakery",
     "sources": [
       {
@@ -2362,7 +3123,13 @@
       "Madeleinen",
       "Madeleinë",
       "madeleine"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Madeleine",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:LIEFKUCH1UNI1",
@@ -2380,11 +3147,17 @@
       "Liefkuche",
       "Liefkuchen",
       "pain d'épices"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Liefkuch",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:SCHNECK1UNI1",
-    "name": "Schneck",
+    "name": "Schnecken",
     "category": "Bakery",
     "sources": [
       {
@@ -2397,11 +3170,17 @@
       "Schnecke",
       "Schnecken",
       "pain aux raisins"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schneck",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BOXEMANNCHEN1UNI1",
-    "name": "Boxemännchen",
+    "name": "Boxemännercher",
     "category": "Bakery",
     "sources": [
       {
@@ -2414,11 +3193,17 @@
       "Boxemännercher",
       "Stutenkerl",
       "Weckmann"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Boxemännchen",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:FUESKICHELCHEN1UNI1",
-    "name": "Fueskichelchen",
+    "name": "Fueskichelcher",
     "category": "Bakery",
     "sources": [
       {
@@ -2431,11 +3216,17 @@
       "Fueskichelchen",
       "Fueskichelcher",
       "beignet de carnaval"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Fueskichelchen",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:VERWUERELTEN1UNI1",
-    "name": "Verwuerelten",
+    "name": "Verwuerelter",
     "category": "Bakery",
     "sources": [
       {
@@ -2448,7 +3239,13 @@
       "Verwuerelten",
       "Verwuerelter",
       "beignet de carnaval"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Verwuerelten",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:FLEESCH1UNI1",
@@ -2464,7 +3261,13 @@
       "Fleesch",
       "Fleisch",
       "viande"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Fleesch",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:GEHACKTES1UNI1",
@@ -2479,7 +3282,13 @@
     "aliases": [
       "Gehacktes",
       "Hackfleisch"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Gehacktes",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:RENDSGEHACKTES1UNI1",
@@ -2495,7 +3304,13 @@
       "Rinderhackfleisch",
       "Rëndsgehacktes",
       "hachis de bœuf"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rëndsgehacktes",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:RENDFLEESCH1UNI1",
@@ -2511,7 +3326,13 @@
       "Rindfleisch",
       "Rëndfleesch",
       "viande bovine"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rëndfleesch",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SCHWENGEFLEESCH1UNI1",
@@ -2527,7 +3348,13 @@
       "Schweinefleisch",
       "Schwéngefleesch",
       "viande de porc"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schwéngefleesch",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KALLEFFLEESCH1UNI1",
@@ -2543,7 +3370,13 @@
       "Kalbfleisch",
       "Kalleffleesch",
       "viande de veau"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kalleffleesch",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:HAMMELFLEESCH1UNI1",
@@ -2557,7 +3390,13 @@
     ],
     "aliases": [
       "Hämmelfleesch"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Hämmelfleesch",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:POULET1UNI1",
@@ -2575,7 +3414,13 @@
       "Poulete",
       "Pouleten",
       "poulet"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Poulet",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:GEFLIGEL1UNI1",
@@ -2591,7 +3436,13 @@
       "Gefligel",
       "Geflügel",
       "volaille"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Gefligel",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:HAM1UNI1",
@@ -2609,7 +3460,13 @@
       "Hamen",
       "Schinken",
       "jambon"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Ham",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:SPECK1UNI1",
@@ -2624,7 +3481,13 @@
     "aliases": [
       "Speck",
       "lard"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Speck",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PANCETTA1UNI1",
@@ -2641,11 +3504,17 @@
       "Pancettae",
       "Pancettaen",
       "pancetta"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Pancetta",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:WURSCHT1UNI2",
-    "name": "Wurscht",
+    "name": "Wurschten",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2659,11 +3528,17 @@
       "Wurschten",
       "Wurst",
       "saucisse"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Wurscht",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ZOOSSISS1UNI1",
-    "name": "Zoossiss",
+    "name": "Zoossissen",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2679,11 +3554,17 @@
       "Zoossissen",
       "salami",
       "saucisson"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Zoossiss",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:GRILLWURSCHT1UNI1",
-    "name": "Grillwurscht",
+    "name": "Grillwurschten",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2705,11 +3586,17 @@
       "Rostbratwurst",
       "Thüringer",
       "saucisse à griller"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Grillwurscht",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:WIRSCHTCHEN1UNI1",
-    "name": "Wirschtchen",
+    "name": "Wirschtercher",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2723,7 +3610,13 @@
       "Wirschtchen",
       "Wirschtercher",
       "saucisse de Francfort"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Wirschtchen",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:METTWURSCHT1UNI1",
@@ -2741,7 +3634,13 @@
       "Mettwurschten",
       "Mettwurst",
       "saucisse fumée"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mettwurscht",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:LIEWERWURSCHT1UNI1",
@@ -2759,11 +3658,17 @@
       "Liewerwurschte",
       "Liewerwurschten",
       "saucisson de pâté de foie"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Liewerwurscht",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:WAINZOOSSISS1UNI1",
-    "name": "Wäinzoossiss",
+    "name": "Wäinzoossissen",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2776,11 +3681,17 @@
       "Wäinzoossiss",
       "Wäinzoossisse",
       "Wäinzoossissen"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Wäinzoossiss",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BIFDECK1UNI1",
-    "name": "Bifdeck",
+    "name": "Bifdecker",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2794,11 +3705,17 @@
       "Steak",
       "bifteck",
       "steak"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Bifdeck",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:FAUXFILET1UNI1",
-    "name": "Faux-filet",
+    "name": "Faux-fileten",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2813,11 +3730,17 @@
       "Lende",
       "Lendenstück",
       "faux-filet"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Faux-filet",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:FILETMIGNON1UNI1",
-    "name": "Filet mignon",
+    "name": "Filet-mignonen",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2831,11 +3754,17 @@
       "Filet-mignonen",
       "Filetspitze",
       "filet mignon"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Filet mignon",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:RENDSFILET1UNI1",
-    "name": "Rëndsfilet",
+    "name": "Rëndsfileten",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2849,11 +3778,17 @@
       "Rëndsfilete",
       "Rëndsfileten",
       "filet de bœuf"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rëndsfilet",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KOTLETT1UNI1",
-    "name": "Kotlett",
+    "name": "Kotletten",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2867,11 +3802,17 @@
       "Kotlette",
       "Kotletten",
       "côtelette"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kotlett",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:SCHNITZEL1UNI1",
-    "name": "Schnitzel",
+    "name": "Schnitzelen",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2884,11 +3825,17 @@
       "Schnitzele",
       "Schnitzelen",
       "escalope"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schnitzel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KALLEFSSCHNITZEL1UNI1",
-    "name": "Kallefsschnitzel",
+    "name": "Kallefsschnitzelen",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2902,7 +3849,13 @@
       "Kallefsschnitzele",
       "Kallefsschnitzelen",
       "escalope de veau"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kallefsschnitzel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:POULETSGESCHNETZELTES1UNI1",
@@ -2918,7 +3871,13 @@
       "Hähnchengeschnetzeltes",
       "Pouletsgeschnetzeltes",
       "émincé de poulet"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Pouletsgeschnetzeltes",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SAUMON1UNI2",
@@ -2936,7 +3895,13 @@
       "Saumone",
       "Saumonen",
       "saumon"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Saumon",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:SAUMON1UNI3",
@@ -2952,7 +3917,13 @@
       "Räucherlachs",
       "Saumon fumé",
       "saumon fumé"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Saumon fumé",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:THON1UNI2",
@@ -2970,11 +3941,17 @@
       "Thonen",
       "Thunfisch",
       "thon"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Thon",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:SARDINN1UNI2",
-    "name": "Sardinn",
+    "name": "Sardinnen",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -2988,7 +3965,13 @@
       "Sardinne",
       "Sardinnen",
       "sardine"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Sardinn",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:SEELACHS1UNI2",
@@ -3004,11 +3987,17 @@
       "Seelachs",
       "lieu noir",
       "merlu"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Seelachs",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:CREVETTE1UNI1",
-    "name": "Crevette",
+    "name": "Crevetten",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -3022,11 +4011,17 @@
       "Crevettë",
       "Garnele",
       "crevette"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Crevette",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:SCAMPI1UNI1",
-    "name": "Scampi",
+    "name": "Scampien",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -3039,11 +4034,17 @@
       "Scampie",
       "Scampien",
       "scampi"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Scampi",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MULL1UNI1",
-    "name": "Mull",
+    "name": "Mullen",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -3057,11 +4058,17 @@
       "Mulle",
       "Mullen",
       "moule"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mull",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:AUSTER1UNI1",
-    "name": "Auster",
+    "name": "Austeren",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -3074,7 +4081,13 @@
       "Austere",
       "Austeren",
       "huître"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Auster",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KALAMAR1UNI1",
@@ -3093,7 +4106,13 @@
       "Kalmar",
       "calamar",
       "calmar"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kalamar",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:MIERESFRIICHTEN1UNI1",
@@ -3114,7 +4133,13 @@
       "Meeresfrüchte",
       "Mieresfriichten",
       "fruits de mer"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mieresfriichten",
+      "usage": "collective",
+      "source": "lod",
+      "reason": "Established collective shopping name; do not add a second plural ending."
+    }
   },
   {
     "id": "lod:KRABBEFLEESCH1UNI1",
@@ -3130,11 +4155,17 @@
       "Krabbefleesch",
       "Krabbenfleisch",
       "chair de crabe"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Krabbefleesch",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ROLLMOPS1UNI2",
-    "name": "Rollmops",
+    "name": "Rollmopsen",
     "category": "Meat & seafood",
     "sources": [
       {
@@ -3147,7 +4178,13 @@
       "Rollmopse",
       "Rollmopsen",
       "rollmops"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rollmops",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MELLECH1UNI1",
@@ -3163,11 +4200,17 @@
       "Milch",
       "Mëllech",
       "lait"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mëllech",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:EE1UNI1",
-    "name": "Ee",
+    "name": "Eeër",
     "category": "Dairy & eggs",
     "sources": [
       {
@@ -3183,7 +4226,13 @@
       "oeufs",
       "œuf",
       "œufs"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Ee",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BOTTER1UNI1",
@@ -3199,7 +4248,13 @@
       "Botter",
       "Butter",
       "beurre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Botter",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:JUGURT1UNI1",
@@ -3217,7 +4272,13 @@
       "Jugurte",
       "Jugurten",
       "yaourt"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Jugurt",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:KEIS1UNI1",
@@ -3236,7 +4297,13 @@
       "Kéisen",
       "Kéiser",
       "fromage"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kéis",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KEIS1UNI3",
@@ -3252,7 +4319,13 @@
       "Quark",
       "Wäisse Kéis",
       "fromage blanc"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Wäisse Kéis",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:RAM1UNI1",
@@ -3272,7 +4345,13 @@
       "Ram",
       "Schmant",
       "crème"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Ram",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SAUERRAM1UNI1",
@@ -3287,7 +4366,13 @@
     "aliases": [
       "Sauerram",
       "saure Sahne"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Sauerram",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KACHKEIS1UNI1",
@@ -3303,7 +4388,13 @@
       "Kachkéis",
       "Kochkäse",
       "cancoillotte"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kachkéis",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:GEESSEKEIS1UNI1",
@@ -3322,7 +4413,13 @@
       "Geessekéiser",
       "Ziegenkäse",
       "fromage de chèvre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Geessekéis",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SCHOFSKEIS1UNI1",
@@ -3341,7 +4438,13 @@
       "Schofskéisen",
       "Schofskéiser",
       "fromage de brebis"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schofskéis",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:EMMENTALER1UNI1",
@@ -3356,7 +4459,13 @@
     "aliases": [
       "Emmentaler",
       "emmental"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Emmentaler",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PARMESAN1UNI1",
@@ -3371,7 +4480,13 @@
     "aliases": [
       "Parmesan",
       "parmesan"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Parmesan",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:RICOTTA1UNI1",
@@ -3386,7 +4501,13 @@
     "aliases": [
       "Ricotta",
       "ricotta"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Ricotta",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ROQUEFORT1UNI1",
@@ -3403,7 +4524,13 @@
       "Roqueforte",
       "Roqueforten",
       "roquefort"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Roquefort",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:COTTAGECHEESE1UNI1",
@@ -3421,7 +4548,13 @@
       "cottage cheese",
       "fromage cottage",
       "körniger Frischkäse"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Cottagecheese",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:VOLLMELLECH1UNI1",
@@ -3437,7 +4570,13 @@
       "Vollmilch",
       "Vollmëllech",
       "lait entier"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Vollmëllech",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:BOTTERMELLECH1UNI1",
@@ -3454,7 +4593,13 @@
       "Buttermilch",
       "babeurre",
       "lait battu"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Bottermëllech",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KOUMELLECH1UNI1",
@@ -3470,7 +4615,13 @@
       "Koumëllech",
       "Kuhmilch",
       "lait de vache"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Koumëllech",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:MARGARINN1UNI1",
@@ -3486,7 +4637,13 @@
       "Margarine",
       "Margarinn",
       "margarine"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Margarinn",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:AERDBIERSJUGURT1UNI1",
@@ -3504,7 +4661,13 @@
       "Äerdbiersjugurt",
       "Äerdbiersjugurte",
       "Äerdbiersjugurten"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Äerdbiersjugurt",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:SCHLAGSAN1UNI1",
@@ -3525,7 +4688,13 @@
       "Schlagsahne",
       "Schlagsan",
       "crème chantilly"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schlagsan",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PUDDING1UNI1",
@@ -3543,7 +4712,13 @@
       "Puddingen",
       "crème",
       "flan"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Pudding",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:SCHOCKELASPUDDING1UNI1",
@@ -3563,7 +4738,13 @@
       "Schokoladenpudding",
       "crème au chocolat",
       "flan au chocolat"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schockelaspudding",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:SCHOCKELASMOUSSE1UNI1",
@@ -3582,7 +4763,13 @@
       "Schockelasmoussë",
       "Schokoladenmousse",
       "mousse au chocolat"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schockelasmousse",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:VANILLSCREME1UNI1",
@@ -3600,7 +4787,13 @@
       "Vanillscrèmen",
       "Vanillscrèmë",
       "crème à la vanille"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Vanillscrème",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:VANILLSGLACE1UNI1",
@@ -3618,7 +4811,13 @@
       "Vanillsglacen",
       "Vanillsglacë",
       "glace à la vanille"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Vanillsglace",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:SCHOCKELASGLACE1UNI1",
@@ -3636,7 +4835,13 @@
       "Schockelasglacë",
       "Schokoladeneis",
       "glace au chocolat"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schockelasglace",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:AERDBIERSGLACE1UNI1",
@@ -3655,7 +4860,13 @@
       "Äerdbiersglace",
       "Äerdbiersglacen",
       "Äerdbiersglacë"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Äerdbiersglace",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:BANANNEGLACE1UNI1",
@@ -3673,7 +4884,13 @@
       "Bananneglacen",
       "Bananneglacë",
       "glace à la banane"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Bananneglace",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:SORBET1UNI1",
@@ -3690,11 +4907,17 @@
       "Sorbete",
       "Sorbeten",
       "sorbet"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Sorbet",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:FISCHSTABCHEN1UNI2",
-    "name": "Fischstäbchen",
+    "name": "Fischstäbercher",
     "category": "Frozen",
     "sources": [
       {
@@ -3713,7 +4936,13 @@
       "Fishsticke",
       "Fishsticken",
       "bâtonnet de poisson"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Fischstäbchen",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MIEL1UNI1",
@@ -3729,7 +4958,13 @@
       "Mehl",
       "Miel",
       "farine"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Miel",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:RAIS1UNI2",
@@ -3745,11 +4980,17 @@
       "Reis",
       "Räis",
       "riz"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Räis",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:NUDDEL1UNI1",
-    "name": "Nuddel",
+    "name": "Nuddelen",
     "category": "Pantry",
     "sources": [
       {
@@ -3775,7 +5016,13 @@
       "Teigwaren",
       "nouille",
       "pâte"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Nuddel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:SPAGHETTI1UNI1",
@@ -3792,7 +5039,13 @@
       "Spaghettie",
       "Spaghettien",
       "spaghetti"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Spaghetti",
+      "usage": "collective",
+      "source": "lod",
+      "reason": "Established collective shopping name; do not add a second plural ending."
+    }
   },
   {
     "id": "lod:TAGLIATELLE1UNI1",
@@ -3809,7 +5062,13 @@
       "Tagliatellen",
       "Tagliatellë",
       "tagliatelle"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Tagliatelle",
+      "usage": "collective",
+      "source": "lod",
+      "reason": "Established collective shopping name; do not add a second plural ending."
+    }
   },
   {
     "id": "lod:MAKKARONI1UNI1",
@@ -3826,7 +5085,13 @@
       "Makkaronie",
       "Makkaronien",
       "macaroni"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Makkaroni",
+      "usage": "collective",
+      "source": "lod",
+      "reason": "Established collective shopping name; do not add a second plural ending."
+    }
   },
   {
     "id": "lod:CANNELLONI1UNI1",
@@ -3843,11 +5108,17 @@
       "Cannellonie",
       "Cannellonien",
       "cannelloni"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Cannelloni",
+      "usage": "collective",
+      "source": "lod",
+      "reason": "Established collective shopping name; do not add a second plural ending."
+    }
   },
   {
     "id": "lod:VOLLKARNUDDEL1UNI1",
-    "name": "Vollkarnuddel",
+    "name": "Vollkarnuddelen",
     "category": "Pantry",
     "sources": [
       {
@@ -3860,7 +5131,13 @@
       "Vollkarnuddele",
       "Vollkarnuddelen",
       "Vollkornnudel"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Vollkarnuddel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:VOLLKARRAIS1UNI1",
@@ -3876,7 +5153,13 @@
       "Vollkarräis",
       "Vollkornreis",
       "riz complet"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Vollkarräis",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:VOLLKARMIEL1UNI1",
@@ -3892,7 +5175,13 @@
       "Vollkarmiel",
       "Vollkornmehl",
       "farine intégrale"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Vollkarmiel",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:MAISMIEL1UNI1",
@@ -3908,7 +5197,13 @@
       "Maismehl",
       "Maismiel",
       "farine de maïs"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Maismiel",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:WELLKARMIEL1UNI1",
@@ -3924,7 +5219,13 @@
       "Buchweizenmehl",
       "Wëllkarmiel",
       "farine de sarrasin"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Wëllkarmiel",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PANEIERMIEL1UNI1",
@@ -3940,7 +5241,13 @@
       "Paniermehl",
       "Panéiermiel",
       "chapelure"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Panéiermiel",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SCHMULL1UNI1",
@@ -3956,7 +5263,13 @@
       "Grieß",
       "Schmull",
       "semoule"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schmull",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:POLENTA1UNI1",
@@ -3971,7 +5284,13 @@
     "aliases": [
       "Polenta",
       "polenta"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Polenta",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ZOCKER1UNI1",
@@ -3987,7 +5306,13 @@
       "Zocker",
       "Zucker",
       "sucre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Zocker",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:MIELZOCKER1UNI1",
@@ -4003,7 +5328,13 @@
       "Mielzocker",
       "Puderzucker",
       "sucre glace"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mielzocker",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:VANILLZOCKER1UNI1",
@@ -4019,7 +5350,13 @@
       "Vanillezucker",
       "Vanillzocker",
       "sucre vanillé"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Vanillzocker",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KANDISZOCKER1UNI1",
@@ -4035,7 +5372,13 @@
       "Kandiszocker",
       "Kandiszucker",
       "sucre candi"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kandiszocker",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:STECKERZOCKER1UNI1",
@@ -4051,7 +5394,13 @@
       "Stéckerzocker",
       "Würfelzucker",
       "sucre en morceaux"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Stéckerzocker",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SALZ1UNI1",
@@ -4067,7 +5416,13 @@
       "Salz",
       "Salzer",
       "sel"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Salz",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PEFFER1UNI1",
@@ -4083,11 +5438,17 @@
       "Peffer",
       "Pfeffer",
       "poivre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Peffer",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PEFFERKAR1UNI1",
-    "name": "Pefferkär",
+    "name": "Pefferkären",
     "category": "Pantry",
     "sources": [
       {
@@ -4101,7 +5462,13 @@
       "Pefferkären",
       "Pfefferkorn",
       "grain de poivre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Pefferkär",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KANEIL1UNI1",
@@ -4117,7 +5484,13 @@
       "Kanéil",
       "Zimt",
       "cannelle"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kanéil",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KARDAMOM1UNI1",
@@ -4132,7 +5505,13 @@
     "aliases": [
       "Kardamom",
       "cardamome"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kardamom",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KRAIZKUMMEL1UNI1",
@@ -4149,7 +5528,13 @@
       "Kräizkümmel",
       "Kumin",
       "cumin"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kräizkümmel",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KUMMEL1UNI1",
@@ -4166,7 +5551,13 @@
       "Wiesenkümmel",
       "carvi",
       "cumin des prés"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kümmel",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:MUSKOT1UNI1",
@@ -4182,11 +5573,17 @@
       "Muskat",
       "Muskot",
       "muscade"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Muskot",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:NEELCHESKAPP1UNI1",
-    "name": "Neelcheskapp",
+    "name": "Neelcheskäpp",
     "category": "Pantry",
     "sources": [
       {
@@ -4199,7 +5596,13 @@
       "Neelcheskapp",
       "Neelcheskäpp",
       "clou de girofle"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Neelcheskapp",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:SAFRAN1UNI1",
@@ -4214,7 +5617,13 @@
     "aliases": [
       "Safran",
       "safran"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Safran",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KURKUMA1UNI1",
@@ -4235,7 +5644,13 @@
       "Gielwuerzel",
       "Kurkuma",
       "curcuma"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kurkuma",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:CURRY1UNI2",
@@ -4252,7 +5667,13 @@
       "Currye",
       "Curryen",
       "curry"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Curry",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PAPRIKA1UNI2",
@@ -4267,7 +5688,13 @@
     "aliases": [
       "Paprika",
       "paprika"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Paprika",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:OREGANO1UNI1",
@@ -4284,11 +5711,17 @@
       "Wilder Majoran",
       "marjolaine sauvage",
       "origan"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Oregano",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:LORBERBLAT1UNI1",
-    "name": "Lorberblat",
+    "name": "Lorberblieder",
     "category": "Pantry",
     "sources": [
       {
@@ -4301,7 +5734,13 @@
       "Lorberblat",
       "Lorberblieder",
       "feuille de laurier"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Lorberblat",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:VANILL1UNI1",
@@ -4317,11 +5756,17 @@
       "Vanill",
       "Vanille",
       "vanille"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Vanill",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:VANILLSSTAANG1UNI1",
-    "name": "Vanillsstaang",
+    "name": "Vanillsstaangen",
     "category": "Pantry",
     "sources": [
       {
@@ -4335,7 +5780,13 @@
       "Vanillsstaange",
       "Vanillsstaangen",
       "gousse de vanille"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Vanillsstaang",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:STARENANAIS1UNI1",
@@ -4351,7 +5802,13 @@
       "Sternanis",
       "Stärenanäis",
       "anis étoilé"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Stärenanäis",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:OLIVENUELEG1UNI1",
@@ -4368,7 +5825,13 @@
       "Olivenueleger",
       "Olivenöl",
       "huile d'olive"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Olivenueleg",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:RAPSUELEG1UNI1",
@@ -4385,7 +5848,13 @@
       "Rapsueleger",
       "Rapsöl",
       "huile de colza"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rapsueleg",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KOKOSUELEG1UNI1",
@@ -4402,7 +5871,13 @@
       "Kokosueleger",
       "Kokosöl",
       "huile de coco"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kokosueleg",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SOJAUELEG1UNI1",
@@ -4419,7 +5894,13 @@
       "Sojaueleger",
       "Sojaöl",
       "huile de soja"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Sojaueleg",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:MAISUELEG1UNI1",
@@ -4436,7 +5917,13 @@
       "Maisueleg",
       "Maisueleger",
       "huile de maïs"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Maisueleg",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ESSEG1UNI1",
@@ -4453,7 +5940,13 @@
       "Esseger",
       "Essig",
       "vinaigre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Esseg",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:BALSAMICOESSEG1UNI1",
@@ -4469,7 +5962,13 @@
       "Balsamicoesseg",
       "Balsamicoesseger",
       "vinaigre balsamique"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Balsamicoesseg",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:MOSCHTER1UNI1",
@@ -4485,7 +5984,13 @@
       "Moschter",
       "Senf",
       "moutarde"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Moschter",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KETCHUP1UNI1",
@@ -4500,7 +6005,13 @@
     "aliases": [
       "Ketchup",
       "ketchup"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Ketchup",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:MAYONNAISE1UNI1",
@@ -4515,7 +6026,13 @@
     "aliases": [
       "Mayonnaise",
       "mayonnaise"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mayonnaise",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:VINAIGRETTE1UNI1",
@@ -4532,7 +6049,13 @@
       "Vinaigretten",
       "Vinaigrettë",
       "vinaigrette"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Vinaigrette",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:TOMATENZOOSS1UNI1",
@@ -4552,7 +6075,13 @@
       "Tomatenzose",
       "Tomatenzosen",
       "sauce tomate"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Tomatenzooss",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:TOMATEPUREE1UNI1",
@@ -4570,7 +6099,13 @@
       "Tomatepüreeë",
       "Tomatepüreeën",
       "concentré de tomates"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Tomatepüree",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:TOMATEKONZENTRAT1UNI1",
@@ -4587,7 +6122,13 @@
       "Tomatekonzentrater",
       "Tomatenmark",
       "concentré de tomates"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Tomatekonzentrat",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:BOLOGNESEZOOSS1UNI1",
@@ -4607,7 +6148,13 @@
       "Bolognesezose",
       "Bolognesezosen",
       "sauce bolognaise"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Bolognesezooss",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SPAGHETTISZOOSS1UNI1",
@@ -4627,7 +6174,13 @@
       "Spaghettiszose",
       "Spaghettiszosen",
       "sauce spaghetti"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Spaghettiszooss",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:GEBEESS1UNI1",
@@ -4644,7 +6197,13 @@
       "Gebeesser",
       "Marmelade",
       "confiture"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Gebeess",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:AERDBIERSGEBEESS1UNI1",
@@ -4661,7 +6220,13 @@
       "confiture de fraises",
       "Äerdbiersgebeess",
       "Äerdbiersgebeesser"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Äerdbiersgebeess",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:APRIKOSEGEBEESS1UNI1",
@@ -4678,7 +6243,13 @@
       "Aprikosegebeesser",
       "Aprikosenmarmelade",
       "confiture d'abricots"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Aprikosegebeess",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:HAMMBIERSGEBEESS1UNI1",
@@ -4695,7 +6266,13 @@
       "Hammbiersgebeesser",
       "Himbeermarmelade",
       "confiture de framboises"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Hammbiersgebeess",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KIISCHTEGEBEESS1UNI1",
@@ -4712,7 +6289,13 @@
       "Kiischtegebeesser",
       "Kirschmarmelade",
       "confiture de cerises"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kiischtegebeess",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:QUETSCHEKRAUT1UNI1",
@@ -4728,7 +6311,13 @@
       "Quetschekraut",
       "Zwetschgenkraut",
       "confiture de quetsches"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Quetschekraut",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ORANGEGEBEESS1UNI1",
@@ -4745,7 +6334,13 @@
       "Orangëgebeess",
       "Orangëgebeesser",
       "confiture d'oranges"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Orangëgebeess",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:HUNNEG1UNI1",
@@ -4762,7 +6357,13 @@
       "Hunneg",
       "Hunneger",
       "miel"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Hunneg",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SCHOCKELASBOTTER1UNI1",
@@ -4778,7 +6379,13 @@
       "Nuss-Nugat-Creme",
       "Schockelasbotter",
       "Schokoladenaufstrich"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schockelasbotter",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:APPELKOMPOTT1UNI1",
@@ -4797,7 +6404,13 @@
       "Äppelkompotte",
       "Äppelkompotten",
       "Äppelkompotter"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Äppelkompott",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:APPELMOUS1UNI1",
@@ -4813,11 +6426,17 @@
       "Apfelmus",
       "compote de pommes",
       "Äppelmous"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Äppelmous",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KICHERIERBES1UNI1",
-    "name": "Kicherierbes",
+    "name": "Kicherierbessen",
     "category": "Pantry",
     "sources": [
       {
@@ -4843,11 +6462,17 @@
       "Pois-chichen",
       "Pois-chichë",
       "pois chiche"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kicherierbes",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:OLIV1UNI1",
-    "name": "Oliv",
+    "name": "Oliven",
     "category": "Pantry",
     "sources": [
       {
@@ -4860,11 +6485,17 @@
       "Olive",
       "Oliven",
       "olive"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Oliv",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KAPER1UNI1",
-    "name": "Kaper",
+    "name": "Kaperen",
     "category": "Pantry",
     "sources": [
       {
@@ -4877,7 +6508,13 @@
       "Kapere",
       "Kaperen",
       "câpre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kaper",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:SAUERKRAUT1UNI1",
@@ -4897,7 +6534,13 @@
       "Sauerkraut",
       "Sauermous",
       "choucroute"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Sauerkraut",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:BRITT1UNI1",
@@ -4916,11 +6559,17 @@
       "Britten",
       "Brühe",
       "bouillon"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Britt",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:GEMEISKUB1UNI1",
-    "name": "Geméisküb",
+    "name": "Geméisküben",
     "category": "Pantry",
     "sources": [
       {
@@ -4934,11 +6583,17 @@
       "Geméisküben",
       "Suppenwürfel",
       "cube de bouillon de légumes"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Geméisküb",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:POULETSKUB1UNI1",
-    "name": "Pouletsküb",
+    "name": "Pouletsküben",
     "category": "Pantry",
     "sources": [
       {
@@ -4954,7 +6609,13 @@
       "Suppenwürfel",
       "cube de bouillon de poule",
       "cube de bouillon de volaille"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Pouletsküb",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ZOPP1UNI1",
@@ -4973,7 +6634,13 @@
       "Zoppen",
       "potage",
       "soupe"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Zopp",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:GEMEISZOPP1UNI1",
@@ -4992,7 +6659,13 @@
       "Gemüsesuppe",
       "potage",
       "soupe de légumes"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Geméiszopp",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:TOMATENZOPP1UNI1",
@@ -5010,7 +6683,13 @@
       "Tomatenzoppe",
       "Tomatenzoppen",
       "velouté à la tomate"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Tomatenzopp",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:CORNFLAKES1UNI1",
@@ -5025,7 +6704,13 @@
     "aliases": [
       "Cornflakes",
       "cornflakes"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Cornflakes",
+      "usage": "collective",
+      "source": "lod",
+      "reason": "Established collective shopping name; do not add a second plural ending."
+    }
   },
   {
     "id": "lod:MUUSLI1UNI1",
@@ -5043,7 +6728,13 @@
       "Müüslie",
       "Müüslien",
       "muesli"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Müüsli",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:SEESAM1UNI1",
@@ -5059,11 +6750,17 @@
       "Seesam",
       "Sesam",
       "sésame"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Seesam",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ROSENG1UNI1",
-    "name": "Roséng",
+    "name": "Roséngen",
     "category": "Pantry",
     "sources": [
       {
@@ -5077,11 +6774,17 @@
       "Rosénge",
       "Roséngen",
       "raisin sec"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Roséng",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MANDEL1UNI1",
-    "name": "Mandel",
+    "name": "Mandelen",
     "category": "Pantry",
     "sources": [
       {
@@ -5094,11 +6797,17 @@
       "Mandele",
       "Mandelen",
       "amande"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mandel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MANDELBLIETCHEN1UNI1",
-    "name": "Mandelblietchen",
+    "name": "Mandelbliedercher",
     "category": "Pantry",
     "sources": [
       {
@@ -5111,11 +6820,17 @@
       "Mandelblietchen",
       "Mandelblättchen",
       "amande effilée"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mandelblietchen",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:HIESELNOSS1UNI1",
-    "name": "Hieselnoss",
+    "name": "Hieselnëss",
     "category": "Pantry",
     "sources": [
       {
@@ -5128,11 +6843,17 @@
       "Hieselnoss",
       "Hieselnëss",
       "noisette"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Hieselnoss",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:HACKERNOSS1UNI1",
-    "name": "Hackernoss",
+    "name": "Hackernëss",
     "category": "Pantry",
     "sources": [
       {
@@ -5150,11 +6871,17 @@
       "Hackernëss",
       "Walnuss",
       "noix"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Hackernoss",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:CASHEWNOSS1UNI1",
-    "name": "Cashewnoss",
+    "name": "Cashewnëss",
     "category": "Pantry",
     "sources": [
       {
@@ -5167,11 +6894,17 @@
       "Cashewnuss",
       "Cashewnëss",
       "noix de cajou"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Cashewnoss",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KAKUETT1UNI1",
-    "name": "Kakuett",
+    "name": "Kakuetten",
     "category": "Pantry",
     "sources": [
       {
@@ -5191,11 +6924,17 @@
       "Kakuette",
       "Kakuetten",
       "cacahouète"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kakuett",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:PISTASCH1UNI1",
-    "name": "Pistasch",
+    "name": "Pistaschen",
     "category": "Pantry",
     "sources": [
       {
@@ -5209,11 +6948,17 @@
       "Pistaschen",
       "Pistazie",
       "pistache"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Pistasch",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KOKOSNOSS1UNI1",
-    "name": "Kokosnoss",
+    "name": "Kokosnëss",
     "category": "Pantry",
     "sources": [
       {
@@ -5225,11 +6970,17 @@
       "Kokosnoss",
       "Kokosnuss",
       "Kokosnëss"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kokosnoss",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MACADAMIANOSS1UNI1",
-    "name": "Macadamianoss",
+    "name": "Macadamianëss",
     "category": "Pantry",
     "sources": [
       {
@@ -5242,11 +6993,17 @@
       "Macadamianuss",
       "Macadamianëss",
       "noix de macadamia"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Macadamianoss",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:MAROUN1UNI1",
-    "name": "Maroun",
+    "name": "Marounen",
     "category": "Pantry",
     "sources": [
       {
@@ -5261,7 +7018,13 @@
       "Maroune",
       "Marounen",
       "marron"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Maroun",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:GNOCCHI1UNI1",
@@ -5278,7 +7041,13 @@
       "Gnocchie",
       "Gnocchien",
       "gnocchi"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Gnocchi",
+      "usage": "collective",
+      "source": "lod",
+      "reason": "Established collective shopping name; do not add a second plural ending."
+    }
   },
   {
     "id": "lod:RAVIOLI1UNI1",
@@ -5295,7 +7064,13 @@
       "Raviolie",
       "Raviolien",
       "ravioli"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Ravioli",
+      "usage": "collective",
+      "source": "lod",
+      "reason": "Established collective shopping name; do not add a second plural ending."
+    }
   },
   {
     "id": "lod:SCHOCKELA2UNI1",
@@ -5311,11 +7086,17 @@
       "Schockela",
       "Schokolade",
       "chocolat"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schockela",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SCHOCKELA2UNI2",
-    "name": "schwaarze Schockela",
+    "name": "Schwaarze Schockela",
     "category": "Snacks",
     "sources": [
       {
@@ -5324,14 +7105,24 @@
       }
     ],
     "aliases": [
+      "Schwaarze Schockela",
       "chocolat noir",
       "schwaarze Schockela",
       "schwarze Schokolade"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "schwaarze Schockela",
+      "usage": "mass",
+      "source": "reviewed-phrase",
+      "reason": "Capitalize the LOD secondary headword for a standalone shopping label.",
+      "evidence": [
+        "SCHOCKELA2UNI2"
+      ]
+    }
   },
   {
     "id": "lod:SCHOCKELA2UNI3",
-    "name": "wäisse Schockela",
+    "name": "Wäisse Schockela",
     "category": "Snacks",
     "sources": [
       {
@@ -5340,10 +7131,20 @@
       }
     ],
     "aliases": [
+      "Wäisse Schockela",
       "chocolat blanc",
       "weiße Schokolade",
       "wäisse Schockela"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "wäisse Schockela",
+      "usage": "mass",
+      "source": "reviewed-phrase",
+      "reason": "Capitalize the LOD secondary headword for a standalone shopping label.",
+      "evidence": [
+        "SCHOCKELA2UNI3"
+      ]
+    }
   },
   {
     "id": "lod:MELLECHSCHOCKELA1UNI1",
@@ -5359,7 +7160,13 @@
       "Milchschokolade",
       "Mëllechschockela",
       "chocolat au lait"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mëllechschockela",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:CHIPS1UNI1",
@@ -5377,7 +7184,13 @@
       "Chipse",
       "Chipsen",
       "chips"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Chips",
+      "usage": "collective",
+      "source": "lod",
+      "reason": "Established collective shopping name; do not add a second plural ending."
+    }
   },
   {
     "id": "lod:POPCORN1UNI1",
@@ -5392,11 +7205,17 @@
     "aliases": [
       "Popcorn",
       "popcorn"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Popcorn",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SALZSTAANG1UNI1",
-    "name": "Salzstaang",
+    "name": "Salzstaangen",
     "category": "Snacks",
     "sources": [
       {
@@ -5409,11 +7228,17 @@
       "Salzstaange",
       "Salzstaangen",
       "Salzstange"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Salzstaang",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KICHELCHEN1UNI1",
-    "name": "Kichelchen",
+    "name": "Kichelcher",
     "category": "Snacks",
     "sources": [
       {
@@ -5433,11 +7258,17 @@
       "Kichelchen",
       "Kichelcher",
       "biscuit"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kichelchen",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:PETITBEURRE1UNI1",
-    "name": "Petit-beurre",
+    "name": "Petit-beurren",
     "category": "Snacks",
     "sources": [
       {
@@ -5451,7 +7282,13 @@
       "Petit-beurren",
       "Petit-beurrë",
       "petit-beurre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Petit-beurre",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:SPEKULATIUS1UNI1",
@@ -5468,11 +7305,17 @@
       "Spekulatiusse",
       "Spekulatiussen",
       "spéculos"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Spekulatius",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:KAMELL1UNI1",
-    "name": "Kamell",
+    "name": "Kamellen",
     "category": "Snacks",
     "sources": [
       {
@@ -5492,11 +7335,17 @@
       "Kamelle",
       "Kamellen",
       "bonbon"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kamell",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:SUCETTE1UNI1",
-    "name": "Sucette",
+    "name": "Sucetten",
     "category": "Snacks",
     "sources": [
       {
@@ -5510,7 +7359,13 @@
       "Sucetten",
       "Sucettë",
       "sucette"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Sucette",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:NOUGAT1UNI1",
@@ -5526,7 +7381,13 @@
       "Nougat",
       "nougat",
       "türkischer Honig"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Nougat",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:MARZIPAN1UNI1",
@@ -5542,7 +7403,13 @@
       "Marzipan",
       "massepain",
       "pâte d'amandes"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Marzipan",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KNATSCH1UNI1",
@@ -5567,7 +7434,13 @@
       "Knätschgummie",
       "Knätschgummien",
       "chewing-gum"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Knätsch",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:LAKRITZ1UNI2",
@@ -5585,11 +7458,17 @@
       "Lakritze",
       "Lakritzen",
       "bonbon de réglisse"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Lakritz",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:MUUSLIRIGEL1UNI1",
-    "name": "Müüslirigel",
+    "name": "Müüslirigelen",
     "category": "Snacks",
     "sources": [
       {
@@ -5603,11 +7482,17 @@
       "Müüslirigele",
       "Müüslirigelen",
       "barre de céréales"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Müüslirigel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:AERDBIERSKAMELL1UNI1",
-    "name": "Äerdbierskamell",
+    "name": "Äerdbierskamellen",
     "category": "Snacks",
     "sources": [
       {
@@ -5621,7 +7506,13 @@
       "Äerdbierskamell",
       "Äerdbierskamelle",
       "Äerdbierskamellen"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Äerdbierskamell",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ZWIBACK1UNI1",
@@ -5639,7 +7530,13 @@
       "Zwibacken",
       "Zwieback",
       "biscotte"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Zwiback",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:WAASSER2UNI1",
@@ -5655,7 +7552,13 @@
       "Waasser",
       "Wasser",
       "eau"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Waasser",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:MINERALWAASSER1UNI1",
@@ -5671,7 +7574,13 @@
       "Mineralwaasser",
       "Mineralwasser",
       "eau minérale"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Mineralwaasser",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SPRUDDELWAASSER1UNI1",
@@ -5694,7 +7603,13 @@
       "Sprudelwasser",
       "eau gazeuse",
       "eau pétillante"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Spruddelwaasser",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KAFFI1UNI2",
@@ -5712,11 +7627,17 @@
       "Kaffie",
       "Kaffien",
       "café"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kaffi",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KAFFISBOUN1UNI1",
-    "name": "Kaffisboun",
+    "name": "Kaffisbounen",
     "category": "Beverages",
     "sources": [
       {
@@ -5730,7 +7651,13 @@
       "Kaffisboune",
       "Kaffisbounen",
       "grain de café"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kaffisboun",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:FILTERKAFFI1UNI1",
@@ -5748,7 +7675,13 @@
       "Filterkaffie",
       "Filterkaffien",
       "café-filtre"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Filterkaffi",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:TEI1UNI2",
@@ -5768,7 +7701,13 @@
       "Téien",
       "thé",
       "tisane"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Téi",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KRAIDERTEI1UNI1",
@@ -5786,7 +7725,13 @@
       "Kraidertéien",
       "Kräutertee",
       "tisane"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kraidertéi",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KAMILLENTEI1UNI1",
@@ -5803,7 +7748,13 @@
       "Kamillentéi",
       "Kamillentéie",
       "Kamillentéien"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kamillentéi",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:KAKAO1UNI2",
@@ -5820,7 +7771,13 @@
       "Kakaoe",
       "Kakaoen",
       "cacao"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kakao",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SOJAMELLECH1UNI1",
@@ -5836,7 +7793,13 @@
       "Sojamilch",
       "Sojamëllech",
       "lait de soja"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Sojamëllech",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SCHOCKELASMELLECH1UNI1",
@@ -5853,7 +7816,13 @@
       "Schokomilch",
       "lait au chocolat",
       "lait chocolaté"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schockelasmëllech",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:JUS1UNI1",
@@ -5871,7 +7840,13 @@
       "Jusen",
       "Saft",
       "jus"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Jus",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ORANGEJUS1UNI1",
@@ -5889,7 +7864,13 @@
       "Orangëjuse",
       "Orangëjusen",
       "jus d'orange"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Orangëjus",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:APPELJUS1UNI1",
@@ -5907,7 +7888,13 @@
       "Äppeljus",
       "Äppeljuse",
       "Äppeljusen"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Äppeljus",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:APRIKOSEJUS1UNI1",
@@ -5925,7 +7912,13 @@
       "Aprikosejusen",
       "Aprikosensaft",
       "jus d'abricots"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Aprikosejus",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PIJEJUS1UNI1",
@@ -5943,7 +7936,13 @@
       "Pijejuse",
       "Pijejusen",
       "jus de pêche"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Pijejus",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:COLA1UNI1",
@@ -5960,7 +7959,13 @@
       "Colae",
       "Colaen",
       "coca"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Cola",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:LIMONAD1UNI1",
@@ -5978,7 +7983,13 @@
       "Limonaden",
       "limonade",
       "soda"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Limonad",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ICETEA1UNI1",
@@ -5996,7 +8007,13 @@
       "Iceteae",
       "Iceteaen",
       "thé glacé"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Icetea",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SMOOTHIE1UNI1",
@@ -6013,7 +8030,13 @@
       "Smoothien",
       "Smoothië",
       "smoothie"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Smoothie",
+      "usage": "ambiguous",
+      "source": "lod",
+      "reason": "Use the food/product name; do not assume individual servings, whole units or packages."
+    }
   },
   {
     "id": "lod:BEIER1UNI1",
@@ -6029,7 +8052,13 @@
       "Bier",
       "Béier",
       "bière"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Béier",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:WAIN1UNI1",
@@ -6046,7 +8075,13 @@
       "Wäin",
       "Wäiner",
       "vin"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Wäin",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ROUDEWAIN1UNI1",
@@ -6062,7 +8097,13 @@
       "Rotwein",
       "Roude Wäin",
       "vin rouge"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Roude Wäin",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ROSE1UNI1",
@@ -6079,7 +8120,13 @@
       "Roséen",
       "Roséë",
       "rosé"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rosé",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:CREMANT1UNI1",
@@ -6097,7 +8144,13 @@
       "Cremanten",
       "Crémant",
       "crémant"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Cremant",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:RIESLING1UNI2",
@@ -6114,7 +8167,13 @@
       "Rieslinge",
       "Rieslingen",
       "riesling"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Riesling",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PINOTGRIS1UNI2",
@@ -6132,7 +8191,13 @@
       "Pinot-grise",
       "Pinot-grisen",
       "pinot gris"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Pinot gris",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PINOTBLANC1UNI2",
@@ -6151,7 +8216,13 @@
       "Pinot-blancen",
       "Weißburgunder",
       "pinot blanc"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Pinot blanc",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:PINOTNOIR1UNI2",
@@ -6169,7 +8240,13 @@
       "Pinot-noiren",
       "Spätburgunder",
       "pinot noir"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Pinot noir",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:CHARDONNAY1UNI2",
@@ -6186,7 +8263,13 @@
       "Chardonnaye",
       "Chardonnayen",
       "chardonnay"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Chardonnay",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:RIVANER1UNI2",
@@ -6204,7 +8287,13 @@
       "Rivanere",
       "Rivaneren",
       "rivaner"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Rivaner",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:AUXERROIS1UNI2",
@@ -6221,7 +8310,13 @@
       "Auxerroise",
       "Auxerroisen",
       "auxerrois"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Auxerrois",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:GIN1UNI1",
@@ -6238,7 +8333,13 @@
       "Ginne",
       "Ginnen",
       "gin"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Gin",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:VODKA1UNI1",
@@ -6256,7 +8357,13 @@
       "Vodkaen",
       "Wodka",
       "vodka"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Vodka",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:WHISKY1UNI1",
@@ -6273,7 +8380,13 @@
       "Whiskye",
       "Whiskyen",
       "whisky"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Whisky",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:TOILETTEPABEIER1UNI1",
@@ -6295,7 +8408,13 @@
       "Toilettëpabeier",
       "papier hygiénique",
       "papier-toilette"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Toilettëpabeier",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:WASCHPOLVER1UNI1",
@@ -6317,7 +8436,13 @@
       "Wäschpolver",
       "lessive en poudre",
       "poudre à laver"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Wäschpolver",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SPULLMETTEL1UNI1",
@@ -6335,7 +8460,13 @@
       "Spullmëttelen",
       "Spülmittel",
       "produit vaisselle"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Spullmëttel",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:BOTZMETTEL1UNI1",
@@ -6354,7 +8485,13 @@
       "Putzmittel",
       "Reinigungsmittel",
       "produit de nettoyage"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Botzmëttel",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:BAKPABEIER1UNI1",
@@ -6369,11 +8506,17 @@
     "aliases": [
       "Backpapier",
       "Bakpabeier"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Bakpabeier",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:DRECKSTUT1UNI1",
-    "name": "Dreckstut",
+    "name": "Dreckstuten",
     "category": "Household",
     "sources": [
       {
@@ -6387,7 +8530,13 @@
       "Dreckstuten",
       "Müllbeutel",
       "sac-poubelle"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Dreckstut",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:KICHEPABEIER1UNI1",
@@ -6404,7 +8553,13 @@
       "Küchenpapier",
       "Küchenrolle",
       "essuie-tout"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Kichepabeier",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SELWERPABEIER1UNI1",
@@ -6421,7 +8576,13 @@
       "Stanniolpapier",
       "Sëlwerpabeier",
       "papier d'aluminium"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Sëlwerpabeier",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:WASCHMETTEL1UNI1",
@@ -6439,11 +8600,17 @@
       "Wäschmëttele",
       "Wäschmëttelen",
       "lessive"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Wäschmëttel",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SCHWAMP1UNI1",
-    "name": "Schwamp",
+    "name": "Schwämm",
     "category": "Household",
     "sources": [
       {
@@ -6456,11 +8623,17 @@
       "Schwamp",
       "Schwämm",
       "éponge"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Schwamp",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:NUESSCHNAPPECH1UNI1",
-    "name": "Nuesschnappech",
+    "name": "Nuesschnappecher",
     "category": "Household",
     "sources": [
       {
@@ -6473,11 +8646,17 @@
       "Nuesschnappecher",
       "Taschentuch",
       "mouchoir"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Nuesschnappech",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:ZERWEIT1UNI1",
-    "name": "Zerwéit",
+    "name": "Zerwéiten",
     "category": "Household",
     "sources": [
       {
@@ -6490,11 +8669,17 @@
       "Zerwéit",
       "Zerwéite",
       "Zerwéiten"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Zerwéit",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:SEEF1UNI3",
-    "name": "schwaarz Seef",
+    "name": "Schwaarz Seef",
     "category": "Household",
     "sources": [
       {
@@ -6504,9 +8689,19 @@
     ],
     "aliases": [
       "Schmierseife",
+      "Schwaarz Seef",
       "savon noir",
       "schwaarz Seef"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "schwaarz Seef",
+      "usage": "mass",
+      "source": "reviewed-phrase",
+      "reason": "Capitalize the LOD secondary headword for a standalone shopping label.",
+      "evidence": [
+        "SEEF1UNI3"
+      ]
+    }
   },
   {
     "id": "lod:SEEF1UNI1",
@@ -6524,7 +8719,13 @@
       "Seefen",
       "Seife",
       "savon"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Seef",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SHAMPOING1UNI1",
@@ -6542,7 +8743,13 @@
       "Shampoingen",
       "Shampoo",
       "shampoing"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Shampoing",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ZANNSEEF1UNI1",
@@ -6567,11 +8774,17 @@
       "Zännseefe",
       "Zännseefen",
       "dentifrice"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Zännseef",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:ZANNBIISCHT1UNI1",
-    "name": "Zännbiischt",
+    "name": "Zännbiischten",
     "category": "Personal care",
     "sources": [
       {
@@ -6585,7 +8798,13 @@
       "Zännbiischte",
       "Zännbiischten",
       "brosse à dents"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Zännbiischt",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:DUSCHGEL1UNI1",
@@ -6602,7 +8821,13 @@
       "Duschgelle",
       "Duschgellen",
       "gel douche"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Duschgel",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:SONNECREME1UNI1",
@@ -6621,11 +8846,17 @@
       "Sonnencreme",
       "Sonnenschutzcreme",
       "crème solaire"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Sonnecrème",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   },
   {
     "id": "lod:WENDEL1UNI2",
-    "name": "Wëndel",
+    "name": "Wëndelen",
     "category": "Personal care",
     "sources": [
       {
@@ -6639,11 +8870,17 @@
       "Wëndele",
       "Wëndelen",
       "couche"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Wëndel",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:BIND1UNI1",
-    "name": "Bind",
+    "name": "Binden",
     "category": "Personal care",
     "sources": [
       {
@@ -6657,11 +8894,17 @@
       "Binden",
       "Damenbinde",
       "serviette hygiénique"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Bind",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:TAMPON1UNI1",
-    "name": "Tampon",
+    "name": "Tamponen",
     "category": "Personal care",
     "sources": [
       {
@@ -6673,7 +8916,13 @@
       "Tampon",
       "Tampone",
       "Tamponen"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Tampon",
+      "usage": "plural",
+      "source": "lod",
+      "reason": "Countable grocery units; use the standalone plural."
+    }
   },
   {
     "id": "lod:WATT2UNI1",
@@ -6690,6 +8939,12 @@
       "Watte",
       "coton",
       "ouate"
-    ]
+    ],
+    "shoppingLabel": {
+      "originalName": "Watt",
+      "usage": "mass",
+      "source": "lod",
+      "reason": "Substance, ingredient, material or preparation; no package count implied."
+    }
   }
 ]

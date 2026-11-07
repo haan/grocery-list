@@ -3,7 +3,75 @@
 Baseline: main commit 5edb48bd2bff1fd78e0700898604846c2b39aa8d. Work branch:
 cleanup/android-only. Audit date: 2026-11-06. No history rewrite or main merge.
 
-## Add-item details form (current phase)
+## Luxembourgish interface and shopping labels (current phase)
+
+Branch `feature/luxembourgish`, based on main `731412a` (2026-11-07).
+154 complete Luxembourgish interface strings cover app controls, confirmations,
+accessibility, errors and sharing status. System/English/Lëtzebuergesch choices
+remain device-local. Expo Localization 57.0.2 supplies Android language preferences
+and native en/lb declarations; the obsolete seven-language custom plugin is removed.
+No iOS/web app targets or translation framework were added.
+
+All 371 products have explicit shopping-usage decisions: 136 plurals, 162 mass
+names, 64 ambiguous names kept without assuming packaging, and 9 collectives.
+Stable IDs, old aliases, aisle keys and shared-learning identities remain.
+The parser distinguishes standalone plurals from n-rule variants; reviewed
+qualified phrases keep separate identities. Starter products use IDs. The manifest
+is the editorial source; destructive bootstrap regeneration is disabled.
+Built-in labels correct Vorrat to Spënnchen and Snacks to Snacken; stored keys
+remain Pantry and Snacks.
+
+The authorized `luxembourgish-shopping-v1` reset runs transactionally before
+hydration/sync, replacing all test shopping/history/aisle/sharing state with one
+empty private list. It preserves appearance/language and earlier migration markers.
+Fresh installations and subsequent launches use the same idempotent path; rollback
+preserves old data on failure. Old relay data is not purged; update both test phones
+and pair them again. There is no Nostr payload or item-schema change.
+
+| File group | Disposition |
+|---|---|
+| `src/i18n/lb.json`, locale registry/preference/formatting | Complete translation, native preferred-language order, local override and foreground refresh |
+| `src/data/`, `scripts/lod/` | Reviewed names, provenance, preserved aliases/IDs, deterministic output and before/after report |
+| `src/store/db.ts` | New one-time pre-release shopping reset; no other tables or storage contracts removed |
+| `scripts/language/` | Developer-only pinned Hunspell/Docker workflow, checksum-verified download, context-specific spelling exceptions and glossary |
+| `docs/luxembourgish-*.md` | Generated interface comparison and spelling review; no dictionary copied into application |
+| `plugins/withAndroidLocaleConfig.js` | Removed; Expo Localization owns Android en/lb resources |
+| Retained tests | Updated catalog-label fixtures; full existing regression coverage kept; added translation, catalog and bilingual layout coverage |
+| `tmp/lb-spelling`, generated `android/`, bundle outputs | Ignored local validation resources; dictionary/XML/signing material excluded from EAS upload |
+
+Spelling review uses the pinned official dictionary (EUPL 1.1) and Hunspell 1.7.2
+in a network-disabled container, with LOD-backed exceptions documented by context.
+It checks 154 interface strings and 371 labels. This is a spelling audit, not proof
+of grammatical or idiomatic perfection; final wording/layout review happens on the
+Pixel. See [review](luxembourgish-review.md), [spelling findings](luxembourgish-spelling.md)
+and [catalog decisions](../scripts/lod/review.md).
+
+Automated validation (2026-11-07): clean npm ci, TypeScript, 496 tests in 50 suites,
+all 16 fuzz-harness self-checks, Android configuration guard, Expo dependency checks
+and Expo Doctor (21/21) pass. The count increases from 457/48: +16 catalog cases,
++6 locale selection/restoration cases, +1 interpolation-parity check, +2 existing
+Voice Access cases applied to lb, +1 real language-picker round trip, and +13 existing
+layout checks run in lb as well as en. No regression tests were removed. Catalog
+regeneration is byte-identical; actual generated Android XML declares only en/lb
+and attaches localeConfig to the application. Android Hermes export succeeds
+(3,501 modules, 6.4 MB bytecode); the sandbox initially blocked spawning Hermes,
+so the successful compiler run used the approved normal host permissions.
+
+Development APK 1.0.12 (versionCode 6), build
+[3d0aa2e9-da74-4608-ae22-86b7df6a5f71](https://expo.dev/accounts/lean-mean-coding-team/projects/grocery-list/builds/3d0aa2e9-da74-4608-ae22-86b7df6a5f71),
+was submitted using the existing project/package and remote signing key. Metro
+serves the Android launch manifest and bundle successfully at http://10.1.0.20:8081.
+The final offline spelling run checks 525 entries: 80 documented findings,
+zero unresolved. All 30 targeted language tests also pass after wording refinement.
+
+Pixel confirmation (2026-11-07): the user installed the rebuilt APK and confirmed
+the one-time empty/private startup in Luxembourgish, then persistence of a new
+item and the selected language after restart. Initial list/wording review was
+positive, with further wording refinements welcome during use. Exhaustive screen,
+large-font/theme, English/System round-trip and two-phone checks remain unconfirmed;
+prior-phase phone confirmations do not constitute acceptance of those scenarios.
+
+## Add-item details form (previous phase)
 
 Icon follow-up (2026-11-07): the user selected concept 17, the coral basket on
 teal. Retain the approved raster master, generated transparent foreground, and
@@ -574,7 +642,7 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | plugins/siri/AddGroceryItemIntent.swift | Remove | Removed native voice assistant integration and its hooks, UI, docs, and tests. |
 | plugins/siri/GroceryAppShortcuts.swift | Remove | Removed native voice assistant integration and its hooks, UI, docs, and tests. |
 | plugins/siri/SiriStore.swift | Remove | Removed native voice assistant integration and its hooks, UI, docs, and tests. |
-| plugins/withAndroidLocaleConfig.js | Keep | Retained Android Gradle JVM or locale configuration plugin. |
+| plugins/withAndroidLocaleConfig.js | Remove | Replaced by Expo Localization with Android en/lb declarations in the Luxembourgish feature. |
 | plugins/withGradleJvmArgs.js | Keep | Retained Android Gradle JVM or locale configuration plugin. |
 | plugins/withSiriIntents.js | Remove | Removed native voice assistant integration and its hooks, UI, docs, and tests. |
 | qa/actions.json | Remove | Removed legacy device captures, factory gates, templates, quarantine/reporting, or historical logs. |

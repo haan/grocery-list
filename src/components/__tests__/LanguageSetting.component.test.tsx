@@ -34,6 +34,16 @@ afterEach(() => {
 });
 
 describe('LanguageSetting', () => {
+  it('selects Lëtzebuergesch and can return to English from translated controls', async () => {
+    const user = userEvent.setup();
+    await render(<LanguageSetting />);
+    await user.press(screen.getByRole('button', { name: 'Language, System' }));
+    await user.press(screen.getByRole('radio', { name: 'Lëtzebuergesch' }));
+    expect(screen.getByRole('button', { name: 'Sprooch, Lëtzebuergesch' })).toBeTruthy();
+    await user.press(screen.getByRole('button', { name: 'Sprooch, Lëtzebuergesch' }));
+    await user.press(screen.getByRole('radio', { name: 'English' }));
+    expect(screen.getByRole('button', { name: 'Language, English' })).toBeTruthy();
+  });
   it('opens the selection sheet when the trigger row is pressed', async () => {
     const user = userEvent.setup();
     await render(<LanguageSetting />);
@@ -44,7 +54,7 @@ describe('LanguageSetting', () => {
     // The sheet is open — the English option (a radio) is now reachable.
     expect(screen.getByRole('radio', { name: 'English' })).toBeTruthy();
     expect(screen.getByRole('radio', { name: 'System' })).toBeTruthy();
-    expect(screen.getAllByRole('radio')).toHaveLength(2);
+    expect(screen.getAllByRole('radio')).toHaveLength(3);
   });
 
   it('selects a language and closes the sheet when an option is pressed', async () => {
@@ -52,7 +62,7 @@ describe('LanguageSetting', () => {
     await render(<LanguageSetting />);
 
     await user.press(screen.getByRole('button', { name: 'Language, System' }));
-    // English is the only explicit language until new translations are added.
+    // Both explicit languages remain reachable by their own names.
     await user.press(screen.getByRole('radio', { name: 'English' }));
 
 

@@ -23,8 +23,13 @@ When you share a list with someone, the two phones keep each other up to date by
 Stopping sharing keeps a private copy on this phone. It does not delete other
 phones' data or relay deposits. Starting again creates a new secret. Joining a
 different code replaces this phone's current list only after confirmation.
-The single-list upgrade performs a one-time local shopping-data reset; it does
+The Luxembourgish pre-release upgrade performs a one-time local shopping-data reset; it does
 not erase copies previously shared with other phones or relays.
+
+Interface translations and product labels are bundled and work offline. Your
+language preference stays on your device. The app does not send text to LOD,
+Spellchecker.lu or a translation service; dictionary downloads and spelling checks
+are developer tools outside the application.
 
 ## Where your data can go
 

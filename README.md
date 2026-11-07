@@ -31,9 +31,10 @@ See [the development guide](docs/development.md) for installation, debugging, cr
 
 The app opens directly into one shopping list. The header has Sharing and Settings;
 a compact footer shows connection status. Settings contains Appearance, Language,
-Sharing, Manage aisles, and Version. The language picker offers System and English,
-ready for future Luxembourgish interface translations. Product suggestions and
-built-in aisle labels remain Luxembourgish. Recent items remain local; favorites,
+Sharing, Manage aisles, and Version. The language picker offers System, English,
+and Lëtzebuergesch. Product suggestions and built-in aisle labels remain Luxembourgish
+in either interface language. Countable products use reviewed plural labels such
+as Banannen and Eeër; substances retain names such as Mëllech. Recent items remain local; favorites,
 kits, and file import/export have been removed.
 
 Opening Sharing does not publish anything. Start sharing creates a QR code/link;
@@ -42,10 +43,14 @@ waits for a valid shared snapshot before editing or publishing. Stop sharing kee
 a private copy; starting again creates a new code. Other phones keep their own
 copies. Public relay availability and retention are best-effort.
 
-**Single-list upgrade:** the first launch of this phase intentionally clears all
-old shopping lists, sharing identities, learned/custom aisles, history, and
-favorites, then creates one empty private list. This reset is atomic and runs once.
-Appearance and language remain. Use disposable shopping data for development.
+**Luxembourgish pre-release upgrade:** the first launch intentionally clears test
+shopping data, sharing identities, learned/custom aisles and history, then creates
+one empty private list. This reset is atomic and runs once. Appearance and language
+remain. Update both test phones and pair them again. The new native localization
+module requires a rebuilt development APK. Use disposable shopping data for development.
+
+Translation review and Docker spelling checks are documented in
+[scripts/language](scripts/language/README.md).
 
 See [the repository audit](docs/repository-audit.md) for retained code and removed legacy tooling.
 

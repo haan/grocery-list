@@ -3,34 +3,13 @@ const crypto = require('node:crypto');
 const { readLod } = require('./read.cjs');
 const selection = require('./selection.cjs');
 const source = process.argv[2] || 'tmp/new_lod-art.xml';
+if (process.argv.includes('--select')) throw Error('The catalog is reviewed. Edit manifest.json; bootstrap selection would discard shopping-label decisions.');
 const normalize = s => s.normalize('NFKD').replace(/\p{M}/gu, '').toLowerCase().trim().replace(/\s+/gu, ' ');
 const cleanAlias = s => /^[\p{L}\p{M}\d '\u2019-]+$/u.test(s);
 (async () => {
   const entries = await readLod(source);
   const meanings = new Map(entries.flatMap(e => e.meanings.map(m => [m.id, { e, m }])));
   const path = 'scripts/lod/manifest.json';
-  if (process.argv.includes('--select')) {
-    const rows = Object.entries(selection).flatMap(([category, tokens]) => tokens.trim().split(/\s+/).map(token => {
-      const refs = token.split('=');
-      const first = meanings.get(refs[0]);
-      if (!first) throw Error(`Missing meaning: ${refs[0]}`);
-      const aliases = refs.flatMap(ref => {
-        const found = meanings.get(ref);
-        if (!found) throw Error(`Missing meaning: ${ref}`);
-        const { e, m } = found;
-        return [m.name || e.name, ...(!m.name ? e.plurals : []), ...['de', 'fr'].flatMap(l => m.languages[l]?.words || [])];
-      }).filter(cleanAlias);
-      return { id: `lod:${refs[0]}`, name: first.m.name || first.e.name, category,
-        sources: refs.map(ref => ({ entry: meanings.get(ref).e.id, meaning: ref })),
-        aliases: [...new Set(aliases)].sort() };
-    }));
-    // Common foreign plurals are explicit reviewed aliases, never guessed.
-    const extra = { GROMPER1UNI1: ['Kartoffeln', 'pommes de terre'], CHAMPIGNON1UNI1: ['champignons'],
-      APEL1UNI1: ['Äpfel', 'pommes'], EE1UNI1: ['Eier', 'œufs', 'oeufs'],
-      BAGUETTE1UNI1: ['baguettes'], TOMAT1UNI2: ['Tomaten', 'tomates'] };
-    for (const row of rows) row.aliases = [...new Set([...row.aliases, ...(extra[row.sources[0].meaning] || [])])].sort();
-    fs.writeFileSync(path, JSON.stringify(rows, null, 2) + '\n');
-  }
   const rows = JSON.parse(fs.readFileSync(path, 'utf8'));
   const ids = new Set(), names = new Set();
   for (const row of rows) {
@@ -39,7 +18,17 @@ const cleanAlias = s => /^[\p{L}\p{M}\d '\u2019-]+$/u.test(s);
     if (!Object.hasOwn(selection, row.category) || !row.aliases.length) throw Error(`Invalid row: ${row.id}`);
     if (row.id !== `lod:${row.sources[0].meaning}`) throw Error(`Unstable ID: ${row.id}`);
     for (const ref of row.sources) if (meanings.get(ref.meaning)?.e.id !== ref.entry) throw Error(`Invalid source: ${row.id}`);
-    if (!row.sources.some(ref => { const {e,m} = meanings.get(ref.meaning); return (m.name || e.name) === row.name; })) throw Error(`Unknown preferred name: ${row.name}`);
+    const label = row.shoppingLabel;
+    if (!label || !['plural', 'mass', 'collective', 'ambiguous'].includes(label.usage) || !label.reason?.trim() || !label.originalName?.trim()) throw Error(`Missing shopping-label review: ${row.id}`);
+    if (!row.sources.some(ref => { const { e, m } = meanings.get(ref.meaning); return (m.name || e.name) === label.originalName; })) throw Error(`Unknown original headword: ${row.id}`);
+    const recognized = row.sources.some(ref => {
+      const {e,m} = meanings.get(ref.meaning);
+      return (m.name || e.name) === row.name || (!m.name && e.pluralForms.some(p => p.form === row.name));
+    });
+    if (label.source === 'lod' && !recognized) throw Error(`Unknown LOD preferred form: ${row.name}`);
+    if (!['lod', 'reviewed-phrase'].includes(label.source)) throw Error(`Missing preferred-form provenance: ${row.name}`);
+    if (label.source === 'reviewed-phrase' && (!label.evidence?.length || label.evidence.some(id => !meanings.has(id)))) throw Error(`Missing phrase evidence: ${row.name}`);
+    if (!row.aliases.includes(row.name) || !row.aliases.includes(label.originalName)) throw Error(`Missing preferred/original alias: ${row.id}`);
     if (row.aliases.some(a => !a.trim() || !cleanAlias(a))) throw Error(`Invalid alias: ${row.id}`);
   }
   const checksum = crypto.createHash('sha256').update(fs.readFileSync(source)).digest('hex');
@@ -50,7 +39,8 @@ const cleanAlias = s => /^[\p{L}\p{M}\d '\u2019-]+$/u.test(s);
   let report = `# LOD shopping catalog review\n\nSource SHA-256: \`${checksum}\`\n\n${rows.length} reviewed products. Sources and approved aliases: [manifest.json](manifest.json).\n\n`;
   for (const category of Object.keys(selection)) {
     const group = rows.filter(r => r.category === category);
-    report += `## ${category} (${group.length})\n\n` + group.map(r => `- **${r.name}** — ${r.sources.map(s=>s.meaning).join(', ')}; aliases: ${r.aliases.join(', ')}`).join('\n')+'\n\n';
+    report += `## ${category} (${group.length})\n\n| Previous headword | Shopping label | Choice | Review |\n|---|---|---|---|\n` + group.map(r => `| ${r.shoppingLabel.originalName} | **${r.name}** | ${r.shoppingLabel.usage} | ${r.shoppingLabel.reason} |`).join('\n')+'\n\n';
+    report += group.map(r => `- **${r.name}** — ${r.sources.map(s=>s.meaning).join(', ')}; aliases: ${r.aliases.join(', ')}`).join('\n')+'\n\n';
   }
   report += '## Ambiguous aliases (no product-level learning)\n\n' + [...aliasIndex].filter(([,v])=>v.length>1).map(([a,v])=>`- ${a}: ${v.join(', ')}`).join('\n')+'\n';
   fs.writeFileSync('scripts/lod/review.md', report);
