@@ -5,6 +5,40 @@ cleanup/android-only. Audit date: 2026-11-06. No history rewrite or main merge.
 
 ## Add-item details form (current phase)
 
+Icon follow-up (2026-11-07): the user selected concept 17, the coral basket on
+teal. Retain the approved raster master, generated transparent foreground, and
+prompt/export metadata in `assets/`. Replace the launcher/adaptive/native-launch
+PNGs and set the native backgrounds to `#05515F`. The custom splash remains
+removed. Replace the obsolete SVG renderer with exports using Expo's existing
+image utilities; remove the old cart SVG and now-unused Chrome locator. No
+dependency, package identity, signing, or data changes. All exports are 1024px;
+the adaptive foreground's opaque artwork fits inside Android's 66/108 safe
+circle. A new APK is required for device verification of the native assets.
+Validation: TypeScript, Android configuration guard, all 16 fuzz-harness checks,
+resolved Expo prebuild configuration, and all 457 tests in 48 suites pass
+(`tmp/icon-startup-tests.json`). PNG exports were inspected for dimensions,
+transparency, and foreground safe-area bounds; launcher-mask previews are in
+`tmp/icon-concepts/final-preview.html`. Development APK build
+`11e088dc-f518-4b8b-88e5-e1bf980e945d` was submitted on 2026-11-07 using the
+existing Expo project, Android package, and remote signing key; versionCode 5.
+The user installed the finished APK as an update and confirmed on the Pixel that
+the teal basket appears on the home screen and during startup, with the existing
+list and sharing setup intact. Native device acceptance passed on 2026-11-07.
+The Expo project dashboard icon was also updated successfully with
+`eas project:icon:set assets/icon.png --non-interactive`.
+
+Startup follow-up: remove `src/components/AnimatedSplash.tsx`, including its
+"josh approved" wordmark, extra font wait, and timed intro/exit. `AppShell` now
+reveals the laid-out app or startup error directly from Android's native launch
+screen. `App.tsx` still holds that native screen during hydration. Native assets,
+configuration, dependencies, and stored data are unchanged. Startup regression
+tests cover readiness gating, immediate layout handoff, repeated layout, and
+error content without a navigator. TypeScript, Android configuration, and all 16
+fuzz-harness checks pass. The full run passed the existing 455 tests (47 suites);
+the new suite initially needed native-boundary mocks corrected, then both startup
+tests passed in its targeted rerun. The user confirmed on the Pixel that startup
+goes directly from the native icon screen to the list without the branded animation.
+
 Branch: `ui/add-item-flow`, based on clean main `f7adbdf0` after PR #1 merged
 the Android-only/single-list work. This phase does not commit, push, or merge
 without a subsequent request. Earlier no-merge statements below describe their
@@ -520,7 +554,8 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | assets/fonts/IBMPlexSans-SemiBold.otf | Keep | Retained launcher/splash source assets, bundled fonts, and font license. |
 | assets/fonts/LICENSE-IBM-Plex.md | Keep | Retained launcher/splash source assets, bundled fonts, and font license. |
 | assets/icon.png | Keep | Retained launcher/splash source assets, bundled fonts, and font license. |
-| assets/icon.svg | Keep | Retained launcher/splash source assets, bundled fonts, and font license. |
+| assets/icon.svg | Remove | Superseded old cart artwork with the approved raster basket master. |
+| assets/icon-source.png, assets/icon-foreground.png, assets/icon-generation.json | Add | Approved concept 17, transparent foreground for native layers, and generation/export provenance. |
 | assets/play-icon.png | Remove | Removed upstream web/store marketing material; no supported web/store target. |
 | assets/splash-icon.png | Keep | Retained launcher/splash source assets, bundled fonts, and font license. |
 | credits-config.json | Remove | Orphaned external-generator config; retained runtime credits and CREDITS.md maintained locally. |
@@ -728,7 +763,7 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | scripts/e2e/run-chaos.sh | Remove | Removed orphaned factory/device/store automation. |
 | scripts/e2e/run-two-device.sh | Remove | Removed orphaned factory/device/store automation. |
 | scripts/lib/cng-prebuild-preflight.mjs | Remove | Removed orphaned factory/device/store automation. |
-| scripts/lib/find-chrome.mjs | Keep | Retained Android app asset generation or configuration guard; host OS support preserved. |
+| scripts/lib/find-chrome.mjs | Remove | No remaining consumer after icon export moved to Expo's installed image utilities. |
 | scripts/lib/heavy.mjs | Remove | Removed orphaned factory/device/store automation. |
 | scripts/lib/npm-drift-preflight.mjs | Remove | Removed orphaned factory/device/store automation. |
 | scripts/lod/README.md | Update | Retained reviewed catalog provenance, deterministic generator, and review report. |
@@ -760,7 +795,7 @@ Every path tracked at the baseline is accounted for below, followed by added fil
 | src/components/AddAction.tsx | Keep | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/AddIngredientsSheet.tsx | Remove | Retired kit feature and its dedicated tests; list behavior retained. |
 | src/components/AddItemsSheet.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
-| src/components/AnimatedSplash.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
+| src/components/AnimatedSplash.tsx | Remove | Removed the custom branded splash and timed animation; Android launch screen hands off directly to ready content. |
 | src/components/Credits.tsx | Remove | Removed in-app acknowledgements; repository CREDITS.md and licenses retained. |
 | src/components/Dialogs.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |
 | src/components/EmptyState.tsx | Update | Retained current Android app behavior or its tests; removed obsolete references/ownership restrictions where applicable. |

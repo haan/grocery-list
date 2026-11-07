@@ -1,7 +1,7 @@
 /** Android app shell: navigation, theme, diagnostics, safe areas, and splash. */
 
-import React, { useEffect, useRef, useState } from 'react';
-import { useColorScheme } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { useColorScheme, View } from 'react-native';
 import {
   NavigationContainer,
   type NavigationContainerRef,
@@ -12,7 +12,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ErrorBoundary } from '../components/ErrorBoundary';
-import AnimatedSplash from '../components/AnimatedSplash';
+import * as SplashScreen from 'expo-splash-screen';
 import { installDiagnostics } from '../feedback/log';
 import { collectDiagnostics } from '../feedback/diagnostics';
 import { buildNavTheme } from './navTheme';
@@ -44,7 +44,7 @@ function activeRouteName(
 }
 
 type Props = {
-  /** Content is ready (fonts loaded + stores hydrated). Until true, the splash
+  /** Content or the startup error is ready. Until true, Android's launch screen
    *  holds and the navigator is not mounted. */
   ready: boolean;
   onReady?: () => void;
@@ -71,7 +71,14 @@ export function AppShell({ ready, children, navigationRef, onReady }: Props) {
   useApplyLocalePreference();
   const localeVersion = useLocaleVersion();
   const isDark = useColorScheme() === 'dark';
-  const [splashDone, setSplashDone] = useState(false);
+  const launchScreenHidden = useRef(false);
+  const revealContent = () => {
+    if (launchScreenHidden.current) return;
+    launchScreenHidden.current = true;
+    // Reveal a laid-out screen, including the error/retry UI if hydration failed.
+    // There is no extra branded screen, animation, or minimum display time.
+    SplashScreen.hideAsync().catch(() => { launchScreenHidden.current = false; });
+  };
 
   // ---- Breadcrumbs (feedback/log.ts) --------------------------------------
   // A bug report is only triageable if it says what the app was doing. The shell
@@ -88,29 +95,28 @@ export function AppShell({ ready, children, navigationRef, onReady }: Props) {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <ErrorBoundary>
-          {ready && (
-            <NavigationContainer
-              key={localeVersion}
-              ref={navigationRef}
-              onReady={onReady}
-              theme={buildNavTheme(isDark)}
-              onStateChange={(state) => {
-                const name = activeRouteName(state);
-                if (name && name !== lastRoute.current) {
-                  lastRoute.current = name;
-                  logNav(name);
-                }
-              }}
-            >
-              <StatusBar style={isDark ? 'light' : 'dark'} />
-              {children}
-            </NavigationContainer>
-          )}
-          {!splashDone && (
-            <AnimatedSplash ready={ready} onFinish={() => setSplashDone(true)} />
-          )}
-        </ErrorBoundary>
+        {ready && (
+          <View testID="startup-content" style={{ flex: 1 }} onLayout={revealContent}>
+            <ErrorBoundary>
+              <NavigationContainer
+                key={localeVersion}
+                ref={navigationRef}
+                onReady={onReady}
+                theme={buildNavTheme(isDark)}
+                onStateChange={(state) => {
+                  const name = activeRouteName(state);
+                  if (name && name !== lastRoute.current) {
+                    lastRoute.current = name;
+                    logNav(name);
+                  }
+                }}
+              >
+                <StatusBar style={isDark ? 'light' : 'dark'} />
+                {children}
+              </NavigationContainer>
+            </ErrorBoundary>
+          </View>
+        )}
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

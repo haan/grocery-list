@@ -1,109 +1,41 @@
 #!/usr/bin/env node
-// Build Android launcher and splash assets from assets/icon.svg.
-// Uses a local Chrome/Chromium/Edge installation; no store-listing outputs.
-
-import fs from 'node:fs';
+// Export the approved raster artwork for Android. No AI calls or native build.
+import fs from 'node:fs/promises';
 import path from 'node:path';
-import os from 'node:os';
-import { spawnSync } from 'node:child_process';
-import { pathToFileURL, fileURLToPath } from 'node:url';
-import { findChrome } from './lib/find-chrome.mjs';
+import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(__dirname, '..');
-const assetsDir = path.join(repoRoot, 'assets');
-const iconSvgPath = path.join(assetsDir, 'icon.svg');
+// Reuse the image tooling already installed with the pinned Expo SDK.
+const require = createRequire(import.meta.url);
+const { generateImageAsync, generateImageBackgroundAsync, compositeImagesAsync } = require('@expo/image-utils');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const assets = path.join(root, 'assets');
+const size = 1024;
 
-const SIZE = 1024;
-const PAPER = '#FAFAF7'; // the glyph's paper-white ink in icon.svg
-const SPLASH_GLYPH_SCALE = 0.7; // glyph size on the splash (~42% of canvas)
-
-if (!fs.existsSync(iconSvgPath)) {
-  console.error(
-    `build-icon: missing ${path.relative(repoRoot, iconSvgPath)} — see the header for the icon.svg contract.`,
-  );
-  process.exit(1);
-}
-const iconSvg = fs.readFileSync(iconSvgPath, 'utf8');
-
-// ---- Parse the per-app contract out of icon.svg ----------------------------
-function readAccent(svg) {
-  const m =
-    svg.match(/<rect\b[^>]*\bid="bg"[^>]*\bfill="(#[0-9a-fA-F]{6})"/) ||
-    svg.match(/<rect\b[^>]*\bfill="(#[0-9a-fA-F]{6})"[^>]*\bid="bg"/);
-  if (!m) throw new Error('icon.svg: missing <rect id="bg" fill="#RRGGBB"> (the accent).');
-  return m[1];
-}
-function readGlyph(svg) {
-  const m = svg.match(/<g\b[^>]*\bid="glyph"[\s\S]*?<\/g>/);
-  if (!m) throw new Error('icon.svg: missing <g id="glyph">...</g> (no nested <g> allowed).');
-  return m[0];
+async function resize(name, width) {
+  const { source } = await generateImageAsync({ projectRoot: root }, {
+    src: path.join(assets, name), width, height: width, resizeMode: 'contain',
+  });
+  return source;
 }
 
-const ACCENT = readAccent(iconSvg);
-const glyphGroup = readGlyph(iconSvg);
+// Preserve the selected full-color composition for non-adaptive consumers.
+await fs.writeFile(path.join(assets, 'icon.png'), await resize('icon-source.png', size));
 
-// Splash glyph: the glyph alone, recoloured paper-white -> accent, scaled and
-// centred on a transparent canvas.
-function splashSvg() {
-  const accentGlyph = glyphGroup.split(PAPER).join(ACCENT);
-  const c = SIZE / 2;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" width="${SIZE}" height="${SIZE}">
-    <g transform="translate(${c} ${c}) scale(${SPLASH_GLYPH_SCALE}) translate(${-c} ${-c})">
-      ${accentGlyph}
-    </g>
-  </svg>`;
-}
+// Android uses 108dp layers with a central safe area. Keep transparent padding
+// around the basket rather than allowing the launcher to crop the original art.
+const foregroundSize = 768;
+const background = await generateImageBackgroundAsync({
+  width: size, height: size, resizeMode: 'contain', backgroundColor: 'transparent',
+});
+const adaptive = await compositeImagesAsync({
+  background,
+  foreground: await resize('icon-foreground.png', foregroundSize),
+  x: (size - foregroundSize) / 2,
+  y: (size - foregroundSize) / 2,
+});
+await fs.writeFile(path.join(assets, 'adaptive-icon.png'), adaptive);
 
-// ---- Render via headless Chrome --------------------------------------------
-function wrapHtml(size, svg) {
-  return `<!doctype html><html><head><meta charset="utf-8"><style>
-    html,body{margin:0;padding:0;width:${size}px;height:${size}px;background:transparent;}
-    svg{display:block;width:${size}px;height:${size}px;}
-  </style></head><body>${svg}</body></html>`;
-}
-function renderPng(size, outPath, svg) {
-  const tmpHtml = path.join(
-    os.tmpdir(),
-    `ja-icon-${Date.now()}-${Math.random().toString(36).slice(2)}.html`,
-  );
-  fs.writeFileSync(tmpHtml, wrapHtml(size, svg), 'utf8');
-  const args = [
-    '--headless=new',
-    '--disable-gpu',
-    '--hide-scrollbars',
-    '--no-sandbox',
-    '--force-device-scale-factor=1',
-    `--window-size=${size},${size}`,
-    '--default-background-color=00000000',
-    `--screenshot=${outPath}`,
-    '--virtual-time-budget=2000',
-    pathToFileURL(tmpHtml).href,
-  ];
-  const result = spawnSync(findChrome(), args, { stdio: 'pipe' });
-  fs.rmSync(tmpHtml, { force: true });
-  if (result.status !== 0 || !fs.existsSync(outPath)) {
-    throw new Error(`Chrome failed (${result.status}): ${result.stderr?.toString() || ''}`);
-  }
-}
-
-function build() {
-  fs.mkdirSync(assetsDir, { recursive: true });
-  const iconPng = path.join(assetsDir, 'icon.png');
-  const adaptivePng = path.join(assetsDir, 'adaptive-icon.png');
-  const splashPng = path.join(assetsDir, 'splash-icon.png');
-
-  console.log(`Accent ${ACCENT}. Rendering icon.png / adaptive-icon.png (full square)...`);
-  renderPng(SIZE, iconPng, iconSvg);
-  fs.copyFileSync(iconPng, adaptivePng);
-  console.log('  assets/icon.png');
-  console.log('  assets/adaptive-icon.png');
-
-  console.log('Rendering splash-icon.png (glyph only, accent on paper)...');
-  renderPng(SIZE, splashPng, splashSvg());
-  console.log('  assets/splash-icon.png');
-
-  console.log('Done. Android icon and splash assets generated.');
-}
-
-build();
+// The native launch screen sizes this transparent image via imageWidth.
+await fs.writeFile(path.join(assets, 'splash-icon.png'), await resize('icon-foreground.png', size));
+console.log('Exported icon.png, adaptive-icon.png, and splash-icon.png from the approved basket artwork.');

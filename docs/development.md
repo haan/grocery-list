@@ -16,6 +16,22 @@ screenshots, or source control. Use disposable lists while developing.
 
 ## First installation
 
+Startup uses only Android's native launch screen while fonts and local data load.
+The app shell hides it as soon as the content (or the startup error/retry screen)
+has laid out. There is no custom branded splash or artificial animation delay.
+Removing the former animation works through Metro. Launcher icon and native
+launch artwork changes require a new APK.
+
+The approved icon is concept 17: a coral grocery basket on teal. Its original
+artwork is `assets/icon-source.png`, with an image-generated transparent cutout
+in `assets/icon-foreground.png`. `assets/icon-generation.json` records the prompts
+and export settings. Run `node scripts/build-icon.mjs` to regenerate the three
+1024px PNG exports using Expo's installed image utilities; no browser, AI request,
+or extra dependency is needed. The adaptive foreground is padded for Android's
+icon masks, over `#05515F`; the native launch screen uses that same background
+and a 180dp transparent image. This does not reintroduce the custom splash.
+Exploration variants remain ignored in `tmp/icon-concepts/`.
+
 From PowerShell in `E:\codex\grocery-list`:
 
 ```powershell
