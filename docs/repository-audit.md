@@ -3,7 +3,24 @@
 Baseline: main commit 5edb48bd2bff1fd78e0700898604846c2b39aa8d. Work branch:
 cleanup/android-only. Audit date: 2026-11-06. No history rewrite or main merge.
 
-## Item swipe action layout (current phase)
+## Settings simplification (current phase)
+
+Branch `ui/settings-footer`: Updates has one button with progress, result and
+retry labels instead of explanatory paragraphs or an update ID. The development
+variant has a disabled Metro button. Existing download, persistence and restart
+safeguards are unchanged. Removed unused update explanation strings from both
+interface dictionaries and regenerated the language review.
+
+The Settings footer displays a small muted heart and the requested dedication
+“Mat Léift gemaach fir meng Fra” below Version in both interface languages.
+Following Pixel review, the version uses smaller text than the dedication so
+the technical label no longer dominates the footer.
+Validation: TypeScript, Android configuration checks, all 530 tests in 52 suites,
+all 16 fuzz-harness self-tests and Luxembourgish spellchecking passed. The user
+approved the revised footer on the Pixel through Metro. Production update behaviour is covered by the retained
+check/download/restart/error tests.
+
+## Item swipe action layout
 
 Branch `fix/swipe-delete-layout`: the retained left-swipe gesture opens a Delete
 action, but its column layout and `alignSelf: stretch` placed the fixed-width

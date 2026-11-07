@@ -37,8 +37,7 @@ beforeEach(() => {
 it('leaves Dev on Metro without calling update APIs', async () => {
   require('expo-application').applicationId = 'io.github.haan.grocerylist.dev';
   await render(<UpdateSetting />);
-  expect(screen.getByText(/through Metro/)).toBeTruthy();
-  expect(screen.queryByRole('button')).toBeNull();
+  expect(screen.getByRole('button', { name: 'Updates via Metro' })).toBeDisabled();
   expect(Updates.checkForUpdateAsync).not.toHaveBeenCalled();
 });
 
@@ -46,7 +45,7 @@ it('checks on request, reports no compatible update and does not reload', async 
   await render(<UpdateSetting />);
   expect(Updates.checkForUpdateAsync).not.toHaveBeenCalled();
   await userEvent.press(screen.getByRole('button', { name: 'Check for updates' }));
-  expect(await screen.findByText(/No newer update/)).toBeTruthy();
+  expect(await screen.findByRole('button', { name: 'Up to date' })).toBeTruthy();
   expect(Updates.fetchUpdateAsync).not.toHaveBeenCalled();
   expect(Updates.reloadAsync).not.toHaveBeenCalled();
 });
@@ -68,7 +67,7 @@ it('offers a launch-time downloaded update without forcing a restart', async () 
   mockNative.currentlyRunning = { isEmbeddedLaunch: false, updateId: '12345678-abcdef' };
   await render(<UpdateSetting />);
   expect(screen.getByRole('button', { name: 'Restart to update' })).toBeTruthy();
-  expect(screen.getByText('Update: 12345678')).toBeTruthy();
+  expect(screen.queryByText('Update: 12345678')).toBeNull();
   expect(Updates.reloadAsync).not.toHaveBeenCalled();
 });
 
@@ -80,9 +79,8 @@ it.each(['check', 'fetch'])('allows retry after a %s failure', async kind => {
   }
   await render(<UpdateSetting />);
   await userEvent.press(screen.getByRole('button', { name: 'Check for updates' }));
-  expect(await screen.findByText(/could not be completed/)).toBeTruthy();
-  await userEvent.press(screen.getByRole('button', { name: 'Check for updates' }));
-  expect(await screen.findByText(/No newer update/)).toBeTruthy();
+  await userEvent.press(await screen.findByRole('button', { name: 'Update failed · Try again' }));
+  expect(await screen.findByRole('button', { name: 'Up to date' })).toBeTruthy();
   expect(Updates.reloadAsync).not.toHaveBeenCalled();
 });
 
@@ -91,7 +89,7 @@ it('does not reload when local persistence fails', async () => {
   jest.mocked(saveList).mockRejectedValueOnce(new Error('disk full'));
   await render(<UpdateSetting />);
   await userEvent.press(screen.getByRole('button', { name: 'Restart to update' }));
-  expect(await screen.findByText(/could not be completed/)).toBeTruthy();
+  expect(await screen.findByRole('button', { name: 'Update failed · Try again' })).toBeTruthy();
   expect(Updates.reloadAsync).not.toHaveBeenCalled();
 });
 
@@ -116,6 +114,6 @@ it('disables duplicate checks while a request is running', async () => {
   jest.mocked(Updates.checkForUpdateAsync).mockImplementation(() => new Promise(r => { resolve = r; }));
   await render(<UpdateSetting />);
   await userEvent.press(screen.getByRole('button', { name: 'Check for updates' }));
-  expect(screen.getByRole('button', { name: 'Check for updates' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: 'Checking for updates…' })).toBeDisabled();
   await act(async () => { resolve({ isAvailable: false }); });
 });

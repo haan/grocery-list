@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   Share2,
   Menu,
+  Heart,
 } from 'lucide-react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
@@ -76,6 +77,10 @@ export default function SettingsScreen({ navigation }: Props) {
 
         <UpdateSetting />
         <Text style={s.version}>{t('settings.version')}: {versionLabel()}</Text>
+        <View style={s.dedication}>
+          <Heart size={16} color={c.fgMuted} strokeWidth={1.5} accessible={false} />
+          <Text style={s.dedicationText}>Mat Léift gemaach fir meng Fra</Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -122,6 +127,8 @@ function makeStyles(c: Colors) {
       paddingHorizontal: space.s6,
       paddingTop: space.s4,
     },
-    version: { ...ty.sm, fontFamily: fontFamily.sans, color: c.fgMuted, paddingHorizontal: space.s6, paddingTop: space.s9 },
+    version: { ...ty.xs, fontFamily: fontFamily.sans, color: c.fgMuted, paddingHorizontal: space.s6, paddingTop: space.s9 },
+    dedication: { flexDirection: 'row', alignItems: 'center', gap: space.s2, paddingHorizontal: space.s6, paddingTop: space.s3 },
+    dedicationText: { ...ty.sm, fontFamily: fontFamily.sans, color: c.fgMuted, flexShrink: 1 },
   });
 }

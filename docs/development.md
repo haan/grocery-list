@@ -163,11 +163,12 @@ The installed production APK automatically checks/downloads compatible updates a
 startup, without delaying access to the cached app. A downloaded update applies
 on the next cold start. Settings → Updates can check/download on demand or restart
 when an update is ready. Restart is explicit, saves the current list first, and is
-blocked during a sharing transition or a failed list write. Dev shows a Metro
-explanation and never invokes production update APIs.
+blocked during a sharing transition or a failed list write. Dev shows a disabled
+Updates via Metro button and never invokes production update APIs.
 
-The native APK version stays unchanged after an OTA update. Settings displays the
-short update ID for downloaded releases so we can verify which code is running.
+The native APK version stays unchanged after an OTA update. The Updates section
+contains only its button; checking, downloading, restarting, up-to-date and retry
+states appear in its label. Update IDs remain available in Expo release records.
 A failed/offline update check leaves the installed app usable. An update check
 only finds compatible JS/assets, not newer APKs.
 
@@ -203,8 +204,12 @@ never weaken native compatibility to avoid a rebuild.
 On the phone, open the everyday app online, allow the background download, then
 fully close/reopen it. The first release adds the Updates section itself; later
 releases can use its Check/Restart controls. Check local data and language survive,
-and verify the update ID. A second everyday phone receives the same production
+and verify the released behaviour. A second everyday phone receives the same production
 update independently. Keep test sharing separate from household data.
+
+Settings ends with the version and a small heart beside the dedication
+“Mat Léift gemaach fir meng Fra”. This personal inscription stays in Luxembourgish
+regardless of the interface language.
 
 For a bad release, use Expo's update rollback/republish controls for the production
 channel and affected runtime. Keep the prior update group ID in release records.
