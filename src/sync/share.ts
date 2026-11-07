@@ -22,13 +22,11 @@ export function buildShareLink(secret: string): string {
   return `${SHARE_SCHEME}://join?s=${encodeURIComponent(secret)}`;
 }
 
-/** Pull the secret back out of a tapped link / scanned QR. Tolerant of the
- *  scheme being present or not — accepts any URL with an `s=` query param,
- *  so a partner can share a link through any channel. */
+/** Accept only this installed variant's invitations. In particular, scanning a
+ *  household QR in Dev must not connect experimental code to the household list. */
 export function parseShareLink(url: string): string | null {
-  if (!url) return null;
-  const m = url.match(/[?&]s=([^&]+)/);
-  // Stryker disable next-line ConditionalExpression: equivalent mutant, with no `s=` match the next line reads `m[1]` off null, which throws inside the try — and the catch returns null, the same answer by the same function
+  if (!url || !url.startsWith(`${SHARE_SCHEME}://join?`)) return null;
+  const m = url.match(/[?&]s=([^&#]+)/);
   if (!m) return null;
   try {
     const secret = decodeURIComponent(m[1]);

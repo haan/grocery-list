@@ -5,12 +5,28 @@
 - Repository: https://github.com/haan/grocery-list (independent, not an upstream fork network member).
 - Expo owner: `lean-mean-coding-team`; slug: `grocery-list`.
 - Expo project: `80882728-1f01-40c5-b4aa-56fcfa53f928`.
-- Display name: `Grocery List Dev`.
-- Android package: `io.github.haan.grocerylist.dev`.
-- Share links: `haan-grocerylist-dev://join?s=...`.
+- Variant configuration: `app.config.js` overlays the shared `app.json` base.
+- Default local variant: `development`; EAS profiles set `APP_VARIANT` explicitly.
 - Expo SDK 57; Node 26.12.1; npm 11.20.0; EAS CLI 27.5.0.
 
-The original app can stay installed. Android gives this package separate storage.
+| | Development | Everyday |
+|---|---|---|
+| App name | Grocery List Dev | Grocery List |
+| Android package | io.github.haan.grocerylist.dev | io.github.haan.grocerylist |
+| Invitation scheme | haan-grocerylist-dev | haan-grocerylist |
+| Adaptive icon / native launch background | Purple | Teal |
+| EAS profile / channel | development | production |
+| Use | Metro, disposable test lists | Standalone APK, household shopping |
+
+Both apps can stay installed on the Pixel with independent storage and language
+settings. The second household phone only needs Grocery List. For sync testing,
+install Dev there as well and pair the Dev apps on a separate disposable list.
+The existing Dev package and signing credential are preserved; no data is copied
+or reset by this variant change. The everyday package starts empty and private.
+Invitation parsing uses the installed binary's application ID and rejects the
+other variant's QR/link. Nostr payloads and merge rules are unchanged. Already
+paired Dev installations continue syncing; this is an invitation safeguard, not
+a separate relay service or a migration of existing shared lists.
 Share links contain the list's secret: do not put real share links in logs, issues,
 screenshots, or source control. Use disposable lists while developing.
 
@@ -28,7 +44,7 @@ in `assets/icon-foreground.png`. `assets/icon-generation.json` records the promp
 and export settings. Run `node scripts/build-icon.mjs` to regenerate the three
 1024px PNG exports using Expo's installed image utilities; no browser, AI request,
 or extra dependency is needed. The adaptive foreground is padded for Android's
-icon masks, over `#05515F`; the native launch screen uses that same background
+icon masks, over teal `#05515F` (everyday) or purple `#5B3A80` (Dev); the native launch screen uses the variant's background
 and a 180dp transparent image. This does not reintroduce the custom splash.
 Exploration variants remain ignored in `tmp/icon-concepts/`.
 
@@ -110,21 +126,88 @@ JavaScript, styles, and most app logic use Fast Refresh; no EAS Update publicati
 or cloud build is involved. Native dependencies, config plugins, native Android
 permissions, or SDK upgrades require `npm run build:dev` again.
 
-The `development` profile uses the `development` update channel. The `preview`
-profile builds a standalone APK on the separate `preview` channel:
+## Everyday APK releases
 
 ```powershell
-npm run build:preview
+npm run build:production
 ```
 
-Preview and development currently share the development package ID: installing
-one replaces the other and retains its data if signed with the same key. Neither
-replaces the original author's app. A future everyday release needs its own
-package ID, scheme, release channel, and migration decisions before distribution.
-No production or store-submission profile is configured.
+This creates a signed standalone APK with JavaScript bundled inside it. Install
+that APK on both household phones, then share a new list between those apps.
+It starts without Metro or a PC; local shopping works offline, and Nostr sync
+resumes when connectivity returns. Production is an internal APK distribution
+profile, not a Play Store submission. There is no third preview variant.
 
-Updates point only to our Expo project. Runtime compatibility uses Expo's
-fingerprint policy. Actual OTA publishing and automatic APK updates are later work.
+Develop on a feature branch with Dev and Metro. After checks and review, build a
+new production APK from the desired source revision. Install it as an update
+without uninstalling or clearing storage. EAS increments Android versionCode and
+keeps credentials per package. The first production build provisions its own
+keystore; keep that key for all future everyday releases. Never commit keys.
+Merging source code alone does not update installed everyday apps.
+
+Both profiles use the existing Expo project, separate update channels, and
+fingerprint runtime compatibility. JavaScript/assets can now be delivered through
+Expo Updates as described below. Native changes still require a new APK; GitHub
+APK detection and installation remain deferred.
+
+Generated `android/` is ignored and excluded from EAS uploads, so cloud builds
+regenerate it for the selected profile. For a local native build after switching
+variants, regenerate with `npx expo prebuild --platform android --clean` before
+`npx expo run:android`; do not reuse another variant's generated native project.
+Set `$env:APP_VARIANT='production'` only for local production inspection, then
+remove it (`Remove-Item Env:APP_VARIANT`) before returning to Metro development.
+
+## Expo updates for the everyday app
+
+The installed production APK automatically checks/downloads compatible updates at
+startup, without delaying access to the cached app. A downloaded update applies
+on the next cold start. Settings → Updates can check/download on demand or restart
+when an update is ready. Restart is explicit, saves the current list first, and is
+blocked during a sharing transition or a failed list write. Dev shows a Metro
+explanation and never invokes production update APIs.
+
+The native APK version stays unchanged after an OTA update. Settings displays the
+short update ID for downloaded releases so we can verify which code is running.
+A failed/offline update check leaves the installed app usable. An update check
+only finds compatible JS/assets, not newer APKs.
+
+Production Expo environment has plaintext `APP_VARIANT=production`. Build-profile
+`env` values alone do not configure an EAS Update invocation. Use the wrapper:
+
+```powershell
+npm exec --package=eas-cli@27.5.0 -- node scripts/update-production.cjs --build 9b8210ac-c3d5-4c33-9966-dd09bada49ea --message "Describe the tested change"
+```
+
+Replace the build ID when targeting a later everyday APK. This command verifies
+that the selected build is a finished production APK and that the current native
+fingerprint exactly matches its runtime, then publishes Android only to the
+production channel/environment. A mismatch stops publication; never override the
+runtime hash to force delivery. A dry run (put `--dry-run` before `--build`)
+prints the intended target without a network request or compatibility check.
+Run TypeScript, tests and Android checks before deliberate publication. No push,
+merge or scheduled job publishes an update automatically.
+
+The original production APK's fingerprint is
+`c1cfabf69b96d9c0b35bb5bdeaa31b6c070c623b`. Expo's fingerprint includes npm
+scripts and the presence of an ignored generated Android directory. Consequently
+we keep this command in its own script rather than adding a package.json script.
+For a fresh checkout targeting that APK, generate the ignored Android directory
+with `npx expo prebuild --platform android --no-install` first. Its native
+contents remain ignored; the wrapper compares the actual fingerprint before
+publishing. Use `eas fingerprint:compare --build-id BUILD_ID --environment production`
+to investigate mismatches. A future native rebuild can establish a new runtime;
+never weaken native compatibility to avoid a rebuild.
+
+On the phone, open the everyday app online, allow the background download, then
+fully close/reopen it. The first release adds the Updates section itself; later
+releases can use its Check/Restart controls. Check local data and language survive,
+and verify the update ID. A second everyday phone receives the same production
+update independently. Keep test sharing separate from household data.
+
+For a bad release, use Expo's update rollback/republish controls for the production
+channel and affected runtime. Keep the prior update group ID in release records.
+Rollback to embedded code is also supported by the UI. Rollback changes code;
+it does not reverse database migrations, so migrations must remain compatible.
 
 ## Checks and CI
 
@@ -348,6 +431,6 @@ All temporary breakpoint and logging code was removed afterward.
 First successful development build:
 https://expo.dev/accounts/lean-mean-coding-team/projects/grocery-list/builds/7363f767-ef0a-47d2-a3a8-532e2b4889b8
 
-A development build may need Metro to cold-start. Use the standalone preview
+A development build may need Metro to cold-start. Use the standalone production
 APK for a complete offline cold-start test. Automated checks cannot substitute
 for these device checks; leave items unchecked until actually observed.

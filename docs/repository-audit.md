@@ -3,7 +3,90 @@
 Baseline: main commit 5edb48bd2bff1fd78e0700898604846c2b39aa8d. Work branch:
 cleanup/android-only. Audit date: 2026-11-06. No history rewrite or main merge.
 
-## Luxembourgish interface and shopping labels (current phase)
+## Everyday Expo updates (current phase)
+
+Continues on `feature/app-variants`. Existing production APK already includes
+Expo Updates and automatic launch checks; no new native dependency, configuration,
+data reset, or GitHub APK updater. New Settings controls check/download compatible
+updates and restart only on request after saving the list. Dev stays on Metro.
+English and Luxembourgish controls include retry/offline states and update IDs.
+
+| File group | Disposition |
+|---|---|
+| `src/components/UpdateSetting.tsx`, Settings screen | Production-only native update controls, pending/download/error handling, explicit restart with persistence and sharing-transition checks |
+| English/Luxembourgish dictionaries and review reports | Twelve update strings; local dictionary spelling review |
+| `scripts/update-production.cjs` | Fixed Android/production target, explicit target APK, remote fingerprint match required before publication; no automatic CI publishing |
+| Update component, Settings and publisher tests | Native update mocks, no implicit reload, no publication on wrong build/runtime, offline retry and persistence-failure coverage |
+| `docs/development.md` | Publishing, fingerprint constraints, phone verification and rollback workflow |
+| Expo project production environment | Plaintext APP_VARIANT=production so EAS Update resolves the everyday app |
+
+Validation: all 521 tests in 52 suites pass (10 new update-control cases and 5
+publisher safety cases), TypeScript and Android checks pass, all 16 fuzz-harness
+checks pass. Hunspell checked 537 UI/catalog entries with zero unresolved findings.
+Production Hermes export succeeded. No dependencies or lockfile changes.
+
+First production OTA published on 2026-11-07:
+- Group: `e4644aeb-8d20-438e-8144-b2671297b22c`.
+- Android update: `01a1b576-0fe6-7216-ada2-7ded3787bd3a`.
+- Runtime: `c1cfabf69b96d9c0b35bb5bdeaa31b6c070c623b`, identical to everyday APK 1.0.12 (2).
+- Production update endpoint returned HTTP 200 and this exact update ID when
+  requested with the installed APK's Android runtime/channel headers.
+- Pixel checks confirmed on 2026-11-07: update 01a1b576 arrived without an APK
+  reinstall, with existing shopping data and language retained. The manual online
+  check correctly reported no newer update; airplane mode produced a retryable
+  error while the list remained usable. Update delivery on the second phone was
+  also confirmed. The explicit pending-update Restart button was verified with
+  the follow-up release below.
+
+Fingerprint investigation found no native-code change: adding an npm script and
+moving the ignored generated Android folder changed fingerprint inputs. Keeping
+those original inputs restored an exact match. Publication uses a standalone
+script; compatibility policy/runtime are never overridden.
+
+Restart verification release (same app code), published on 2026-11-07 at the
+user's request: group `75980ecc-0d19-47ab-90e1-65f90a95b973`, Android update
+`01a1b57c-4cab-7ea3-84ba-145bab4fe26e`, same runtime as the first OTA.
+The production endpoint serves the new ID. The user confirmed that Check for
+updates → Restart to update reopened the app with items and language intact,
+and Settings showed the new update ID 01a1b57c.
+
+## Two installed Android variants
+
+Branch `feature/app-variants` from main `1a6b8db`. Dev retains its package,
+signing identity and data; the everyday app uses `io.github.haan.grocerylist`
+with independent storage. No database migration or Nostr protocol change.
+
+| File group | Disposition |
+|---|---|
+| `app.config.js`, `app.json` | Dynamic variant overlay on the retained shared base; distinct name, package, invitation scheme, adaptive icon and native launch background. Disable the shared generated Expo scheme. |
+| `eas.json`, `package.json` | Explicit development/production APK profiles, environments and channels; replace the former preview command with build:production. No dependency change. |
+| `src/sync/shareConfig.ts`, `share.ts` | Derive invitation scheme from native package; reject cross-variant and arbitrary URLs while retaining same-variant existing invitations. |
+| `src/sync/__tests__/share.test.ts`, `scripts/check-android.cjs` | Cover both link identities, cross-variant rejection, both build profiles and invalid/mismatched variant selection. |
+| `docs/development.md` | Installation, separate test/household lists, APK release steps and local native regeneration. |
+
+Validation: TypeScript, all 506 tests in 50 suites, 16 fuzz-harness checks,
+Android variant checks and Expo Doctor 21/21 passed. The 10 additional tests
+come from running invitation coverage for both variants and rejecting cross-variant
+links. Generated Android manifests have only their respective invitation schemes,
+correct app names/package IDs and en/lb locale support. No dependency or lockfile
+changes were needed.
+
+Pixel checks confirmed on 2026-11-07: both apps coexist with separate data;
+the everyday app retains an added item after closing and reopening in airplane
+mode, without Metro. Updating Dev to 1.0.12 (7) confirmed the distinct purple
+icon; the initially identical icons came from the older Dev installation.
+Both EAS builds finished successfully. Two-phone testing of these variants
+remains deferred; cross-variant invitation rejection is covered by automated
+tests but has not been checked on devices.
+
+EAS builds from this working tree:
+- Everyday 1.0.12 (2): `9b8210ac-c3d5-4c33-9966-dd09bada49ea`; new remote signing key.
+- Dev 1.0.12 (7): `b34cc2bf-f7bb-4156-9162-208ef5f7f3e8`; existing remote signing key.
+
+Both uploads exclude generated native projects, local dictionaries and credentials.
+Metro's manifest was verified to resolve to Grocery List Dev.
+
+## Luxembourgish interface and shopping labels
 
 Branch `feature/luxembourgish`, based on main `731412a` (2026-11-07).
 154 complete Luxembourgish interface strings cover app controls, confirmations,

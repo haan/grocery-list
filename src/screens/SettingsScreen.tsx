@@ -19,6 +19,7 @@ import type { RootStackParamList } from '../../App';
 import { useListsStore } from '../store/lists';
 import { AboutRow } from '../components/AboutRow';
 import { LanguageSetting } from '../components/LanguageSetting';
+import { UpdateSetting } from '../components/UpdateSetting';
 import { t } from '../i18n';
 import { versionLabel } from '../lib/version';
 import {
@@ -73,6 +74,7 @@ export default function SettingsScreen({ navigation }: Props) {
         {!blocked && list && <AboutRow label={t('detail.reorderAisles')} icon={Menu}
           onPress={() => navigation.navigate('ReorderAisles', { listId: list.id })} />}
 
+        <UpdateSetting />
         <Text style={s.version}>{t('settings.version')}: {versionLabel()}</Text>
       </ScrollView>
     </SafeAreaView>

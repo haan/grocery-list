@@ -1,8 +1,8 @@
-# Grocery List Dev
+# Grocery List
 
 An independent Android version of [Josh Williams's Grocery List](https://github.com/Josh-Approved/grocery-list), maintained in [haan/grocery-list](https://github.com/haan/grocery-list).
 
-This Android-only app uses a development APK on a physical phone, with Fast Refresh from a local PC. It retains SQLite storage and encrypted synchronization through public Nostr relays.
+This Android-only app has two APK variants: **Grocery List** for everyday use without a PC, and **Grocery List Dev** for development with Metro and Fast Refresh. Both can be installed together with separate storage. It uses SQLite storage and encrypted synchronization through public Nostr relays.
 
 ## Development
 
@@ -21,9 +21,19 @@ npm run test:fuzz-harness
 npm run typecheck
 npm test -- --runInBand
 npm run build:dev
+npm run build:production
 ```
 
 The cloud build uses Expo project `80882728-1f01-40c5-b4aa-56fcfa53f928`, owned by `lean-mean-coding-team`. Building requires an authorized Expo account. It does not submit to an app store.
+
+Install the production APK on both household phones. Its teal icon distinguishes
+it from the purple Dev app. Pair the everyday apps together; Dev invitations are
+kept separate for disposable test lists. Everyday releases are installed as APK
+updates, retaining their data; changes sent through Metro only affect Dev.
+Compatible JavaScript and asset releases also arrive through Expo Updates.
+Settings → Updates checks for a release and offers an explicit restart after
+download. Production publication is deliberate, with a native-runtime check;
+see the development guide. GitHub APK auto-updating is not implemented.
 
 See [the development guide](docs/development.md) for installation, debugging, credentials, networking, and the device acceptance checklist.
 

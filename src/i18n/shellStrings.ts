@@ -26,6 +26,20 @@ export const SHELL_STRINGS = {
     languageSystemHint: 'Match your phone',
     version: 'Version',
   },
+  updates: {
+    title: 'Updates',
+    dev: 'This development app receives changes through Metro.',
+    automatic: 'Updates download automatically when the app starts and apply on its next fresh start.',
+    check: 'Check for updates',
+    checking: 'Checking for updates…',
+    downloading: 'Downloading update…',
+    current: 'No newer update is available for this installed version.',
+    ready: 'An update is ready. Restart now or keep shopping and use it next time.',
+    restart: 'Restart to update',
+    restarting: 'Saving and restarting…',
+    error: 'The update could not be completed. Your current version is still available. Try again.',
+    revision: 'Update: {id}',
+  },
   // Top-level error boundary fallback (ErrorBoundary).
   error: {
     loadData: 'Could not open your shopping data. Please retry. A failed upgrade leaves your previous shopping data intact.',
