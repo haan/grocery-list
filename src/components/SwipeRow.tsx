@@ -127,7 +127,7 @@ export function SwipeRow({
 
 function makeStyles(c: Colors) {
   return StyleSheet.create({
-    wrap: { position: 'relative' },
+    wrap: { position: 'relative', overflow: 'hidden' },
     // The content rides on the row background so the action stays hidden until
     // the swipe slides it aside.
     content: { backgroundColor: c.bg },
@@ -136,12 +136,15 @@ function makeStyles(c: Colors) {
       // the plain object it used to be, so it is what spreads here. Spreading
       // the old name resolved to undefined, leaving the action layer unpositioned.
       ...StyleSheet.absoluteFill,
-      alignItems: 'flex-end',
-      justifyContent: 'center',
+      // A horizontal layer puts the action at the right edge and stretches it
+      // vertically. alignSelf: 'stretch' in a column instead placed it on the
+      // left, beneath the translated content, leaving the revealed area empty.
+      flexDirection: 'row',
+      alignItems: 'stretch',
+      justifyContent: 'flex-end',
     },
     action: {
       width: ACTION_WIDTH,
-      alignSelf: 'stretch',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',

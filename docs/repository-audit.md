@@ -3,7 +3,20 @@
 Baseline: main commit 5edb48bd2bff1fd78e0700898604846c2b39aa8d. Work branch:
 cleanup/android-only. Audit date: 2026-11-06. No history rewrite or main merge.
 
-## Custom suggestion editing (current phase)
+## Item swipe action layout (current phase)
+
+Branch `fix/swipe-delete-layout`: the retained left-swipe gesture opens a Delete
+action, but its column layout and `alignSelf: stretch` placed the fixed-width
+button under the shifted content rather than in the revealed right-hand area.
+`src/components/SwipeRow.tsx` now uses a horizontal action layer aligned right,
+stretching the button vertically, and clips sliding content to the row bounds.
+Gesture thresholds, deletion and Undo behaviour are unchanged. The user confirmed
+on the Pixel that swiping left reveals Delete, swiping right closes it, and Delete
+followed by Undo restores the item.
+TypeScript, Android configuration checks and all 530 tests in 52 suites passed.
+Device verification used the development app through Metro.
+
+## Custom suggestion editing
 
 Branch `fix/catalog-suggestion-editing`: separate Recent membership from whether
 a suggestion can be edited. Catalog names and confirmed aliases never show the
