@@ -105,6 +105,9 @@ let shop: GroceryList;
 let party: GroceryList;
 
 beforeEach(() => {
+  // This audit measures visible layout. Background preparation has dedicated
+  // clock-driven coverage in AddItemsFlow; do not start it during an audit.
+  jest.spyOn(global, 'requestIdleCallback').mockImplementation(() => 0);
   const now = Date.now();
   shop = makeList('Weekly shop');
   const apples = { ...makeItem('Apples', 'en', 'Produce'), quantity: 3, note: 'The crisp green ones' };
@@ -141,6 +144,8 @@ beforeEach(() => {
   markConnected(SECRET, true);
   markReceived(SECRET, now - 3 * HOUR);
 });
+
+afterEach(() => jest.restoreAllMocks());
 
 /** Render, take a step a sheet needs to open (a tap), then audit — the same
  *  canonical helper and metrics `auditScreen` uses. */
@@ -238,7 +243,7 @@ describe("edge-inset audit — this app's screens", () => {
 
   it('Add items sheet (recent and catalog)', async () => {
     expect(
-      await auditScreen(<AddItemsSheet visible listId={shop.id} onClose={noop} />, { readyText: 'Tomatoes' })
+      await auditScreen(<AddItemsSheet visible listId={shop.id} onClose={noop} />, { readyText: 'Äerdbier' })
     ).toEqual([]);
   });
 

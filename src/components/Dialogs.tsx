@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Modal, View, Text, Pressable, TextInput, KeyboardAvoidingView } from 'react-native';
+import { Modal, View, Text, Pressable, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { useTheme } from '../theme';
+import { Trash2 } from 'lucide-react-native';
 import { t } from '../i18n';
 import {
   makeDialogStyles as makeStyles,
@@ -128,31 +129,43 @@ export function usePrompt(): {
     state.onSubmit(trimmed);
   }, [state, close]);
 
+  const isSheet = state.presentation === 'sheet';
+  const Fields = isSheet ? ScrollView : View;
   const canSubmit = state.allowEmpty || state.value.trim().length > 0;
 
   const element = (
     <Modal
       visible={state.visible}
       transparent
-      animationType={reduced ? 'none' : 'fade'}
+      animationType={reduced ? 'none' : isSheet ? 'slide' : 'fade'}
       statusBarTranslucent
       onRequestClose={close}
     >
-      <KeyboardAvoidingView style={s.flex}>
+      <KeyboardAvoidingView style={s.flex} behavior={isSheet ? 'height' : undefined}>
         <Pressable
-          style={s.centerOverlay}
+          style={isSheet ? s.sheetOverlay : s.centerOverlay}
           onPress={close}
           accessibilityRole="button"
           accessibilityLabel={t('common.cancel')}
         >
-          <Pressable style={s.card} onPress={(e) => e.stopPropagation()}>
-            <Text style={s.cardTitle} accessibilityRole="header">
+          <Pressable style={isSheet ? [s.sheet, s.promptSheet] : s.card} onPress={(e) => e.stopPropagation()}>
+            <View style={s.promptHeader}>
+            <Text style={[s.cardTitle, s.promptTitle]} accessibilityRole="header">
               {state.title}
             </Text>
+            {state.destructiveAction ? <Pressable
+              onPress={() => { close(); state.destructiveAction?.onPress(); }}
+              accessibilityRole="button" accessibilityLabel={state.destructiveAction.label}
+              style={({ pressed }) => [s.promptIcon, pressed && s.pressed]}>
+              <Trash2 size={22} color={c.dangerText} accessibilityElementsHidden importantForAccessibility="no-hide-descendants" />
+            </Pressable> : null}
+            </View>
+            <Fields style={isSheet ? s.promptFields : undefined} keyboardShouldPersistTaps="handled">
             {state.message ? <Text style={s.cardMessage}>{state.message}</Text> : null}
+            {state.fieldLabel ? <Text style={s.promptLabel}>{state.fieldLabel}</Text> : null}
             <TextInput
               ref={inputRef}
-              style={s.input}
+              style={[s.input, isSheet && s.promptInput]}
               value={state.value}
               onChangeText={(value) => {
                 selectInitialText.current = false;
@@ -173,19 +186,20 @@ export function usePrompt(): {
               autoCapitalize={state.autoCapitalize ?? 'sentences'}
               returnKeyType="done"
               onSubmitEditing={submit}
-              accessibilityLabel={state.title}
+              accessibilityLabel={state.fieldLabel ?? state.title}
             />
-            <View style={s.cardActions}>
+            </Fields>
+            <View style={isSheet ? s.formActions : s.cardActions}>
               <Pressable
-                style={({ pressed }) => [s.btnGhost, pressed && s.pressed]}
+                style={({ pressed }) => [isSheet ? [s.formButton, s.formCancel] : s.btnGhost, pressed && s.pressed]}
                 onPress={close}
                 accessibilityRole="button"
                 accessibilityLabel={t('common.cancel')}
               >
-                <Text style={s.btnGhostText}>{t('common.cancel')}</Text>
+                <Text style={isSheet ? s.formCancelText : s.btnGhostText}>{t('common.cancel')}</Text>
               </Pressable>
               <Pressable
-                style={({ pressed }) => [s.btnPrimary, !canSubmit && s.btnDisabled, pressed && s.pressed]}
+                style={({ pressed }) => [isSheet ? [s.formButton, s.formPrimary] : s.btnPrimary, !canSubmit && s.btnDisabled, pressed && s.pressed]}
                 onPress={submit}
                 disabled={!canSubmit}
                 accessibilityRole="button"
@@ -243,27 +257,27 @@ export function useConfirm(): {
         accessibilityRole="button"
         accessibilityLabel={t('common.cancel')}
       >
-        <Pressable style={s.card} onPress={(e) => e.stopPropagation()}>
+        <Pressable style={[s.card, s.confirmCard]} onPress={(e) => e.stopPropagation()}>
           <Text style={s.cardTitle} accessibilityRole="header">
             {state.title}
           </Text>
-          {state.message ? <Text style={s.cardMessage}>{state.message}</Text> : null}
-          <View style={s.cardActions}>
+          {state.message ? <ScrollView style={s.promptFields}><Text style={s.confirmMessage}>{state.message}</Text></ScrollView> : null}
+          <View style={s.formActions}>
             <Pressable
-              style={({ pressed }) => [s.btnGhost, pressed && s.pressed]}
+              style={({ pressed }) => [s.formButton, s.formCancel, pressed && s.pressed]}
               onPress={close}
               accessibilityRole="button"
               accessibilityLabel={t('common.cancel')}
             >
-              <Text style={s.btnGhostText}>{t('common.cancel')}</Text>
+              <Text style={s.formCancelText}>{t('common.cancel')}</Text>
             </Pressable>
             <Pressable
-              style={({ pressed }) => [s.btnPrimary, state.destructive && s.btnDanger, pressed && s.pressed]}
+              style={({ pressed }) => [s.formButton, state.destructive ? s.confirmDanger : s.formPrimary, pressed && s.pressed]}
               onPress={confirm}
               accessibilityRole="button"
               accessibilityLabel={state.confirmLabel ?? t('common.confirm')}
             >
-              <Text style={[s.btnPrimaryText, state.destructive && s.btnDangerText]}>
+              <Text style={[s.btnPrimaryText, state.destructive && s.confirmDangerText]}>
                 {state.confirmLabel ?? t('common.confirm')}
               </Text>
             </Pressable>

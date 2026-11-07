@@ -57,7 +57,7 @@ export default function SettingsScreen({ navigation }: Props) {
       </View>
 
       <ScrollView contentContainerStyle={s.content}>
-        <Text style={s.sectionLabel}>{t('settings.appearance')}</Text>
+        <Text style={s.sectionLabel} accessibilityRole="header">{t('settings.appearance')}</Text>
         <AppearanceToggle labels={{
           title: t('settings.appearance'),
           system: t('settings.themeSystem'),
@@ -65,9 +65,10 @@ export default function SettingsScreen({ navigation }: Props) {
           dark: t('settings.themeDark'),
         }} />
 
-        <Text style={s.sectionLabel}>{t('settings.language')}</Text>
+        <Text style={s.sectionLabel} accessibilityRole="header">{t('settings.language')}</Text>
         <LanguageSetting />
 
+        <Text style={s.sectionLabel} accessibilityRole="header">{t('settings.shoppingList')}</Text>
         <AboutRow label={t('share.title')} icon={Share2} onPress={() => navigation.navigate('Share')} />
         {!blocked && list && <AboutRow label={t('detail.reorderAisles')} icon={Menu}
           onPress={() => navigation.navigate('ReorderAisles', { listId: list.id })} />}

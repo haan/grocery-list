@@ -16,6 +16,22 @@ screenshots, or source control. Use disposable lists while developing.
 
 ## First installation
 
+Startup uses only Android's native launch screen while fonts and local data load.
+The app shell hides it as soon as the content (or the startup error/retry screen)
+has laid out. There is no custom branded splash or artificial animation delay.
+Removing the former animation works through Metro. Launcher icon and native
+launch artwork changes require a new APK.
+
+The approved icon is concept 17: a coral grocery basket on teal. Its original
+artwork is `assets/icon-source.png`, with an image-generated transparent cutout
+in `assets/icon-foreground.png`. `assets/icon-generation.json` records the prompts
+and export settings. Run `node scripts/build-icon.mjs` to regenerate the three
+1024px PNG exports using Expo's installed image utilities; no browser, AI request,
+or extra dependency is needed. The adaptive foreground is padded for Android's
+icon masks, over `#05515F`; the native launch screen uses that same background
+and a 180dp transparent image. This does not reintroduce the custom splash.
+Exploration variants remain ignored in `tmp/icon-concepts/`.
+
 From PowerShell in `E:\codex\grocery-list`:
 
 ```powershell
@@ -122,6 +138,117 @@ npx expo-doctor@latest
 ```
 
 The Checks workflow runs Android-only configuration checks, fuzz-harness self-tests, TypeScript, and the Jest Android suite on main pushes and pull requests. It can also be run manually. There are no scheduled builds or device-emulator jobs. Fuzz artifacts go to ignored tmp/; useful minimized regression JSON stays tracked under qa/regressions.
+
+## Item-details workflow
+
+Add items opens an alphabetical browser of the entire catalog and personal
+Recent names, grouped under letter headings. The keyboard starts hidden for
+browsing. “Search items” filters names and confirmed aliases, including accent-free
+input; there is no result cap. Recent names retain their edit/forget/Undo controls,
+but frequency no longer changes their position in the alphabetical list.
+The Recent pencil opens Edit suggestion directly as a bottom sheet, with the name
+initially selected, a scope explanation, and Cancel/Save actions. Its header trash
+action is labeled Forget suggestion and retains Undo. Forget discards unsaved
+name changes; neither renaming nor forgetting changes existing shopping items.
+The browser starts with a screenful of rows, then queues small batches during idle
+time regardless of scrolling or screen visibility. A short preparation footer marks
+the end of the available rows until the queue finishes; there are no blank placeholders.
+The full view stays mounted between visits, including behind filtered results, so
+later openings reuse it. Closing early does not stop preparation. Fast scrolling
+after preparation never requests more rows. Search always checks the full catalog,
+even before its rows are drawn. This cache lasts for the current home/list instance,
+not across restarting the app. Sorting
+and alias normalization are prepared once, personal entries are merged when
+Recent changes, and a bounded search cache avoids repeated preparation. Moving
+the letter bubble updates its animated position without rerendering the list.
+The hidden layer ignores touches and accessibility navigation. When it is visible,
+home controls are hidden from accessibility, Android Back closes the browser, and
+closing resets search/scroll and cancels pending keyboard focus without deleting
+the prepared rows. Details dialogs retain their native-modal Back/cancel behavior.
+
+Tapping a suggestion opens the shared details sheet. A nonempty search without
+an exact name or confirmed-alias match offers Add “…” alongside any partial
+matches; keyboard Enter follows that same condition. Exact matching ignores case,
+accents, and repeated whitespace and includes Recent names. Otherwise
+Enter dismisses the keyboard. The close icon leaves Add items. While scrolling,
+a small letter bubble follows the scrollbar position, reflects the first visible
+group, and fades after scrolling stops (instant transitions with reduced motion).
+Quantity is a separate whole-number field (1–99) with +/- controls. The app does
+not parse quantities from phrases such as “sechs Plastiktuten”.
+Opening a new item draft capitalizes the first character of its prefilled name
+(for example, “glace” becomes “Glace”); existing items retain their stored names.
+The compact form orders fields as name, quantity, aisle, and note. The aisle row
+opens a vertical chooser with the current aisle marked; selecting an aisle returns
+to the form, while Cancel, scrim tap, or Android Back returns without changing it.
+The note field has no example placeholder and starts one line tall, expanding
+with content up to 160 logical pixels before scrolling internally. The form's
+Cancel and Add/Save actions stay outside the scrolling fields above the keyboard.
+
+The sheet holds an in-memory draft until Add item or Save. Cancel, scrim tap,
+and Android Back discard edits. Aisles are created only in Settings → Manage
+aisles; the item form selects from existing aisles. An unchecked
+existing item opens its current details and quantity is the desired total.
+Selecting a checked item prepares quantity 1, retains its note, and applies
+learned aisles; confirmation unchecks it. Editing from home preserves check state.
+Remove is a labeled trash icon in the form header; it discards unsaved edits and
+Undo restores the original item. Cancel and Save remain the bottom actions. After a successful
+save from Add items, search clears and regains focus with a short confirmation.
+
+Manage aisles uses compact bottom sheets for Add aisle and Rename aisle, with a
+labeled name field and equal-width Cancel and Add/Save actions above the keyboard.
+Rename retains one-time initial selection without reselecting typed characters.
+Confirmations remain centered dialogs, with readable body text and equal-width
+outlined Cancel and primary action buttons. Destructive actions use a solid red
+button with a light label in both themes. Longer messages can scroll while the
+actions stay visible. Outside-tap and Android Back still cancel.
+
+Sharing groups connection status and last peer contact in a compact panel with
+one refresh icon (accessible as Sync now). The invitation section contains the
+QR code, Send link, and access warning. Join another list contains the outlined
+scanner action; Stop sharing is a separate red action at the bottom. A pending
+join shows the waiting message and refresh controls without an invitation. These
+layout changes preserve the existing sharing identity and confirmation flow.
+
+`src/data/itemDraft.ts` holds the draft model and applies edits to the latest
+list snapshot. `saveItemDraft` commits details and explicit aisle
+learning in one Zustand list update and one persistence call. Only additions and
+re-additions record Recent usage. Automatic aisle suggestions do not teach rules.
+Untouched fields and the separate checked-state clock survive incoming edits.
+Name collisions, deleted items, and unavailable aisles keep the form open with
+an explanation. Replacing the current list closes its drafts. Existing item
+records, SQLite schema, and encrypted Nostr payloads are unchanged.
+
+This feature runs through Metro on the existing APK. No dependency installation,
+native rebuild, data reset, or re-pairing is needed. Device acceptance for this
+phase is separate from the earlier checks below:
+
+- [x] Pixel: Plastiktut → quantity 6, note, aisle → Add item; one complete item
+      and cleared/focused search. Confirmed by the user on 2026-11-06.
+- [x] Pixel: keyboard, scrolling, and reachable form controls; suggestion → Cancel,
+      existing-item Save/Cancel, and New aisle → Cancel preserve search/data as
+      expected. Confirmed by the user on 2026-11-06.
+- [ ] Pixel: custom-name cancellation, outside tap, Android Back, and visible
+      success confirmation (not separately confirmed in the walkthrough).
+- [ ] Pixel: existing total quantity, checked-item re-addition,
+      Remove/Undo, and separate Recent edit/forget/Undo.
+- [ ] Second phone: complete details arrive after Save, nothing arrives before
+      confirmation, and re-adding the corrected product uses its learned aisle.
+- [x] Alphabetical-browser follow-up: browse letter groups, verify the letter
+      bubble updates and disappears after scrolling, filter suggestions, and
+      verify Add appears only for no matches. User confirmed on 2026-11-06.
+- [x] Loading follow-up: fully rendering the catalog removed growing/blank rows,
+      but the user reported roughly two seconds to open it on 2026-11-06.
+- [x] Retained-browser follow-up: repeated openings, Android Back, and home
+      controls work. User confirmed on 2026-11-06; the first opening remains
+      noticeably slower, so cold-start preparation is not considered instant.
+- [x] Queued-browser follow-up: faster first screenful after restarting the app,
+      complete list ready for fast scrolling after closing/waiting/reopening,
+      and immediate “Zopp” search during preparation. User confirmed on the Pixel
+      on 2026-11-06. Filter clearing preserves prepared rows in automated coverage.
+
+Leave these unchecked until observed. Automated coverage includes the complete
+custom-item flow, validation, cancellation, conflicts, remote edits, and compatible
+snapshot convergence; it does not replace physical keyboard/layout verification.
 
 ## Android-only cleanup acceptance
 

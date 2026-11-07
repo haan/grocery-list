@@ -16,10 +16,13 @@ export interface MenuState {
 
 export interface PromptConfig {
   title: string;
+  presentation?: 'dialog' | 'sheet';
+  fieldLabel?: string;
   message?: string;
   placeholder?: string;
   initialValue?: string;
   confirmLabel?: string;
+  destructiveAction?: { label: string; onPress: () => void };
   keyboardType?: 'default' | 'numeric' | 'decimal-pad' | 'email-address';
   autoCapitalize?: 'none' | 'sentences' | 'words';
   /** Select the initial value on focus (rename flows). */
@@ -92,6 +95,21 @@ export function makeDialogStyles(c: Colors) {
     },
     sheetCancelText: { ...ty.base, fontFamily: fontFamily.sansSemibold, color: c.fgMuted, textAlign: 'center' },
 
+    promptSheet: { paddingHorizontal: space.s7, maxHeight: '88%' },
+    promptHeader: { flexDirection: 'row', alignItems: 'center', gap: space.s3, marginBottom: space.s3 },
+    promptTitle: { flex: 1, marginBottom: 0 },
+    promptIcon: { width: target.min, height: target.min, alignItems: 'center', justifyContent: 'center' },
+    promptFields: { flexShrink: 1 },
+    promptLabel: { ...ty.xs, fontFamily: fontFamily.sansSemibold, color: c.fgMuted,
+      textTransform: 'uppercase', letterSpacing: 0.5, marginTop: space.s5, marginBottom: space.s2 },
+    promptInput: { marginBottom: 0, backgroundColor: c.bg },
+    formActions: { flexDirection: 'row', gap: space.s4, marginTop: space.s5 },
+    formButton: { flex: 1, minHeight: 52, alignItems: 'center', justifyContent: 'center',
+      paddingHorizontal: space.s4, paddingVertical: space.s3, borderRadius: radius.md, borderWidth: hairline },
+    formCancel: { borderColor: c.hairlineStrong },
+    formCancelText: { ...ty.base, fontFamily: fontFamily.sansSemibold, color: c.fg },
+    formPrimary: { backgroundColor: c.inkButton, borderColor: c.inkButton },
+
     centerOverlay: { flex: 1, backgroundColor: c.bgScrim, justifyContent: 'center', alignItems: 'center', padding: space.s7 },
     card: {
       width: '100%',
@@ -103,6 +121,10 @@ export function makeDialogStyles(c: Colors) {
       padding: space.s7,
     },
     cardTitle: { ...ty.md, fontFamily: fontFamily.sansSemibold, color: c.fg, marginBottom: space.s3 },
+    confirmCard: { maxHeight: '88%' },
+    confirmMessage: { ...ty.base, fontFamily: fontFamily.sans, color: c.fg },
+    confirmDanger: { backgroundColor: c.danger, borderColor: c.danger },
+    confirmDangerText: { color: c.fgOnInk },
     cardMessage: { ...ty.sm, fontFamily: fontFamily.sans, color: c.fgMuted, marginBottom: space.s4 },
     input: {
       ...ty.base,
@@ -121,8 +143,6 @@ export function makeDialogStyles(c: Colors) {
     btnGhostText: { ...ty.base, fontFamily: fontFamily.sans, color: c.fgMuted },
     btnPrimary: { minHeight: target.min, justifyContent: 'center', backgroundColor: c.inkButton, borderRadius: radius.md, paddingHorizontal: space.s7 },
     btnPrimaryText: { ...ty.base, fontFamily: fontFamily.sansSemibold, color: c.inkButtonText },
-    btnDanger: { backgroundColor: c.dangerBg },
-    btnDangerText: { color: c.danger },
     btnDisabled: { opacity: 0.4 },
   });
 }

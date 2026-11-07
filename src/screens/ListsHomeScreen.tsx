@@ -97,6 +97,7 @@ function ShoppingList({ navigation, listId }: Props & { listId: string }) {
   const [footerHeight, setFooterHeight] = useState(48);
   const { open: openEditor, element: editorElement } = useItemEditor();
   const [addSheetOpen, setAddSheetOpen] = useState(false);
+  const closeAddSheet = useCallback(() => setAddSheetOpen(false), []);
   // Checked items move into a group that's open by default — crossing
   // something off should visibly land it somewhere, not vanish behind a
   // collapsed header (Josh, 2026-06-19).
@@ -314,6 +315,9 @@ function ShoppingList({ navigation, listId }: Props & { listId: string }) {
 
   return (
     <SafeAreaView style={s.safe} edges={['top', 'left', 'right', 'bottom']}>
+      <View style={s.homeContent} pointerEvents={addSheetOpen && !blocked ? 'none' : 'auto'}
+        accessibilityElementsHidden={addSheetOpen && !blocked}
+        importantForAccessibility={addSheetOpen && !blocked ? 'no-hide-descendants' : 'auto'}>
       <View style={s.header}>
         <Text style={[s.headerTitle, s.headerTitleWrap]} accessibilityRole="header">{t('home.title')}</Text>
         <Pressable onPress={() => navigation.navigate('Share')} accessibilityRole="button"
@@ -382,11 +386,6 @@ function ShoppingList({ navigation, listId }: Props & { listId: string }) {
         <SharingFooter onPress={() => navigation.navigate('Share')} />
       </View>
 
-      <AddItemsSheet
-        visible={addSheetOpen && !blocked}
-        listId={listId}
-        onClose={() => setAddSheetOpen(false)}
-      />
 
       <Snackbar
         bottomOffset={footerHeight}
@@ -397,6 +396,8 @@ function ShoppingList({ navigation, listId }: Props & { listId: string }) {
         onDismiss={() => setSnack(null)}
       />
 
+      </View>
+      <AddItemsSheet visible={addSheetOpen && !blocked} listId={listId} onClose={closeAddSheet} />
       {editorElement}
     </SafeAreaView>
   );
@@ -405,6 +406,7 @@ function ShoppingList({ navigation, listId }: Props & { listId: string }) {
 function makeStyles(c: Colors) {
   return StyleSheet.create({
     safe: { flex: 1, backgroundColor: c.bg },
+    homeContent: { flex: 1 },
     pressed: { opacity: 0.6 },
 
     header: {

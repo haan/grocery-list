@@ -12,8 +12,8 @@
  *   - If `onRemove` is provided, − while at min (or long-pressing −) removes.
  */
 
-import React, { useCallback } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import React, { useCallback, useRef } from 'react';
+import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Minus, Plus } from 'lucide-react-native';
 import { t } from '../i18n';
@@ -28,6 +28,8 @@ import {
 
 type Props = {
   value: number;
+  inputValue?: string;
+  onChangeText?: (text: string) => void;
   onChange: (next: number) => void;
   min?: number;
   max?: number;
@@ -38,6 +40,8 @@ type Props = {
 
 export function Stepper({
   value,
+  inputValue,
+  onChangeText,
   onChange,
   min = 1,
   max = Number.POSITIVE_INFINITY,
@@ -46,6 +50,7 @@ export function Stepper({
 }: Props) {
   const { c } = useTheme();
   const s = makeStyles(c);
+  const inputRef = useRef<TextInput>(null);
 
   const tap = useCallback(() => {
     Haptics.selectionAsync().catch(() => {});
@@ -81,7 +86,7 @@ export function Stepper({
   return (
     <View
       style={s.container}
-      accessibilityRole="adjustable"
+      accessibilityRole={onChangeText ? undefined : "adjustable"}
       accessibilityLabel={label}
       accessibilityValue={{ text: String(value) }}
     >
@@ -109,13 +114,17 @@ export function Stepper({
       </Pressable>
 
       <View style={s.numberWrap}>
-        <Text
+        {onChangeText ? <TextInput ref={inputRef} style={[s.number, { minWidth: 48, minHeight: target.min, textAlign: 'center' }]}
+          value={inputValue} onChangeText={onChangeText} keyboardType="number-pad"
+          // Native selectTextOnFocus can reselect the first replacement character on Android.
+          onFocus={() => inputRef.current?.setSelection(0, inputValue?.length ?? 0)}
+          accessibilityLabel={t('detail.quantityLabel')} /> : <Text
           style={s.number}
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
         >
           {value}
-        </Text>
+        </Text>}
       </View>
 
       <Pressable

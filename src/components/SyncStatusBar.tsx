@@ -1,5 +1,5 @@
 /**
- * A small, honest live-sync indicator for a shared list — and a tap-to-resync.
+ * A compact connection panel with a separate refresh action.
  *
  * Two facts, kept apart on purpose: whether the DROP BOXES are reachable
  * ("Connected" / "Offline" / "Not syncing") and when the OTHER PHONE was last
@@ -7,8 +7,7 @@
  * yet"). Before store-and-forward the first was shown alone, and it read as
  * "the partner is here" when it only ever meant "the relays answered" — the
  * exact confusion behind "both phones say Connected but nothing arrives".
- * Tap = one-shot "sync now" (push our state + pull peers'). Nothing here
- * leaves the device.
+ * Refresh = one-shot "sync now" (push our state + pull peers').
  */
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
@@ -21,6 +20,8 @@ import {
   fontFamily,
   space,
   target,
+  radius,
+  hairline,
   type as ty,
   type Colors,
 } from '../theme';
@@ -39,7 +40,7 @@ export function relativeAgo(at: number, now: number): string {
   return days === 1 ? t('detail.sync.dayAgo') : t('detail.sync.daysAgo', { n: days });
 }
 
-export function SyncStatusBar({ secret }: { secret: string }) {
+export function SyncStatusBar({ secret, disabled = false }: { secret: string; disabled?: boolean }) {
   const { c } = useTheme();
   const s = makeStyles(c);
   const status = useChannelStatus(secret);
@@ -89,27 +90,21 @@ export function SyncStatusBar({ secret }: { secret: string }) {
       : c.fgSubtle;
 
   return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
-      // The status text is what a person can see, so it is the accessible name
-      // and Voice Access can match it. The "shared list sync / tap to sync"
-      // framing moves to the hint, which Voice Access ignores and TalkBack
-      // still reads.
-      accessibilityLabel={label}
-      accessibilityHint={t('detail.sync.hint')}
-      style={({ pressed }) => [s.row, pressed && s.pressed]}
-    >
-      <View
-        style={[s.dot, { backgroundColor: dotColor }]}
-        accessibilityElementsHidden
-        importantForAccessibility="no"
-      />
-      <Text style={s.label} numberOfLines={2}>
-        {label}
-      </Text>
-      <RefreshCw size={16} color={c.fgMuted} strokeWidth={1.5} />
-    </Pressable>
+    <View style={s.panel}>
+      <View style={s.details}>
+        <View style={s.row}>
+          <View style={[s.dot, { backgroundColor: dotColor }]}
+            accessibilityElementsHidden importantForAccessibility="no" />
+          <Text style={s.reach}>{reach}</Text>
+        </View>
+        <Text style={s.label}>{partner}</Text>
+      </View>
+      <Pressable onPress={onPress} disabled={disabled} accessibilityRole="button"
+        accessibilityLabel={t('share.syncNow')} accessibilityHint={`${label}. ${t('detail.sync.hint')}`}
+        accessibilityState={{ disabled }} style={({ pressed }) => [s.refresh, pressed && s.pressed, disabled && s.pressed]}>
+        <RefreshCw size={20} color={c.fg} strokeWidth={1.5} />
+      </Pressable>
+    </View>
   );
 }
 
@@ -119,10 +114,13 @@ function makeStyles(c: Colors) {
       flexDirection: 'row',
       alignItems: 'center',
       gap: space.s2,
-      minHeight: target.min,
-      paddingHorizontal: space.s6,
-      paddingBottom: space.s3,
     },
+    panel: { flexDirection: 'row', alignItems: 'center', gap: space.s3,
+      padding: space.s4, borderRadius: radius.md, backgroundColor: c.bgSubtle,
+      borderWidth: hairline, borderColor: c.hairline },
+    details: { flex: 1, gap: space.s1 },
+    reach: { ...ty.base, fontFamily: fontFamily.sansSemibold, color: c.fg, flexShrink: 1 },
+    refresh: { width: target.min, height: target.min, alignItems: 'center', justifyContent: 'center' },
     pressed: { opacity: 0.6 },
     dot: { width: 7, height: 7, borderRadius: 4 },
     label: { ...ty.sm, fontFamily: fontFamily.sans, color: c.fgMuted, flexShrink: 1 },

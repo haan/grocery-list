@@ -42,6 +42,8 @@ import {
 } from './db';
 import { isListSnapshot } from '../sync/validateList';
 import { logEvent, logError } from '../feedback/log';
+import { applyItemDraft, type ItemDraft, type DraftResult } from '../data/itemDraft';
+import { useAccountStore } from './account';
 
 /** Heal duplicate ids in loaded data (legacy/edge collisions corrupt React
  *  keys and would let two devices share an id once sync lands). */
@@ -90,6 +92,7 @@ interface ListsState {
   hydrate: () => Promise<void>;
 
   getList: (id: string) => GroceryList | undefined;
+  saveItemDraft: (draft: ItemDraft) => DraftResult;
   /** Add an item or re-add its existing row. Learned list preferences override
    * supplied catalog aisles. The locale argument remains for callers;
    * classification itself is independent of the interface language. */
@@ -197,6 +200,20 @@ export const useListsStore = create<ListsState>()((set, get) => {
     hydrated: false,
     pendingJoin: false,
     transitioning: false,
+
+    saveItemDraft: (draft) => {
+      const state = get();
+      const list = state.getList(draft.listId);
+      if (!list || state.pendingJoin || state.transitioning) return { ok: false, error: 'list' };
+      const applied = applyItemDraft(list, draft, clockNow, () => makeId('i'));
+      if (applied.result.ok && applied.list) {
+        const updated = applied.list;
+        set({ lists: state.lists.map(l => l.id === draft.listId ? updated : l) });
+        persist(updated);
+        if (applied.result.added) useAccountStore.getState().recordUse(applied.result.item.name);
+      }
+      return applied.result;
+    },
 
     hydrate: async () => {
       const persistClock = (v: number) => {

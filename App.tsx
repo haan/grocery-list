@@ -17,7 +17,7 @@ import ShareScreen from './src/screens/ShareScreen';
 import { startSyncEngine, stopSyncEngine, flushSyncEngine } from './src/sync';
 import { parseShareLink } from './src/sync/share';
 
-// Hold the native launch screen until the animated splash is ready.
+// Hold Android's launch screen only until the app content or startup error is ready.
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export type RootStackParamList = {

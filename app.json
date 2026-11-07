@@ -13,7 +13,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FAFAF7"
+        "backgroundColor": "#05515F"
       },
       "predictiveBackGestureEnabled": false,
       "package": "io.github.haan.grocerylist.dev",
@@ -37,8 +37,9 @@
         "expo-splash-screen",
         {
           "image": "./assets/splash-icon.png",
+          "imageWidth": 180,
           "resizeMode": "contain",
-          "backgroundColor": "#FAFAF7"
+          "backgroundColor": "#05515F"
         }
       ],
       "expo-status-bar"

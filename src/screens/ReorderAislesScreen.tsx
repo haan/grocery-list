@@ -58,12 +58,14 @@ export default function ReorderAislesScreen({ route, navigation }: Props) {
   const rename = (category: Category) => {
     setRenameFailed(false);
     prompt.open({
+      presentation: 'sheet', fieldLabel: t('reorder.nameLabel'),
       title: t('reorder.renameTitle'), initialValue: category, selectAll: true,
       placeholder: t('detail.newAislePlaceholder'), confirmLabel: t('common.save'),
       onSubmit: name => { setRenameFailed(!renameCategory(listId, category, name)); },
     });
   };
   const add = () => prompt.open({
+    presentation: 'sheet', fieldLabel: t('reorder.nameLabel'),
     title: t('reorder.add'), placeholder: t('detail.newAislePlaceholder'),
     confirmLabel: t('common.add'), onSubmit: name => { addCategory(listId, name); },
   });

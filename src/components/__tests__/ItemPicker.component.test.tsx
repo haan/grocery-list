@@ -1,23 +1,9 @@
-/**
- * ItemPicker — action coverage (the behaviors NOT covered by
- * ItemPicker.clearOnAdd.test.tsx). Every user-facing action is driven through
- * the real component and asserted on its observable outcome:
- *   - tapping an item row adds it (onAdd fired)                [pressable-376]
- *   - typing + submit (return key) adds the typed item         [textinput-441]
- *   - empty submit closes the sheet (onClose fired)            [textinput-441]
- *   - tapping the clear (X) button empties the search box      [common.close-456]
- *   - the ★ usual toggle saves/removes a usual                 [pressable-394]
- *   - the recent-row edit (pencil) opens the edit menu         [detail.editItemA11y-413]
- *   - the "Show all / Show less" usuals toggle expands the list[pressable-353]
- *
- * Queries are by role / accessibility label / text — never testID.
- */
-
 import React from 'react';
-import { render, fireEvent, userEvent } from '@testing-library/react-native';
+import { render, fireEvent, userEvent, act } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ItemPicker from '../ItemPicker';
 import { useAccountStore } from '../../store/account';
+import { PRODUCTS } from '../../data/seedCatalogData';
 
 const METRICS = {
   frame: { x: 0, y: 0, width: 412, height: 915 },
@@ -54,8 +40,7 @@ async function renderPicker(props: Partial<React.ComponentProps<typeof ItemPicke
     <SafeAreaProvider initialMetrics={METRICS}>
       <ItemPicker
         activeNames={new Set()}
-        onAdd={onAdd}
-        onClose={onClose}
+        onSelect={onAdd}
         presentLabel="On list"
         presentA11y={(name) => `${name} on list`}
         addHint="Adds it to your list."
@@ -63,29 +48,56 @@ async function renderPicker(props: Partial<React.ComponentProps<typeof ItemPicke
       />
     </SafeAreaProvider>
   );
-  const searchBox = () => utils.getByLabelText('Search or add an item');
+  const searchBox = () => utils.getByLabelText('Search items');
   return { ...utils, onAdd, onClose, searchBox };
 }
 
-test('tapping an item row adds that item', async () => {
+test('tapping an item row requests details', async () => {
   const { onAdd, searchBox, getByLabelText } = await renderPicker();
   // Type a partial term that surfaces the built-in "apple" seed row.
   await fireEvent.changeText(searchBox(), 'ape');
   await fireEvent.press(getByLabelText('Apel'));
-  expect(onAdd).toHaveBeenCalledWith('Apel', expect.anything());
+  expect(onAdd).toHaveBeenCalledWith('Apel', expect.anything(), expect.any(Function));
 });
 
-test('typing a term and submitting (return key) adds the typed item', async () => {
+test('starts with a screenful and queues the entire catalog without scrolling', async () => {
+  const { getAllByRole, getByText, queryByText } = await renderPicker();
+  expect(getAllByRole('button').length).toBeGreaterThanOrEqual(12);
+  expect(getAllByRole('button').length).toBeLessThan(PRODUCTS.length);
+  expect(getByText('Preparing remaining items…')).toBeTruthy();
+  // Each commit schedules the next idle batch; no scroll event is required.
+  for (let i = 0; i < 24; i++) await act(() => jest.advanceTimersByTime(200));
+  const labels = getAllByRole('button').map(button => button.props.accessibilityLabel);
+  expect(labels).toEqual(expect.arrayContaining(PRODUCTS.map(product => product.name)));
+  expect(queryByText('Preparing remaining items…')).toBeNull();
+});
+
+test('filtering finds unprepared products immediately and preserves the alphabetical view', async () => {
+  const { getByLabelText, queryByLabelText, searchBox, getAllByRole } = await renderPicker();
+  const firstRow = getByLabelText('Äerdbier');
+  expect(queryByLabelText('Zopp')).toBeNull();
+  await fireEvent.changeText(searchBox(), 'Zopp');
+  expect(getByLabelText('Zopp')).toBeTruthy();
+  expect(queryByLabelText('Add “Zopp”…')).toBeNull();
+  // The hidden unfiltered view continues preparing while search is in use.
+  for (let i = 0; i < 24; i++) await act(() => jest.advanceTimersByTime(200));
+  await fireEvent.press(getByLabelText('Clear search'));
+  expect(getByLabelText('Äerdbier')).toBe(firstRow);
+  expect(getAllByRole('button').map(button => button.props.accessibilityLabel))
+    .toEqual(expect.arrayContaining(PRODUCTS.map(product => product.name)));
+});
+
+test('typing a term and submitting (return key) requests typed item details', async () => {
   const { onAdd, searchBox } = await renderPicker();
   await fireEvent.changeText(searchBox(), 'Dragonfruit');
   await fireEvent(searchBox(), 'submitEditing');
-  expect(onAdd).toHaveBeenCalledWith('Dragonfruit', undefined);
+  expect(onAdd).toHaveBeenCalledWith('Dragonfruit', undefined, expect.any(Function));
 });
 
-test('submitting an empty search box closes the sheet', async () => {
+test('submitting an empty search does not select or close', async () => {
   const { onAdd, onClose, searchBox } = await renderPicker();
   await fireEvent(searchBox(), 'submitEditing');
-  expect(onClose).toHaveBeenCalledTimes(1);
+  expect(onClose).not.toHaveBeenCalled();
   expect(onAdd).not.toHaveBeenCalled();
 });
 
@@ -94,19 +106,21 @@ test('tapping the clear button empties the search box', async () => {
   await fireEvent.changeText(searchBox(), 'milk');
   expect(searchBox().props.value).toBe('milk');
   // The clear affordance carries the "Close" a11y label.
-  await fireEvent.press(getByLabelText('Close'));
+  await fireEvent.press(getByLabelText('Clear search'));
   expect(searchBox().props.value).toBe('');
 });
 
-test('the edit (pencil) on a recent row opens the edit menu', async () => {
+test('the pencil opens the suggestion form directly', async () => {
   // Seed history so a "Recent" row with an edit affordance renders.
   useAccountStore.setState({
     history: [{ name: 'Butter', count: 1, lastUsed: Date.now() }] as any,
     });
   const user = userEvent.setup();
   const { getByLabelText, getByText } = await renderPicker();
-  // userEvent (not fireEvent) so the action-menu Modal flushes under fake timers.
-  await user.press(getByLabelText('Edit Butter'));
-  // The action menu opened → its Edit / Delete options are now on screen.
-  expect(getByText('Delete')).toBeTruthy();
+  // Open the real native form under fake timers.
+  await fireEvent.changeText(getByLabelText('Search items'), 'Butter');
+  await user.press(getByLabelText('Edit suggestion Butter'));
+  expect(getByText('Edit suggestion')).toBeTruthy();
+  expect(getByLabelText('Suggestion name').props.value).toBe('Butter');
+  expect(getByLabelText('Forget suggestion')).toBeTruthy();
 });

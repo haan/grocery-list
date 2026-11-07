@@ -61,6 +61,13 @@ test('home shows items directly with Sharing, Settings, and a compact footer', a
   expect(navigation.navigate).toHaveBeenCalledWith('Share');
   await user.press(screen.getByRole('button', { name: 'Settings' }));
   expect(navigation.navigate).toHaveBeenCalledWith('Settings');
+  await user.press(screen.getByRole('button', { name: 'Add an item' }));
+  expect(screen.getByLabelText('Search items')).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'Settings' })).toBeNull();
+  await user.press(screen.getByRole('button', { name: 'Close' }));
+  expect(screen.queryByLabelText('Search items')).toBeNull();
+  await user.press(screen.getByRole('button', { name: 'Settings' }));
+  expect(navigation.navigate).toHaveBeenLastCalledWith('Settings');
 });
 
 test('Add items opens the picker directly and applies learned aisles to suggestions', async () => {
@@ -77,13 +84,14 @@ test('Add items opens the picker directly and applies learned aisles to suggesti
   </SafeAreaProvider>);
   expect(screen.queryByRole('tab')).toBeNull();
   expect(screen.queryByText('Kits')).toBeNull();
-  const input = screen.getByLabelText('Search or add an item');
+  const input = screen.getByLabelText('Search items');
   await user.type(input, 'ape');
   await user.press(screen.getByRole('button', { name: 'Apel' }));
+  await user.press(screen.getByRole('button', { name: 'Add item' }));
   const added = useListsStore.getState().getList(id)!.items.filter(i => !i.deletedAt);
   expect(added).toEqual([expect.objectContaining({ name: 'Apel', category: 'Pantry' })]);
   expect(input.props.value).toBe('');
-  await user.press(screen.getByRole('button', { name: 'Done' }));
+  await user.press(screen.getByRole('button', { name: 'Close' }));
   expect(close).toHaveBeenCalledTimes(1);
 });
 afterEach(() => {

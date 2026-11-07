@@ -1,0 +1,12 @@
+{
+  "selectedConcept": "17-basket-teal",
+  "generator": "Built-in image_gen",
+  "foregroundExtractionPrompt": "Use case: background-extraction. The supplied image is the FINAL APPROVED grocery app icon, and is the edit target. Extract only the existing coral clay grocery basket with its handle and ivory rivets, milk bottle, red apple, green leaf, and baguette. REMOVE the teal background completely, including inside the handle opening. Preserve the exact foreground pixels/design as closely as possible: same shape, position, size, framing, colors, lighting, matte texture, details, no redesign. Keep a faint semi-transparent neutral contact shadow directly below the basket; no colored ground or backdrop. Output on a genuinely transparent alpha background, not a checkerboard drawn into the image. Same square composition and margins as source; no crop or zoom. This cutout will be layered over the approved teal background by Android.",
+  "sourcePrompt": "Use case: precise-object-edit. Input image is the edit target, concept 16 of an Android grocery app icon. Change ONLY the dark green backdrop to Deep teal, approximately #075B66. Preserve the exact original foreground: peach-coral basket silhouette, thick handle, ivory handle rivets, three slots, cream milk bottle and ochre cap on the left, red apple with stem and green leaf in the center, golden baguette on the right. Preserve their exact positions, dimensions, framing, colors, matte clay texture, highlights, and all details. Do not redraw or redesign the foreground, add anything, change camera angle, zoom, or crop. Change the background visible through the handle opening as well. Retain the soft contact shadow underneath, naturally blending into the new background. Maintain the same subtle seamless background lighting, not a flat cutout appearance. Full-bleed square opaque image, no border or text. This is a controlled background-color comparison with identical foreground.",
+  "backgroundColor": "#05515F",
+  "exports": {
+    "size": 1024,
+    "adaptiveForegroundCanvas": 768,
+    "nativeLaunchImageWidth": 180
+  }
+}
