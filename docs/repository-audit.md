@@ -21,6 +21,11 @@ and all 16 fuzz-harness self-tests passed. The user confirmed on the Pixel that
 the development app through Metro; loading recovered after a cache-clearing server
 restart.
 
+Release preparation also pins `eas.json` to LF in `.gitattributes`: Windows Git
+checkout had changed its line endings, producing a different Expo fingerprint
+with identical settings. The LF checkout restores compatibility with the installed
+everyday APK without overriding the runtime or modifying native configuration.
+
 ## Everyday Expo updates
 
 Continues on `feature/app-variants`. Existing production APK already includes

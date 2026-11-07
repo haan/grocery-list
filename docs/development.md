@@ -191,6 +191,8 @@ The original production APK's fingerprint is
 `c1cfabf69b96d9c0b35bb5bdeaa31b6c070c623b`. Expo's fingerprint includes npm
 scripts and the presence of an ignored generated Android directory. Consequently
 we keep this command in its own script rather than adding a package.json script.
+The fingerprint also hashes `eas.json` bytes; `.gitattributes` pins that file to
+LF so Windows checkouts do not change the runtime solely through line endings.
 For a fresh checkout targeting that APK, generate the ignored Android directory
 with `npx expo prebuild --platform android --no-install` first. Its native
 contents remain ignored; the wrapper compares the actual fingerprint before
