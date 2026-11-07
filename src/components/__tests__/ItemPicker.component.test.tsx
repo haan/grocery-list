@@ -110,17 +110,26 @@ test('tapping the clear button empties the search box', async () => {
   expect(searchBox().props.value).toBe('');
 });
 
-test('the pencil opens the suggestion form directly', async () => {
+test('adding a predefined name to history does not expose suggestion editing', async () => {
+  const { searchBox, getByLabelText, queryByLabelText, onAdd } = await renderPicker();
+  await fireEvent.changeText(searchBox(), 'Äppel');
+  await act(() => useAccountStore.getState().recordUse('Äppel'));
+  expect(queryByLabelText('Edit suggestion Äppel')).toBeNull();
+  await fireEvent.press(getByLabelText('Äppel'));
+  expect(onAdd).toHaveBeenCalledWith('Äppel', 'Produce', expect.any(Function));
+});
+
+test('the pencil opens the custom suggestion form directly', async () => {
   // Seed history so a "Recent" row with an edit affordance renders.
   useAccountStore.setState({
-    history: [{ name: 'Butter', count: 1, lastUsed: Date.now() }] as any,
+    history: [{ name: 'Butter maison', count: 1, lastUsed: Date.now() }] as any,
     });
   const user = userEvent.setup();
   const { getByLabelText, getByText } = await renderPicker();
   // Open the real native form under fake timers.
-  await fireEvent.changeText(getByLabelText('Search items'), 'Butter');
-  await user.press(getByLabelText('Edit suggestion Butter'));
+  await fireEvent.changeText(getByLabelText('Search items'), 'Butter maison');
+  await user.press(getByLabelText('Edit suggestion Butter maison'));
   expect(getByText('Edit suggestion')).toBeTruthy();
-  expect(getByLabelText('Suggestion name').props.value).toBe('Butter');
+  expect(getByLabelText('Suggestion name').props.value).toBe('Butter maison');
   expect(getByLabelText('Forget suggestion')).toBeTruthy();
 });

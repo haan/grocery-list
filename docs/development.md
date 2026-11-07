@@ -227,9 +227,12 @@ The Checks workflow runs Android-only configuration checks, fuzz-harness self-te
 Add items opens an alphabetical browser of the entire catalog and personal
 Recent names, grouped under letter headings. The keyboard starts hidden for
 browsing. “Search items” filters names and confirmed aliases, including accent-free
-input; there is no result cap. Recent names retain their edit/forget/Undo controls,
-but frequency no longer changes their position in the alphabetical list.
-The Recent pencil opens Edit suggestion directly as a bottom sheet, with the name
+input; there is no result cap. Custom Recent names retain their edit/forget/Undo
+controls. Recognized catalog names and aliases never show a pencil, including
+after use; their history is still recorded. Matching ignores case, accents,
+Unicode representation and repeated whitespace. Longer custom names remain editable.
+Frequency no longer changes their position in the alphabetical list.
+The custom suggestion pencil opens Edit suggestion directly as a bottom sheet, with the name
 initially selected, a scope explanation, and Cancel/Save actions. Its header trash
 action is labeled Forget suggestion and retains Undo. Forget discards unsaved
 name changes; neither renaming nor forgetting changes existing shopping items.

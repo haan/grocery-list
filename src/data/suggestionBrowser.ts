@@ -6,6 +6,7 @@ export interface BrowserSuggestion {
   name: string;
   category?: string;
   recent: boolean;
+  editable: boolean;
   letter: string;
 }
 
@@ -29,9 +30,12 @@ const compareRows = (a: BrowserSuggestion, b: BrowserSuggestion) => {
 // rather than rebuilding all entries whenever the sheet opens or a key is typed.
 const catalogIndex: IndexedSuggestion[] = PRODUCTS.map(product => ({
   row: { key: normalizeProductName(product.name), name: product.name,
-    category: product.category, recent: false, letter: letterFor(product.name) },
+    category: product.category, recent: false, editable: false, letter: letterFor(product.name) },
   terms: [...new Set([product.name, ...product.aliases].map(normalizeProductName))],
 })).sort((a, b) => compareRows(a.row, b.row));
+
+// History membership does not make a built-in name (or alias) a custom suggestion.
+const catalogNames = new Set(catalogIndex.flatMap(entry => entry.terms));
 
 let cachedNames: string[] = [];
 let currentIndex = catalogIndex;
@@ -47,7 +51,8 @@ function updateRecentIndex(recentNames: readonly string[]) {
     if (!key) continue;
     const product = exactProduct(name);
     personal.set(key, {
-      row: { key, name, category: product?.category, recent: true, letter: letterFor(name) },
+      row: { key, name, category: product?.category, recent: true,
+        editable: !catalogNames.has(key), letter: letterFor(name) },
       terms: [...new Set((product ? [name, product.name, ...product.aliases] : [name]).map(normalizeProductName))],
     });
   }
