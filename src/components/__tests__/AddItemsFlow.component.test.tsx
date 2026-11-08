@@ -21,6 +21,7 @@ jest.mock('../../store/db', () => ({
   recordHistory: () => Promise.resolve(),
   deleteHistory: () => Promise.resolve(),
   putHistory: () => Promise.resolve(),
+  renameHistory: () => Promise.resolve(),
   loadAllLists: () => Promise.resolve([]),
   saveList: () => Promise.resolve(),
   deleteListFromDb: () => Promise.resolve(),

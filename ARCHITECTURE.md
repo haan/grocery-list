@@ -69,6 +69,19 @@ logical timestamps and deterministic tie-breaking. Deletions are tombstones.
 Name, checked-state, items, and preferences retain their clock/validation
 semantics. Check compatibility with installed fork versions before changing them.
 
+Aisle membership/order now carries an optional `categoryOrderUpdatedAt` clock,
+advanced only by creating, renaming, deleting, or reordering aisles. SQLite adds
+a nullable column without resetting shopping data. Older snapshots still use
+their list-level `updatedAt` for aisle conflicts; they can exchange data with
+updated phones, but both phones need the update to protect aisle changes from
+unrelated offline item edits. Item and preference merge rules are unchanged.
+
+Delivery status follows the latest stored list publication. Hello responses and
+late acknowledgements of superseded uploads cannot clear a failed upload.
+Recent suggestions use the same trimmed, NFC-normalized, lowercase identity in
+memory and SQLite. Queued transactions consolidate existing duplicate rows,
+preserving total use counts and the latest use time, and make renames atomic.
+
 Product and built-in aisle labels are Luxembourgish; menus follow the selected
 interface language (English or Luxembourgish). The picker offers System, English
 and Lëtzebuergesch. Expo Localization reads Android's ordered language preferences;

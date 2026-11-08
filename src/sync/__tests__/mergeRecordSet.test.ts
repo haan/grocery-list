@@ -238,6 +238,7 @@ describe('mergeList — grocery-list wrapper', () => {
 
   function listWith(over: Partial<GroceryList>): GroceryList {
     const base = makeList('Base');
+    delete base.categoryOrderUpdatedAt; // These fixtures exercise the legacy wire format.
     return { ...base, ...over };
   }
 
@@ -560,7 +561,7 @@ describe('mergeRecordSet — tie-break determinism', () => {
 
 describe('mergeList — head resolution details', () => {
   function listWith(over: Partial<GroceryList>): GroceryList {
-    return { ...makeList('Base'), ...over };
+    return { ...makeList('Base'), categoryOrderUpdatedAt: undefined, ...over };
   }
 
   it('a strictly NEWER local updatedAt wins the aisle order (not only the remote side)', () => {

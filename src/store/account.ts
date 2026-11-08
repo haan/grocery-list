@@ -4,8 +4,10 @@ import {
   recordHistory,
   deleteHistory,
   putHistory,
+  renameHistory,
   type HistoryRow,
 } from './db';
+import { historyKey } from './historyIdentity';
 
 
 // Re-exported so existing call sites can keep importing from the store; the
@@ -51,32 +53,33 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
   recordUse: (name) => {
     const n = name.trim();
     if (!n) return;
+    const at = Date.now();
     set((s) => {
-      const lower = n.toLowerCase();
-      const existing = s.history.find((h) => h.name.toLowerCase() === lower);
+      const lower = historyKey(n);
+      const existing = s.history.find((h) => historyKey(h.name) === lower);
       const next: HistoryRow[] = existing
         ? s.history.map((h) =>
             h === existing
-              ? { ...h, count: h.count + 1, lastUsed: Date.now() }
+              ? { ...h, count: h.count + 1, lastUsed: at }
               : h
           )
-        : [...s.history, { name: n, count: 1, lastUsed: Date.now() }];
+        : [...s.history, { name: n, count: 1, lastUsed: at }];
       next.sort((a, b) => b.count - a.count || b.lastUsed - a.lastUsed);
       return { history: next };
     });
-    recordHistory(n).catch((err) =>
+    recordHistory(n, at).catch((err) =>
       console.warn('grocery-list: failed to record history', err)
     );
   },
 
   forgetUse: (name) => {
-    const lower = name.trim().toLowerCase();
+    const lower = historyKey(name);
     const removed = get().history.find(
-      (h) => h.name.toLowerCase() === lower
+      (h) => historyKey(h.name) === lower
     );
     if (!removed) return undefined;
     set((s) => ({
-      history: s.history.filter((h) => h.name.toLowerCase() !== lower),
+      history: s.history.filter((h) => historyKey(h.name) !== lower),
     }));
     deleteHistory(removed.name).catch((err) =>
       console.warn('grocery-list: failed to forget history', err)
@@ -85,9 +88,8 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
   },
 
   restoreUse: (row) => {
+    if (get().history.some(h => historyKey(h.name) === historyKey(row.name))) return;
     set((s) => {
-      const lower = row.name.toLowerCase();
-      if (s.history.some((h) => h.name.toLowerCase() === lower)) return s;
       const next = [...s.history, row];
       next.sort((a, b) => b.count - a.count || b.lastUsed - a.lastUsed);
       return { history: next };
@@ -100,10 +102,10 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
   renameUse: (oldName, newName) => {
     const next = newName.trim();
     if (!next) return;
-    const fromLower = oldName.trim().toLowerCase();
-    const toLower = next.toLowerCase();
+    const fromLower = historyKey(oldName);
+    const toLower = historyKey(next);
 
-    const from = get().history.find((h) => h.name.toLowerCase() === fromLower);
+    const from = get().history.find((h) => historyKey(h.name) === fromLower);
     if (!from) return;
     // A pure no-op (same name, same case) — nothing to persist.
     if (from.name === next) return;
@@ -111,7 +113,7 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
     // Merge into any existing entry under the new name (case-insensitive), so a
     // rename onto a word you already buy stacks rather than forking the ranking.
     const collision = get().history.find(
-      (h) => h.name.toLowerCase() === toLower && h.name.toLowerCase() !== fromLower
+      (h) => historyKey(h.name) === toLower && historyKey(h.name) !== fromLower
     );
     const merged: HistoryRow = {
       name: next,
@@ -122,17 +124,14 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
     set((s) => {
       const kept = s.history.filter(
         (h) =>
-          h.name.toLowerCase() !== fromLower && h.name.toLowerCase() !== toLower
+          historyKey(h.name) !== fromLower && historyKey(h.name) !== toLower
       );
       const nextHistory = [...kept, merged];
       nextHistory.sort((a, b) => b.count - a.count || b.lastUsed - a.lastUsed);
       return { history: nextHistory };
     });
 
-    // Persist: drop both old rows, then write the merged one.
-    deleteHistory(from.name)
-      .then(() => (collision ? deleteHistory(collision.name) : undefined))
-      .then(() => putHistory(merged))
+    renameHistory(from.name, next)
       .catch((err) =>
         console.warn('grocery-list: failed to rename history', err)
       );

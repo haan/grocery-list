@@ -64,6 +64,9 @@ export interface GroceryList {
   /** This list's own aisle order (user-reorderable, build step 3). Seeded
    *  from DEFAULT_CATEGORY_ORDER at creation. */
   categoryOrder: Category[];
+  /** Aisle creation, rename, removal, and reorder clock. Older snapshots omit
+   * this field and retain their whole-list updatedAt conflict rule. */
+  categoryOrderUpdatedAt?: number;
   createdAt: number;
   updatedAt: number;
   shareIdentity?: ShareIdentity;
@@ -82,6 +85,7 @@ export function makeList(name?: string): GroceryList {
     nameUpdatedAt: now,
     items: [],
     categoryOrder: [...DEFAULT_CATEGORY_ORDER],
+    categoryOrderUpdatedAt: now,
     createdAt: now,
     updatedAt: now,
   };
@@ -275,7 +279,8 @@ export function pruneTombstones(list: GroceryList, now: number): GroceryList {
 export function healFutureStamps(list: GroceryList, cap: number): GroceryList {
   const clampTs = (t: number): number => (t > cap ? cap : t);
   let changed =
-    list.updatedAt > cap || list.nameUpdatedAt > cap || list.createdAt > cap;
+    list.updatedAt > cap || list.nameUpdatedAt > cap || list.createdAt > cap
+    || (list.categoryOrderUpdatedAt ?? 0) > cap;
   const items = list.items.map((it) => {
     if (
       it.updatedAt <= cap &&
@@ -308,6 +313,7 @@ export function healFutureStamps(list: GroceryList, cap: number): GroceryList {
     ...(list.aislePreferences != null ? { aislePreferences } : {}),
     updatedAt: clampTs(list.updatedAt),
     nameUpdatedAt: clampTs(list.nameUpdatedAt),
+    ...(list.categoryOrderUpdatedAt != null ? { categoryOrderUpdatedAt: clampTs(list.categoryOrderUpdatedAt) } : {}),
     createdAt: clampTs(list.createdAt),
     items,
   };

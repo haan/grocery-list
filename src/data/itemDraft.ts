@@ -86,7 +86,8 @@ export function applyItemDraft(list: GroceryList, draft: ItemDraft, stamp: () =>
     ? sanitizePreferences([...(list.aislePreferences ?? []).filter(p => p.id !== preferenceKey(name)),
       { id: preferenceKey(name), category, updatedAt: time }]) : list.aislePreferences;
   return { result: { ok: true, item, added: draft.mode !== 'edit' }, list: {
-    ...list, updatedAt: time, categoryOrder: order, aislePreferences: preferences,
+    ...list, updatedAt: time, categoryOrder: order,
+    categoryOrderUpdatedAt: list.categoryOrderUpdatedAt ?? list.updatedAt, aislePreferences: preferences,
     items: live ? list.items.map(i => i.id === live.id ? item : i) : [...list.items, item],
   } };
 }

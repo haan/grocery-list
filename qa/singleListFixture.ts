@@ -7,13 +7,13 @@ import type { useListsStore } from '../src/store/lists';
 
 export function seedList(store: typeof useListsStore, name?: string): string {
   const at = Date.now();
-  const list = { ...makeList(name), createdAt: at, updatedAt: at, nameUpdatedAt: at };
+  const list = { ...makeList(name), createdAt: at, updatedAt: at, nameUpdatedAt: at, categoryOrderUpdatedAt: at };
   store.setState({ lists: [list], hydrated: true, pendingJoin: false, transitioning: false });
   return list.id;
 }
 export function pairedFixture(store: typeof useListsStore, secret: string, snapshot?: GroceryList): string {
   const at = Date.now();
-  const local = { ...makeList(), createdAt: at, updatedAt: at, nameUpdatedAt: at };
+  const local = { ...makeList(), createdAt: at, updatedAt: at, nameUpdatedAt: at, categoryOrderUpdatedAt: at };
   const list = { ...(snapshot ?? local), id: local.id, nameUpdatedAt: snapshot?.nameUpdatedAt ?? 0,
     shareIdentity: { secret, createdAt: Date.now() } };
   store.setState({ lists: [list], hydrated: true, pendingJoin: false, transitioning: false });

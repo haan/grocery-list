@@ -168,7 +168,7 @@ describe('DropBoxTransport publish-rejection (NIP-20 OK-false)', () => {
     const onPublishResult = jest.fn();
     const { tr, a, b } = openTransport(onPublishResult);
 
-    tr.publish('ciphertext-payload-1');
+    tr.publishStored('ciphertext-payload-1', 'list');
     const id = a.publishedEventId();
     expect(id).toBeTruthy();
     expect(b.publishedEventId()).toBe(id); // both open relays got it
@@ -189,7 +189,7 @@ describe('DropBoxTransport publish-rejection (NIP-20 OK-false)', () => {
     const onPublishResult = jest.fn();
     const { tr, a, b } = openTransport(onPublishResult);
 
-    tr.publish('ciphertext-payload-2');
+    tr.publishStored('ciphertext-payload-2', 'list');
     const id = a.publishedEventId();
 
     a.receive(['OK', id, true, '']);
@@ -200,6 +200,49 @@ describe('DropBoxTransport publish-rejection (NIP-20 OK-false)', () => {
     expect(onPublishResult).toHaveBeenCalledTimes(1); // still just the acceptance
 
     tr.close();
+  });
+
+  test.each([true, false])('hello OK=%s never changes the latest list result', accepted => {
+    const result = jest.fn();
+    const { tr, a, b } = openTransport(result);
+    try {
+      tr.publishStored('list', 'list');
+      const listId = a.publishedEventId();
+      a.receive(['OK', listId, false, 'too large']);
+      b.receive(['OK', listId, false, 'too large']);
+      expect(result).toHaveBeenLastCalledWith(false, 'too large');
+      tr.publish('hello');
+      const helloId = JSON.parse(a.sent[a.sent.length - 1])[1].id;
+      a.receive(['OK', helloId, accepted, '']);
+      b.receive(['OK', helloId, accepted, '']);
+      expect(result).toHaveBeenCalledTimes(1);
+      tr.publishStored('retry', 'list');
+      const retryId = JSON.parse(a.sent[a.sent.length - 1])[1].id;
+      a.receive(['OK', retryId, true, '']);
+      expect(result).toHaveBeenLastCalledWith(true, '');
+    } finally { tr.close(); }
+  });
+
+  test('late acknowledgements for older snapshots cannot clear or create a current failure', () => {
+    const result = jest.fn();
+    const { tr, a, b } = openTransport(result);
+    try {
+      tr.publishStored('old list', 'list');
+      const oldId = a.publishedEventId();
+      tr.publishStored('new list', 'list');
+      const newId = JSON.parse(a.sent[a.sent.length - 1])[1].id;
+      a.receive(['OK', newId, false, 'too large']);
+      b.receive(['OK', newId, false, 'too large']);
+      a.receive(['OK', oldId, true, '']);
+      expect(result).toHaveBeenCalledTimes(1);
+      expect(result).toHaveBeenLastCalledWith(false, 'too large');
+      tr.publishStored('retry', 'list');
+      const retryId = JSON.parse(a.sent[a.sent.length - 1])[1].id;
+      a.receive(['OK', retryId, true, '']);
+      b.receive(['OK', oldId, false, 'too large']);
+      expect(result).toHaveBeenCalledTimes(2);
+      expect(result).toHaveBeenLastCalledWith(true, '');
+    } finally { tr.close(); }
   });
 });
 
@@ -222,6 +265,32 @@ function sharedList(): GroceryList {
     shareIdentity: { secret: SECRET, createdAt: at },
   };
 }
+
+test.each([true, false])('real engine keeps the list failure when hello is acknowledged first=%s', helloFirst => {
+  const restore = __setTransportFactory((channel, message, reconnect, status, result, seed) =>
+    new DropBoxTransport(channel, message, reconnect, status, result, seed));
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  useListsStore.setState({ lists: [sharedList()], hydrated: true, pendingJoin: false, transitioning: false });
+  try {
+    startSyncEngine();
+    const socket = FakeWebSocket.instances[0];
+    socket.open();
+    const events = socket.sent.map(frame => JSON.parse(frame)).filter(frame => frame[0] === 'EVENT').map(frame => frame[1]);
+    const listEvent = events.find(event => event.kind === 30078);
+    const helloEvent = events.find(event => event.kind === 20001);
+    expect(listEvent).toBeDefined();
+    expect(helloEvent).toBeDefined();
+    if (helloFirst) socket.receive(['OK', helloEvent.id, true, '']);
+    socket.receive(['OK', listEvent.id, false, 'too large']);
+    if (!helloFirst) socket.receive(['OK', helloEvent.id, true, '']);
+    expect(useSyncStatusStore.getState().bySecret[SECRET]).toMatchObject({ connected: true, publishRejected: true });
+  } finally {
+    stopSyncEngine();
+    restore();
+    warn.mockRestore();
+    useListsStore.setState({ lists: [] });
+  }
+});
 
 describe('sync status honesty: rejection reads "Not syncing", never "Connected"', () => {
   let onStatus: ((openRelays: number) => void) | undefined;

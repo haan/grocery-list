@@ -3,8 +3,8 @@
  *
  * The per-item LWW-element-set + tombstone logic lives in the shared helper
  * (`./mergeRecordSet.ts`). This file resolves the *list-level* fields and
- * delegates item-set merging to the generic helper. Aisle order and share
- * identity follow the whole-list `updatedAt`; the **name merges on its own
+ * delegates item-set merging to the generic helper. Aisle order has its own
+ * `categoryOrderUpdatedAt` clock; the **name merges on its own
  * clock** (`nameUpdatedAt`) so the name only changes when a person renames
  * the list — never as a side effect of one device adding an item, and never
  * when a freshly-joined device (which has no name of its own) syncs in.
@@ -186,7 +186,7 @@ export function mergeList(
   local: GroceryList,
   remote: GroceryList
 ): GroceryList {
-  // Head (aisle order + share identity) resolves by the whole-list clock;
+  // Share identity retains the existing whole-list head rule;
   // tie → the greater serialized aisle order, so both devices agree even when
   // two edits land in the same millisecond ("keep local" would diverge).
   const head =
@@ -199,6 +199,13 @@ export function mergeList(
       : JSON.stringify(local.categoryOrder) >= JSON.stringify(remote.categoryOrder)
         ? local
         : remote;
+  // Legacy peers have no independent aisle clock. Keep accepting their edits
+  // using updatedAt; both phones need this field to isolate unrelated edits.
+  const localOrderClock = local.categoryOrderUpdatedAt ?? local.updatedAt;
+  const remoteOrderClock = remote.categoryOrderUpdatedAt ?? remote.updatedAt;
+  const orderHead = localOrderClock !== remoteOrderClock
+    ? (localOrderClock > remoteOrderClock ? local : remote)
+    : JSON.stringify(local.categoryOrder) >= JSON.stringify(remote.categoryOrder) ? local : remote;
   // The name resolves on its OWN clock, independent of the list's updatedAt.
   // Tie → the lexicographically greater name, so both devices agree even when
   // two renames land in the same millisecond.
@@ -210,7 +217,10 @@ export function mergeList(
     id: local.id, // keep the local id — devices have independent local ids
     name: nameHead.name,
     nameUpdatedAt: Math.max(nameClock(local), nameClock(remote)),
-    categoryOrder: head.categoryOrder,
+    categoryOrder: orderHead.categoryOrder,
+    ...((local.categoryOrderUpdatedAt != null || remote.categoryOrderUpdatedAt != null) ? {
+      categoryOrderUpdatedAt: Math.max(localOrderClock, remoteOrderClock),
+    } : {}),
     ...((local.aislePreferences || remote.aislePreferences) ? {
       aislePreferences: sanitizePreferences(mergeRecordSet(
         sanitizePreferences(local.aislePreferences), sanitizePreferences(remote.aislePreferences)

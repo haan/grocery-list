@@ -11,6 +11,7 @@ export function isListSnapshot(value: unknown, secret: string): value is Grocery
   return !('_sync' in l) && typeof l.id === 'string' && typeof l.name === 'string'
     && l.shareIdentity?.secret === secret && stamp(l.shareIdentity.createdAt)
     && stamp(l.createdAt) && stamp(l.updatedAt) && optionalStamp(l.nameUpdatedAt)
+    && optionalStamp(l.categoryOrderUpdatedAt)
     && Array.isArray(l.categoryOrder) && l.categoryOrder.length > 0
     && l.categoryOrder.every(c => typeof c === 'string' && c.length > 0)
     && Array.isArray(l.items) && l.items.every(i => i && typeof i.id === 'string'

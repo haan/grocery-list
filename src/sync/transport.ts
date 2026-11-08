@@ -98,7 +98,8 @@ export class DropBoxTransport {
    *  threshold must count recipients, not currently-open sockets (a relay
    *  that connected after the publish never got the event and will never
    *  OK it). */
-  private ackState = new Map<string, { ok: boolean; rejects: number; sent: number }>();
+  private ackState = new Map<string, { ok: boolean; rejects: number; sent: number; slot: string }>();
+  private latestStored = new Map<string, string>();
   /** Last created_at we signed, per `d` tag: a replaceable slot must never
    *  see two of our events with the same second (the relay keeps the newer
    *  one, and "same second" is a coin toss), and must never go backwards if
@@ -121,9 +122,9 @@ export class DropBoxTransport {
    * @param onStatus  fires with the live relay count whenever it changes — the
    *   engine surfaces this as a connected/offline indicator in the UI. It means
    *   "drop boxes reachable", never "partner present".
-   * @param onPublishResult  fires once per published event: `true` when the
-   *   first relay accepts it, `false` when every open relay rejected it — so
-   *   the engine can tell "sent" apart from "actually delivered".
+   * @param onPublishResult  reports acceptance/rejection of the latest stored
+   *   publication per slot. Hello acknowledgements and superseded uploads must
+   *   not change whether the current shopping state was delivered.
    * @param authorSeed  32 bytes that make this device's signing key stable
    *   across runs (so its stored slot is replaced, not accumulated). Omitted →
    *   a throwaway key per run: fine for live-only use, wrong for deposits.
@@ -204,7 +205,8 @@ export class DropBoxTransport {
     // made oversized publishes vanish while the UI claimed "Connected".
     if (msg[0] === 'OK' && typeof msg[1] === 'string' && this.mine.has(msg[1])) {
       const id = msg[1];
-      const st = this.ackState.get(id) ?? { ok: false, rejects: 0, sent: 1 };
+      const st = this.ackState.get(id);
+      if (!st || this.latestStored.get(st.slot) !== id) return;
       if (msg[2] === true) {
         if (!st.ok) this.onPublishResult?.(true, '');
         st.ok = true;
@@ -286,7 +288,10 @@ export class DropBoxTransport {
         }
       }
     }
-    this.ackState.set(id, { ok: false, rejects: 0, sent: Math.max(1, sent) });
+    if (kind === STORED_KIND) {
+      this.latestStored.set(stampKey, id);
+      this.ackState.set(id, { ok: false, rejects: 0, sent: Math.max(1, sent), slot: stampKey });
+    }
   }
 
   close(): void {

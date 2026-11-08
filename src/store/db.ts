@@ -3,6 +3,7 @@ import { getDb as getSharedDb } from '../storage/kv';
 import type { Category } from '../data/categories';
 import { makeList, type GroceryItem, type GroceryList, type ShareIdentity } from '../data/list';
 import { sanitizePreferences } from '../data/aislePreferences';
+import { historyKey } from './historyIdentity';
 
 let _dbPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
@@ -40,6 +41,7 @@ async function openDb(): Promise<SQLite.SQLiteDatabase> {
       nameUpdatedAt INTEGER,
       items         TEXT NOT NULL,
       categoryOrder TEXT NOT NULL,
+      categoryOrderUpdatedAt INTEGER,
       aislePreferences TEXT,
       shareIdentity TEXT,
       createdAt     INTEGER NOT NULL,
@@ -85,6 +87,10 @@ async function openDb(): Promise<SQLite.SQLiteDatabase> {
     try { await _db.execAsync('ALTER TABLE lists ADD COLUMN aislePreferences TEXT'); }
     catch (err) { if (!/duplicate column name/i.test(String(err))) throw err; }
   }
+  if (!cols.some(c => c.name === 'categoryOrderUpdatedAt')) {
+    try { await _db.execAsync('ALTER TABLE lists ADD COLUMN categoryOrderUpdatedAt INTEGER'); }
+    catch (err) { if (!/duplicate column name/i.test(String(err))) throw err; }
+  }
   // One transaction owns the explicitly requested pre-release shopping reset.
   // Settings unrelated to shopping (appearance/language) remain untouched.
   await _db.execAsync('BEGIN IMMEDIATE');
@@ -114,40 +120,84 @@ export interface HistoryRow {
   lastUsed: number;
 }
 
-export async function loadHistory(): Promise<HistoryRow[]> {
-  const db = await getDb();
-  return db.getAllAsync<HistoryRow>(
-    'SELECT name, count, lastUsed FROM item_history ORDER BY count DESC, lastUsed DESC'
-  );
+// Use the list-write queue too: all transactions share the same connection.
+// Repair old case/Unicode duplicates on read as well as write, including rows
+// written by a rollback to an older bundle. No destructive reset is needed.
+function editHistory(edit: (rows: HistoryRow[]) => HistoryRow[]): Promise<HistoryRow[]> {
+  return enqueue(async () => {
+    const db = await getDb();
+    await db.execAsync('BEGIN IMMEDIATE');
+    try {
+      const raw = await db.getAllAsync<HistoryRow>(
+        'SELECT name, count, lastUsed FROM item_history ORDER BY count DESC, lastUsed DESC, name ASC'
+      );
+      const byKey = new Map<string, HistoryRow>();
+      for (const row of raw) {
+        const key = historyKey(row.name);
+        const existing = byKey.get(key);
+        byKey.set(key, existing ? { ...existing, count: existing.count + row.count,
+          lastUsed: Math.max(existing.lastUsed, row.lastUsed) } : { ...row });
+      }
+      const next = edit([...byKey.values()]);
+      const names = new Set(next.map(row => row.name));
+      for (const row of raw) {
+        if (!names.has(row.name)) await db.runAsync('DELETE FROM item_history WHERE name = ?', [row.name]);
+      }
+      const previous = new Map(raw.map(row => [row.name, row]));
+      for (const row of next) {
+        const old = previous.get(row.name);
+        if (old?.count === row.count && old.lastUsed === row.lastUsed) continue;
+        await db.runAsync('INSERT OR REPLACE INTO item_history (name, count, lastUsed) VALUES (?, ?, ?)',
+          [row.name, row.count, row.lastUsed]);
+      }
+      await db.execAsync('COMMIT');
+      return next.sort((a, b) => b.count - a.count || b.lastUsed - a.lastUsed);
+    } catch (err) {
+      await db.execAsync('ROLLBACK');
+      throw err;
+    }
+  });
 }
 
-export async function recordHistory(name: string): Promise<void> {
-  const db = await getDb();
-  await db.runAsync(
-    `INSERT INTO item_history (name, count, lastUsed) VALUES (?, 1, ?)
-     ON CONFLICT(name) DO UPDATE SET count = count + 1, lastUsed = excluded.lastUsed`,
-    [name, Date.now()]
-  );
+export function loadHistory(): Promise<HistoryRow[]> {
+  return editHistory(rows => rows);
+}
+
+export async function recordHistory(name: string, at = Date.now()): Promise<void> {
+  const key = historyKey(name);
+  if (!key) return;
+  await editHistory(rows => {
+    const existing = rows.find(row => historyKey(row.name) === key);
+    return existing ? rows.map(row => row === existing ? { ...row, count: row.count + 1, lastUsed: at } : row)
+      : [...rows, { name: name.trim(), count: 1, lastUsed: at }];
+  });
 }
 
 /** Permanently forget a single autocomplete entry (case-insensitive) — the
  *  swipe-to-delete on a Recent row. Re-typing the word re-adds it from scratch. */
 export async function deleteHistory(name: string): Promise<void> {
-  const db = await getDb();
-  await db.runAsync(
-    'DELETE FROM item_history WHERE name = ? COLLATE NOCASE',
-    [name]
-  );
+  await editHistory(rows => rows.filter(row => historyKey(row.name) !== historyKey(name)));
 }
 
 /** Re-insert a forgotten row verbatim (Undo) — restores its exact count and
  *  lastUsed so its ranking is unchanged, not reset to a fresh single use. */
 export async function putHistory(row: HistoryRow): Promise<void> {
-  const db = await getDb();
-  await db.runAsync(
-    `INSERT OR REPLACE INTO item_history (name, count, lastUsed) VALUES (?, ?, ?)`,
-    [row.name, row.count, row.lastUsed]
-  );
+  await editHistory(rows => [...rows.filter(old => historyKey(old.name) !== historyKey(row.name)), row]);
+}
+
+/** Rename and collision-merge as one queued transaction, in user-action order. */
+export async function renameHistory(oldName: string, newName: string): Promise<void> {
+  const fromKey = historyKey(oldName), toKey = historyKey(newName);
+  if (!toKey) return;
+  await editHistory(rows => {
+    const from = rows.find(row => historyKey(row.name) === fromKey);
+    if (!from) return rows;
+    const collision = rows.find(row => historyKey(row.name) === toKey && row !== from);
+    return [...rows.filter(row => row !== from && row !== collision), {
+      name: newName.trim(), count: from.count + (collision?.count ?? 0),
+      lastUsed: Math.max(from.lastUsed, collision?.lastUsed ?? 0),
+    }];
+  });
 }
 
 interface ListRow {
@@ -156,6 +206,7 @@ interface ListRow {
   nameUpdatedAt: number | null;
   items: string;
   categoryOrder: string;
+  categoryOrderUpdatedAt?: number | null;
   aislePreferences?: string | null;
   shareIdentity: string | null;
   createdAt: number;
@@ -183,6 +234,7 @@ function rowToList(row: ListRow): GroceryList {
     nameUpdatedAt,
     items: JSON.parse(row.items) as GroceryItem[],
     categoryOrder: JSON.parse(row.categoryOrder) as Category[],
+    ...(row.categoryOrderUpdatedAt != null ? { categoryOrderUpdatedAt: row.categoryOrderUpdatedAt } : {}),
     aislePreferences: sanitizePreferences(row.aislePreferences ? JSON.parse(row.aislePreferences) : []),
     shareIdentity: row.shareIdentity
       ? (JSON.parse(row.shareIdentity) as ShareIdentity)
@@ -203,8 +255,8 @@ export async function loadAllLists(): Promise<GroceryList[]> {
 async function insertList(db: SQLite.SQLiteDatabase, list: GroceryList): Promise<void> {
   await db.runAsync(
     `INSERT OR REPLACE INTO lists
-       (id, name, nameUpdatedAt, items, categoryOrder, shareIdentity, createdAt, updatedAt, aislePreferences)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       (id, name, nameUpdatedAt, items, categoryOrder, shareIdentity, createdAt, updatedAt, aislePreferences, categoryOrderUpdatedAt)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       list.id,
       list.name,
@@ -215,6 +267,7 @@ async function insertList(db: SQLite.SQLiteDatabase, list: GroceryList): Promise
       list.createdAt,
       list.updatedAt,
       JSON.stringify(list.aislePreferences ?? []),
+      list.categoryOrderUpdatedAt ?? null,
     ]
   );
 }

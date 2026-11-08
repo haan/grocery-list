@@ -165,7 +165,14 @@ export const useListsStore = create<ListsState>()((set, get) => {
     set((s) => ({
       lists: s.lists.map((l) => {
         if (l.id !== id) return l;
-        updated = { ...fn(l), updatedAt: clockNow() };
+        const next = fn(l);
+        const at = clockNow();
+        updated = { ...next, updatedAt: at,
+          // Materialize the legacy baseline before an unrelated edit bumps the
+          // list clock. Only an actual order/membership change advances it.
+          categoryOrderUpdatedAt: JSON.stringify(next.categoryOrder) !== JSON.stringify(l.categoryOrder)
+            ? at : l.categoryOrderUpdatedAt ?? l.updatedAt,
+        };
         return updated;
       }),
     }));
@@ -242,7 +249,7 @@ export const useListsStore = create<ListsState>()((set, get) => {
         // (which would let stale local state lose to — or beat — a peer wrongly).
         let maxTs = persistedClock ? Number(persistedClock) || 0 : 0;
         for (const l of healed) {
-          maxTs = Math.max(maxTs, l.updatedAt, l.nameUpdatedAt);
+          maxTs = Math.max(maxTs, l.updatedAt, l.nameUpdatedAt, l.categoryOrderUpdatedAt ?? 0);
           for (const p of l.aislePreferences ?? []) maxTs = Math.max(maxTs, p.updatedAt, p.deletedAt ?? 0);
           for (const it of l.items) {
             maxTs = Math.max(
@@ -502,7 +509,8 @@ export const useListsStore = create<ListsState>()((set, get) => {
       logEvent('share', 'list shared', { items: list.items.length });
       set({ transitioning: true });
       try {
-        const shared = { ...list, shareIdentity: identity, updatedAt: clockNow() };
+        const shared = { ...list, shareIdentity: identity, updatedAt: clockNow(),
+          categoryOrderUpdatedAt: list.categoryOrderUpdatedAt ?? list.updatedAt };
         await replaceCurrentList(shared, false);
         set({ lists: [shared], transitioning: false });
         return identity.secret;
@@ -554,7 +562,7 @@ export const useListsStore = create<ListsState>()((set, get) => {
       // The check clock is scanned explicitly: it does NOT ride updatedAt, and
       // relying on the list-level stamp to transitively cover it would be an
       // unwritten invariant.
-      let remoteMax = Math.max(healed.updatedAt, healed.nameUpdatedAt);
+      let remoteMax = Math.max(healed.updatedAt, healed.nameUpdatedAt, healed.categoryOrderUpdatedAt ?? 0);
       for (const p of healed.aislePreferences ?? []) remoteMax = Math.max(remoteMax, p.updatedAt, p.deletedAt ?? 0);
       for (const it of healed.items) {
         remoteMax = Math.max(

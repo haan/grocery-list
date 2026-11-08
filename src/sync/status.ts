@@ -22,9 +22,9 @@ export interface ChannelStatus {
   lastReceivedAt: number | null;
   /** ms of the last copy we published. */
   lastSentAt: number | null;
-  /** True when the last publish was rejected by every open relay — the socket
+  /** True when the latest list upload was rejected by every recipient relay — the socket
    *  is up but our state is NOT leaving the device ("sent" ≠ "delivered").
-   *  Cleared by the next accepted publish. */
+   *  Cleared by an accepted current list upload, never by a hello. */
   publishRejected: boolean;
 }
 
