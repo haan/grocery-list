@@ -1,116 +1,183 @@
 # Architecture
 
-An Android-only Expo SDK 57 app, maintained independently in haan/grocery-list.
-SQLite stores one list locally; encrypted Nostr messages synchronize shared
-data without an application server or user account. Node 26.12.1 is required.
-See [development](docs/development.md) and [repository audit](docs/repository-audit.md).
+Grocery List is an Android-only Expo SDK 57 / React Native app. Zustand stores
+hold the working state, SQLite persists it, and encrypted snapshots over public
+Nostr relays synchronize a shared list. Shopping works offline; there is no
+application server or user account.
 
-## Startup and UI
+Use this document for the current design and invariants. See
+[README.md](README.md) for setup, [docs/development.md](docs/development.md) for
+device and release procedures, and the [repository audit](docs/repository-audit.md)
+for historical removals.
 
-App.tsx hydrates list and account stores before showing navigation, starts
-synchronization, handles share links, and flushes pending writes on backgrounding.
-It never seeds demo data. The app shell owns safe areas, gestures, navigation theme,
-language preference, local diagnostics, and splash. Lists is the initial stack route;
-there is no overview or bottom-tab navigator. ListsHomeScreen renders the items directly.
-Add items opens the item picker directly; the bottom sharing indicator opens Sharing.
+## Code map
 
-The package is io.github.haan.grocerylist.dev; links use haan-grocerylist-dev.
-Settings offers appearance, language, sharing, Manage aisles, and a standalone version line.
-The feedback/About UI and decorative footers have been removed. Local diagnostics
-are initialized by the app shell, independently of any reporting UI.
-There are no purchase, store-review, launch-promotion, email-report, or other-app
-promotion flows. All first-party files are independently maintained here; no
-external template synchronization is active. Preserve licenses and attribution.
-
-## Code ownership
-
-| Area | Purpose |
+| Area | Responsibility |
 | --- | --- |
-| src/data | Domain types, catalog matching, aisle preferences. |
-| src/store | Zustand state and SQLite persistence. |
-| src/sync | Logical clock, encryption, relay transport, list merges. |
-| src/screens, src/components, src/shell | Android UI and application shell. |
-| src/theme, src/i18n | Fonts, styling, interface translations. |
-| src/feedback | Bounded local diagnostics; no feedback UI or upload. |
-| src/qa | Test-only layout helpers and checks. |
-| qa/intent-fuzz | Active model-based testing, seed logging, replay. |
-| scripts/lod | Reviewed LOD source references and deterministic generation. |
-| scripts/language | Developer-only Hunspell/Docker checking, pinned dictionary source and contextual review. |
+| [App.tsx](App.tsx) | Store hydration, stack navigation, share links, sync lifecycle, background flushes. |
+| [src/shell](src/shell) | Safe areas, gestures, navigation theme, language preference, diagnostics, splash visibility. |
+| [src/screens](src/screens), [src/components](src/components) | Shopping list, item picker/editor, sharing, settings, and aisle management. |
+| [src/data](src/data) | Domain types, item drafts, catalog matching, aisle order, and learned preferences. |
+| [src/store](src/store) | Zustand list/history stores, schema initialization, and queued SQLite writes. |
+| [src/storage](src/storage) | Shared SQLite connection and database filename. |
+| [src/sync](src/sync) | Logical clock, snapshot validation, merge rules, encryption, relay transport, and delivery status. |
+| [src/theme](src/theme), [src/i18n](src/i18n) | Appearance, fonts, interface strings, and locale selection. |
+| [src/feedback](src/feedback) | Bounded local diagnostics; no reporting UI or upload. |
+| [src/qa](src/qa), [qa](qa) | Layout checks, fixtures, model-based tests, and regression replay. |
+| [scripts/lod](scripts/lod), [scripts/language](scripts/language) | Catalog generation and developer-only language review. |
+| [app.config.js](app.config.js), [eas.json](eas.json), [plugins](plugins) | App variants, cloud build profiles, and native configuration. |
 
-## Persistence and sharing invariants
+## Startup and navigation
 
-Database initialization runs the atomic luxembourgish-shopping-v1 pre-release reset
-before either store hydrates or sync starts. It supersedes single-list-v1, clears
-shopping/history/aisle/sharing state and pending joins, inserts one empty private
-list, and writes both markers in one transaction.
-Failures roll back and show Retry; subsequent launches preserve the list/history.
-Appearance, language, and bounded local diagnostics are retained.
+`App.tsx` hydrates the list store and then the local history/account store before
+starting synchronization. Despite its name, `useAccountStore` does not represent
+a signed-in user. Startup never seeds demo shopping data.
 
-Ordinary item edits update memory immediately and queue SQLite saves. Saves only
-update the current local ID, so stale writes cannot resurrect a replaced list.
-Sharing identity changes await an atomic replacement before exposing their result.
-The store has exactly one list after hydration (the array remains an internal
-container). Public create/rename/duplicate/delete/import/bulk-sync APIs are gone.
+The native Android launch screen stays visible until fonts and stores are ready
+and content has laid out. Initialization failure shows a Retry screen. `AppShell`
+owns navigation context, appearance/language preferences, and local diagnostics;
+there is no extra animated splash.
 
-Join confirmation replaces the list with a persisted pending identity. Pending
-joins send hello requests but cannot edit or publish snapshots. The first valid
-snapshot is adopted durably, retaining this phone's local ID; then normal merging
-begins. Pending state is local metadata, never sent on the wire. Identity changes
-close transports and cancel timers before disk awaits. Callback guards reject old
-channels. Stop sharing makes a fresh private local ID and retains items, aisles,
-and learned rules; starting again mints a fresh secret. Recent history stays local.
-Cold-start links queue until initialization and navigation are ready, then open
-confirmation. Opening Sharing alone has no sharing side effects.
+The initial `Lists` route renders `ListsHomeScreen` directly. Other stack routes
+are `Share`, `Settings`, and `ReorderAisles`; there is no list overview or tab bar.
+Add items opens the catalog/Recent browser. Settings includes update controls,
+version information, and a fixed Luxembourgish dedication.
 
-Shared lists use encrypted snapshots over public relays. Catch-up requests and
-retained relay deposits support phones that were not online together. Availability
-and retention are best-effort. Merge functions resolve records individually with
-logical timestamps and deterministic tie-breaking. Deletions are tombstones.
-Name, checked-state, items, and preferences retain their clock/validation
-semantics. Check compatibility with installed fork versions before changing them.
+Cold-start share links wait for store hydration and navigation readiness before
+opening confirmation. Opening Sharing alone never starts sharing. On backgrounding,
+the app flushes pending local writes and sync publication on a best-effort basis.
 
-Aisle membership/order now carries an optional `categoryOrderUpdatedAt` clock,
-advanced only by creating, renaming, deleting, or reordering aisles. SQLite adds
-a nullable column without resetting shopping data. Older snapshots still use
-their list-level `updatedAt` for aisle conflicts; they can exchange data with
-updated phones, but both phones need the update to protect aisle changes from
-unrelated offline item edits. Item and preference merge rules are unchanged.
+## Local state and persistence
 
-Delivery status follows the latest stored list publication. Hello responses and
-late acknowledgements of superseded uploads cannot clear a failed upload.
-Recent suggestions use the same trimmed, NFC-normalized, lowercase identity in
-memory and SQLite. Queued transactions consolidate existing duplicate rows,
-preserving total use counts and the latest use time, and make renames atomic.
+`src/storage/kv.ts` memoizes one SQLite connection to `grocery-list.db`.
+`src/store/db.ts` initializes the schema before returning it to store operations.
+The hydrated list store contains exactly one list; its array is an internal
+container. Recent history, appearance, and language preferences stay local.
 
-Product and built-in aisle labels are Luxembourgish; menus follow the selected
-interface language (English or Luxembourgish). The picker offers System, English
-and Lëtzebuergesch. Expo Localization reads Android's ordered language preferences;
-System selects the first supported one, falling back to English. Explicit local
-choices win. On foreground, an actual effective-language change refreshes navigation.
-Formatting follows the effective language; user content and language choices never
-get translated or synchronized. Retired saved language preferences migrate to System.
-The native Expo plugin declares only Android en/lb. The bundled catalog works offline. Manual aisle corrections
-apply to future additions in that list and synchronize with it. Removing a custom
-aisle reclassifies affected items and tombstones its preferences. See the
-[catalog guide](scripts/lod/README.md) for matching and learning rules.
+Ordinary edits update memory immediately and queue SQLite saves. Saves update
+only the current local ID, so an old queued write cannot resurrect a replaced
+list. Sharing identity changes use an atomic database replacement before the
+store exposes the result. Preserve these boundaries when adding mutations.
 
-Kit storage is retired with an idempotent DROP TABLE IF EXISTS kits on database
-initialization. The versioned pre-release shopping reset also clears any data from
-earlier test installations. Future catalog wording edits must not change its marker.
-Unsupported control messages, including legacy kit messages, are ignored without
-updating list data or sync status. Existing list wire format and relay slots remain
-unchanged; no deletion is broadcast to older installations or relay storage.
+`src/data/itemDraft.ts` applies confirmed item details to the latest list state.
+Cancel discards the draft. A save commits item changes and explicit aisle learning
+together, preserving untouched fields and the separate checked-state clock.
+Only additions/re-additions record Recent usage. Replacing the list closes its
+drafts.
 
-## Checks and builds
+Recent names use the same trimmed, NFC-normalized, lowercase identity in memory
+and SQLite. Queued history transactions consolidate duplicate rows, preserve
+total use counts/latest use time, and make renames atomic. Renaming or forgetting
+a Recent suggestion does not edit existing shopping items.
 
-The single GitHub workflow runs locked installation, the Android configuration
-guard, fuzz-harness self-tests, TypeScript, and Jest's Android preset. Retained
-tests cover domain behavior, migrations, synchronization, privacy, accessibility,
-and UI interactions/layout. Fuzz logs/intake go to ignored tmp/; minimized
-regression JSON remains tracked under qa/regressions. Fixtures/helpers used only
-by tests are not imported by production code.
+## Sharing lifecycle
 
-EAS generates the Android native project from configuration and plugins. Preserve
-package identity and signing key when updating the Pixel. Native changes require
-a new APK; JavaScript edits use Metro. No web target, store submission, emulator
-CI, or scheduled build is configured. Third-party framework tooling is unmodified.
+`src/store/lists.ts` owns identity transitions; `src/sync/index.ts` reacts to
+them and manages transports.
+
+1. **Private:** edits persist locally. Start sharing creates and persists a secret
+   before exposing an invitation.
+2. **Joining:** confirmation replaces the local list with a persisted pending
+   identity. The phone requests a snapshot with `hello`, but cannot edit or
+   publish a list snapshot.
+3. **Shared:** the first valid snapshot is adopted durably while retaining this
+   phone's local ID. Only then does ordinary merging/publication begin.
+4. **Stop sharing:** an atomic replacement creates a new private local ID and
+   keeps items, aisles, and learned rules. Other participants keep their copies.
+   Starting sharing again creates a fresh secret.
+
+Pending state is local metadata and never goes on the wire. Identity transitions
+close transports and cancel timers before awaiting disk writes. Callback guards
+reject activity from obsolete channels. These guards prevent late traffic from
+modifying a replacement list.
+
+Invitations contain the list secret. `src/sync/shareConfig.ts` selects the scheme
+from the installed binary's application ID, so Dev and everyday invitations are
+separate. This is an invitation safeguard, not a separate relay service.
+
+## Synchronization and compatibility
+
+The engine validates decrypted snapshots before adopting or merging them.
+Catch-up requests and retained relay deposits support phones that were not online
+together; relay availability and retention remain best-effort. Unsupported
+control messages do not update list data or sync status.
+
+`merge.ts` and `mergeRecordSet.ts` resolve individual records using logical
+timestamps and deterministic tie-breaking. Deletions are tombstones. Duplicate
+normalized item names converge to one visible item. Incoming timestamps advance
+the local clock; future-skew healing occurs at the store boundary.
+
+Keep the following clocks and fallbacks compatible between installed versions:
+
+| State | Conflict rule |
+| --- | --- |
+| List name | `nameUpdatedAt`, falling back to `createdAt` when absent. |
+| Item contents/deletion | Per-record timestamps and tombstones. |
+| Checked state | Newest of `checkedUpdatedAt` and `checkedAt`, falling back to `addedAt`; content edits must not override it. |
+| Aisle membership/order | `categoryOrderUpdatedAt`, falling back to list `updatedAt` when absent. |
+| Learned aisle preferences | Per-preference clocks and tombstones. |
+
+Only aisle creation, rename, deletion, or reorder advances an established
+`categoryOrderUpdatedAt`. This separate clock protects aisle changes from
+unrelated offline item edits.
+
+Delivery status follows the latest stored list publication. A `hello` response
+or late acknowledgement of a superseded upload cannot clear a failed upload.
+Changes to validation, clocks, encryption, payload shape, or relay slots need
+compatibility review and convergence tests.
+
+## Catalog and language
+
+The checked-in catalog works offline. The reviewed source is
+`scripts/lod/manifest.json`; generation produces `src/data/seedCatalogData.ts`.
+Product IDs remain stable because shared learned rules reference them. Explicit
+aisle corrections affect future additions in that list and synchronize with it.
+Removing a custom aisle reclassifies affected items and tombstones its rules.
+See the [catalog guide](scripts/lod/README.md) for matching and regeneration.
+
+Product and built-in aisle labels stay Luxembourgish. Interface choices are
+System, English, and Lëtzebuergesch. System selects the first supported language
+in Android's ordered preferences, falling back to English; an explicit local
+choice wins. Effective-language changes on foreground refresh navigation.
+Formatting follows that language; user content is never translated. Android
+declares only `en` and `lb`. See [language review](scripts/language/README.md)
+for translation conventions.
+
+## App variants, builds, and updates
+
+`app.config.js` overlays `app.json`; local development defaults to Dev, while EAS
+profiles select `APP_VARIANT` explicitly.
+
+| | Development | Everyday |
+| --- | --- | --- |
+| Android package | `io.github.haan.grocerylist.dev` | `io.github.haan.grocerylist` |
+| Invitation scheme | `haan-grocerylist-dev` | `haan-grocerylist` |
+| EAS profile/channel | `development` | `production` |
+| Runtime workflow | Metro and Fast Refresh | Standalone APK and compatible Expo Updates |
+
+Storage is separate per package. EAS generates the native Android project from
+configuration/plugins; generated native folders are ignored. Preserve package
+identity and signing credentials for APK updates. Native changes require a new
+APK; JavaScript/assets can use the fingerprint-compatible update channel.
+
+Production checks/downloads compatible updates at startup. Settings → Updates
+also supports checking and an explicit restart. `UpdateSetting.tsx` saves the
+list before restarting and blocks restart during a pending join, identity
+transition, or failed write. Dev uses Metro and disables these update APIs.
+`scripts/update-production.cjs` verifies the target production APK and matching
+native fingerprint before publication. See the
+[release procedure](docs/development.md#expo-updates-for-the-everyday-app).
+
+## Verification
+
+The [Checks workflow](.github/workflows/checks.yml) runs `npm ci`, the Android
+configuration guard, fuzz-harness self-tests, TypeScript, and Jest's Android
+preset. It runs on main pushes, pull requests, and manual dispatch; it does not
+publish releases or run scheduled builds/emulators.
+
+Tests cover persistence, merge convergence, privacy, accessibility, and UI
+behavior/layout. Test-only fixtures/helpers stay out of production imports.
+Transient fuzz logs go to ignored `tmp/`; reviewed minimized fixtures belong in
+`qa/regressions`. See [model testing](qa/intent-fuzz/README.md) for replay and
+the [development guide](docs/development.md) for physical-device acceptance,
+which is separate from automated checks.
